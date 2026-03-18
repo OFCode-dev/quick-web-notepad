@@ -802,9 +802,9 @@ function toggleDark() {
   if (btn) btn.innerHTML = isDark ? T.btnLight : T.btnDark;
 }
 function clearText() {
-  const fname = document.getElementById("filename").value;
-  textarea.value = ""; closeFindBar(); updateCount(); updateLineNumbers(); textarea.focus();
-  document.getElementById("filename").value = fname;
+  textarea.value = ""; closeFindBar(); updateCount(); updateLineNumbers();
+  document.getElementById("filename").value = "Untitled.txt";
+  textarea.focus();
 }
 function setZoom(n) {
   fontSize = n;
