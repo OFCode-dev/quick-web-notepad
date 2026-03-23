@@ -4,216 +4,437 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Quick Web Notepad</title>
-<meta name="description" content="A fast, secure, and distraction-free online plain text editor. Works completely offline, supports multiple languages, and saves directly to your device. No login required." />
-<meta name="keywords" content="online notepad, plain text editor, quick notes, web notepad, text editor online, dark mode notepad, ofcode" />
+<meta name="description" content="A fast, distraction-free plain text editor. Works offline, supports multiple languages." />
 <meta name="author" content="OFCode" />
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 36 36'><rect x='2' y='3' width='32' height='22' rx='2' fill='%23444'/><rect x='4' y='5' width='28' height='18' rx='1' fill='%231a2a1a'/><line x1='7' y1='10' x2='24' y2='10' stroke='%236aff6a' stroke-width='1.2' stroke-linecap='round'/><line x1='7' y1='13.5' x2='22' y2='13.5' stroke='%236aff6a' stroke-width='1.2' stroke-linecap='round'/><line x1='7' y1='17' x2='19' y2='17' stroke='%236aff6a' stroke-width='1.2' stroke-linecap='round'/><rect x='19.5' y='15.5' width='1.2' height='3' fill='%23f5a623'/><rect x='15' y='25' width='6' height='4' fill='%23555'/><rect x='11' y='29' width='14' height='2.5' rx='1' fill='%23555'/></svg>" />
-<meta property="og:title" content="Quick Web Notepad - Free Online Text Editor" />
-<meta property="og:description" content="Fast, distraction-free plain text editor directly in your browser." />
-<meta property="og:type" content="website" />
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --bg:        #f0ece4;
-    --surface:   #fffdf9;
-    --border:    #2a2a2a;
-    --accent:    #d4560a;
-    --accent2:   #f5a623;
-    --text:      #1a1a1a;
-    --muted:     #888;
-    --header-bg: #2a2a2a;
-    --toolbar:   #fafafa;
-    --footer-bg: #e8e4dc;
-    --hint-bg:   #fdf6ec;
-    --lnum-bg:   #f4f0e8;
-    --lnum-col:  #aaa;
-    --findbar:   #fff8f0;
-    --shadow:    0 4px 24px rgba(0,0,0,0.13), 0 1px 4px rgba(0,0,0,0.08);
-  }
-  .dark {
-    --bg:        #141414;
-    --surface:   #1c1c1c;
-    --border:    #444;
-    --text:      #e0d8cc;
-    --muted:     #666;
-    --header-bg: #111;
-    --toolbar:   #2a2a2a;
-    --footer-bg: #181818;
-    --hint-bg:   #1e1e1e;
-    --lnum-bg:   #191919;
-    --lnum-col:  #555;
-    --findbar:   #222;
-    --shadow:    0 4px 24px rgba(0,0,0,0.5);
-  }
+/* ── VARIABLES ───────────────────────────────────────────── */
+:root {
+  --bg:           #f5f5f5;
+  --surface:      #ffffff;
+  --toolbar:      #f3f3f3;
+  --toolbar-b:    #e0e0e0;
+  --border:       #e8e8e8;
+  --text:         #1e1e1e;
+  --text2:        #6e7681;
+  --accent:       #0066cc;
+  --accent-bg:    rgba(0,102,204,.10);
+  --btn-hover:    rgba(0,0,0,.06);
+  --editor:       #ffffff;
+  --lnum-bg:      #f8f8f8;
+  --lnum-text:    #a8a8a8;
+  --findbar:      #ebebeb;
+  --sb-bg:        #007acc;
+  --sb-text:      #ffffff;
+  --header:       #1e1e1e;
+  --header-text:  #cccccc;
+  --protect-col:  #e87d0d;
+  --syntax-col:   #8c64c8;
+  --shadow:       0 1px 3px rgba(0,0,0,.10);
+}
+.dark {
+  --bg:           #1e1e1e;
+  --surface:      #1e1e1e;
+  --toolbar:      #2d2d2d;
+  --toolbar-b:    #3e3e42;
+  --border:       #3e3e42;
+  --text:         #d4d4d4;
+  --text2:        #858585;
+  --accent:       #4fc1ff;
+  --accent-bg:    rgba(79,193,255,.12);
+  --btn-hover:    rgba(255,255,255,.07);
+  --editor:       #1e1e1e;
+  --lnum-bg:      #1e1e1e;
+  --lnum-text:    #505050;
+  --findbar:      #252526;
+  --sb-bg:        #007acc;
+  --sb-text:      #ffffff;
+  --header:       #111111;
+  --header-text:  #aaaaaa;
+  --protect-col:  #e87d0d;
+  --syntax-col:   #b08ae0;
+  --shadow:       0 1px 3px rgba(0,0,0,.35);
+}
 
-  * { box-sizing: border-box; margin: 0; padding: 0; }
+/* ── RESET ───────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; overflow: hidden; }
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 13px;
+  background: var(--bg);
+  color: var(--text);
+  display: flex;
+  flex-direction: column;
+  transition: background .15s, color .15s;
+}
 
-  body {
-    font-family: 'JetBrains Mono', Consolas, monospace;
-    background: var(--bg);
-    color: var(--text);
-    min-height: 100vh;
-    transition: background 0.2s, color 0.2s;
-  }
+/* ── WEB HEADER (hidden in Electron) ─────────────────────── */
+#app-header {
+  background: var(--header);
+  height: 42px;
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  gap: 10px;
+  flex-shrink: 0;
+  border-bottom: 2px solid #f5a623;
+}
+.is-electron #app-header { display: none; }
 
-  /* ── PAGE HEADER ── */
-  #page-header {
-    background: var(--header-bg);
-    padding: 14px 28px;
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    border-bottom: 3px solid var(--accent);
-  }
-  .monitor-icon svg { width: 36px; height: 36px; display: block; }
-  #page-header h1 {
-    font-family: 'Syne', sans-serif;
-    font-weight: 800; font-size: 20px; color: #fff;
-    letter-spacing: 0.05em; text-transform: uppercase; line-height: 1;
-  }
-  #page-header h1 em { color: var(--accent2); font-style: normal; }
-  #page-header .tagline {
-    font-size: 10px; color: #555;
-    letter-spacing: 0.1em; text-transform: uppercase;
-  }
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Inter', sans-serif;
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #fff;
+}
+.logo svg { width: 22px; height: 22px; flex-shrink: 0; }
+.logo em { color: #f5a623; font-style: normal; }
 
-  /* language selector in header */
-  #langWrap {
-    margin-left: auto;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-  #page-header .tagline { margin-left: 0; }
-  #uiLang {
-    font-size: 12px;
-    background: #3a3a3a;
-    color: #ddd;
-    border: 1px solid #666;
-    border-radius: 3px;
-    padding: 3px 6px;
-    cursor: pointer;
-  }
-  #uiLang:focus { outline: 1px solid var(--accent2); }
+#lang-wrap { margin-left: auto; }
+#ui-lang {
+  background: #333;
+  color: #ccc;
+  border: 1px solid #555;
+  border-radius: 4px;
+  padding: 3px 6px;
+  font-size: 11px;
+  font-family: inherit;
+  cursor: pointer;
+  outline: none;
+}
+#ui-lang:focus { border-color: var(--accent); }
 
-  /* ── WRAPPER ── */
-  #wrapper { max-width: 1100px; margin: 24px auto; padding: 0 16px 40px; }
+/* ── APP CONTAINER ───────────────────────────────────────── */
+#app {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  overflow: hidden;
+}
 
-  /* ── APP CARD ── */
-  #app {
-    border: 2px solid var(--border); border-radius: 4px;
-    overflow: hidden; box-shadow: var(--shadow); background: var(--surface);
-  }
+/* ── TOOLBAR ─────────────────────────────────────────────── */
+#toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1px;
+  padding: 3px 6px;
+  background: var(--toolbar);
+  border-bottom: 1px solid var(--toolbar-b);
+  flex-shrink: 0;
+}
+#toolbar button {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 9px;
+  font-size: 11.5px;
+  font-family: 'Inter', sans-serif;
+  font-weight: 500;
+  background: transparent;
+  color: var(--text);
+  border: 1px solid transparent;
+  border-radius: 4px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background .1s, border-color .1s, color .1s;
+  line-height: 1.2;
+  user-select: none;
+}
+#toolbar button:hover {
+  background: var(--btn-hover);
+  border-color: var(--border);
+}
+#toolbar button.active {
+  background: var(--accent-bg);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+#toolbar button:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+#save-btn.has-file {
+  background: var(--accent);
+  color: #fff !important;
+  border-color: var(--accent) !important;
+}
+#save-btn.has-file:hover { filter: brightness(.9); }
 
-  /* ── HINT BAR ── */
-  #hint {
-    padding: 5px 12px; font-size: 11px;
-    background: var(--hint-bg); border-bottom: 1px solid #ddd; color: var(--muted);
-  }
-  .dark #hint { border-bottom-color: #333; }
-  #hint strong { color: var(--accent); font-weight: 600; margin-right: 4px; }
-  @media (hover: none), (max-width: 600px) { #hint { display: none; } }
+#protect-btn.active {
+  background: rgba(232,125,13,.13);
+  border-color: var(--protect-col);
+  color: var(--protect-col);
+}
+@keyframes protect-pulse {
+  0%,100% { box-shadow: none; }
+  40%      { box-shadow: 0 0 0 3px rgba(232,125,13,.55); }
+}
+#protect-btn.pulse { animation: protect-pulse .35s ease 3; }
 
-  /* ── TOOLBAR ── */
-  .controls {
-    padding: 6px 8px; display: flex; flex-wrap: wrap; gap: 3px;
-    align-items: center; background: var(--toolbar); border-bottom: 1px solid var(--border);
-  }
-  .controls button {
-    padding: 3px 8px; font-size: 12px; cursor: pointer;
-    background: buttonface; color: buttontext;
-    border: 1px solid #aaa; border-radius: 2px; white-space: nowrap;
-  }
-  .dark .controls button { background: #3a3a3a; color: #ddd; border-color: #555; }
-  .controls button:hover { filter: brightness(0.93); }
-  .controls button.active { background: #cce5ff; border-color: #66b2ff; color: #003; }
-  .dark .controls button.active { background: #1a3a5c; border-color: #4499dd; color: #aad4ff; }
+@keyframes paste-glow {
+  0%,100% { box-shadow: none; border-color: transparent; }
+  50%      { box-shadow: 0 0 7px 2px rgba(50,200,100,.45); border-color: rgba(50,200,100,.6); }
+}
+#paste-btn.glow { animation: paste-glow 2s ease-in-out infinite; }
 
-  .controls input {
-    padding: 3px 7px; font-size: 12px;
-    font-family: 'JetBrains Mono', monospace;
-    border: 1px solid #aaa; border-radius: 2px;
-    width: 130px; background: var(--surface); color: var(--text);
-  }
-  .dark .controls input { border-color: #555; }
-  .controls input:focus { outline: 1px solid var(--accent); }
+#copy-sel-btn { transition: opacity .15s; }
+#copy-sel-btn:disabled { opacity: 0.28; cursor: not-allowed; pointer-events: none; }
 
-  .sep { width: 1px; height: 18px; background: #ccc; margin: 0 2px; flex-shrink: 0; }
-  .dark .sep { background: #555; }
-  #status { font-size: 11px; color: var(--accent); margin-left: 4px; min-width: 80px; }
+#clear-confirm {
+  display: none; align-items: center; gap: 6px;
+  padding: 3px 10px; flex-shrink: 0;
+  background: rgba(232,125,13,.10);
+  border-bottom: 1px solid var(--protect-col);
+  font-size: 12px; color: var(--text);
+}
+#clear-confirm.show { display: flex; }
+#clear-confirm span { flex: 1; font-size: 11.5px; }
+#clear-confirm button {
+  padding: 2px 10px; font-size: 11.5px; border-radius: 4px; cursor: pointer;
+  font-family: 'Inter', sans-serif; font-weight: 500; border: 1px solid;
+}
+#clear-confirm .cc-do   { background: var(--protect-col); color:#fff; border-color: var(--protect-col); }
+#clear-confirm .cc-keep { background: transparent; color: var(--text); border-color: var(--border); }
+#clear-confirm .cc-do:hover   { filter: brightness(.9); }
+#clear-confirm .cc-keep:hover { background: var(--btn-hover); }
 
-  /* ── FIND / REPLACE BAR ── */
-  #findbar {
-    display: none; padding: 6px 10px; gap: 6px;
-    align-items: center; flex-wrap: wrap;
-    background: var(--findbar); border-bottom: 1px solid var(--border); font-size: 12px;
-  }
-  #findbar.visible { display: flex; }
-  #findbar label { color: var(--muted); font-size: 11px; white-space: nowrap; }
-  #findbar input {
-    padding: 3px 7px; font-size: 12px;
-    font-family: 'JetBrains Mono', monospace;
-    border: 1px solid #aaa; border-radius: 2px;
-    width: 160px; background: var(--surface); color: var(--text);
-  }
-  .dark #findbar input { border-color: #555; }
-  #findbar input:focus { outline: 1px solid var(--accent); }
-  #findbar button {
-    padding: 3px 8px; font-size: 12px; cursor: pointer;
-    border: 1px solid #aaa; border-radius: 2px;
-    background: buttonface; color: buttontext; white-space: nowrap;
-  }
-  .dark #findbar button { background: #3a3a3a; color: #ddd; border-color: #555; }
-  #findbar button:hover { filter: brightness(0.93); }
-  #findbar .close-btn { margin-left: auto; font-size: 14px; line-height: 1; padding: 2px 7px; }
-  #findbar .match-info { font-size: 11px; color: var(--muted); }
-  #replaceRow { display: none; align-items: center; gap: 6px; flex-wrap: wrap; }
-  #replaceRow.visible { display: flex; }
+#syntax-btn.active {
+  background: rgba(140,100,200,.13);
+  border-color: var(--syntax-col);
+  color: var(--syntax-col);
+}
 
-  /* ── EDITOR ── */
-  #container { display: flex; height: 62vh; background: var(--surface); overflow: hidden; }
-  #linenumbers {
-    user-select: none; background: var(--lnum-bg); color: var(--lnum-col);
-    padding: 10px 8px 10px 10px; text-align: right; border-right: 1px solid #ccc;
-    font-size: 14px; line-height: 1.6em; overflow: hidden; white-space: pre;
-    min-width: 3.2em; flex-shrink: 0; font-family: 'JetBrains Mono', monospace;
-  }
-  .dark #linenumbers { border-right-color: #333; }
-  #text {
-    border: none; resize: none; outline: none;
-    padding: 10px 14px; width: 100%;
-    font-size: 14px; font-family: 'JetBrains Mono', Consolas, monospace;
-    line-height: 1.6em; white-space: pre;
-    overflow-y: scroll; overflow-x: auto;
-    background: var(--surface); color: var(--text);
-    caret-color: var(--accent); tab-size: 2; -moz-tab-size: 2;
-  }
-  #text.wrap { white-space: pre-wrap; word-break: break-word; overflow-x: hidden; }
+.fname-input {
+  padding: 4px 8px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11.5px;
+  background: var(--surface);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  width: 140px;
+  outline: none;
+  transition: border-color .15s;
+}
+.fname-input:focus { border-color: var(--accent); }
 
-  /* ── FOOTER ── */
-  #footer {
-    padding: 4px 12px; font-size: 11px;
-    font-family: 'JetBrains Mono', monospace;
-    display: flex; justify-content: space-between; align-items: center;
-    background: var(--footer-bg); color: var(--muted); border-top: 1px solid var(--border);
-  }
-  #footer b { color: var(--accent); }
+#syntax-lang-select {
+  display: none;
+  font-size: 11px;
+  font-family: 'Inter', sans-serif;
+  padding: 4px 6px;
+  background: var(--surface);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  cursor: pointer;
+  outline: none;
+}
+#syntax-lang-select.show { display: inline-block; }
+#syntax-lang-select:focus { border-color: var(--accent); }
 
-  /* RTL support for Arabic */
-  body.rtl #page-header { flex-direction: row-reverse; }
-  body.rtl #langWrap { margin-left: 0; margin-right: auto; }
-  body.rtl .controls { flex-direction: row-reverse; }
-  body.rtl #findbar { flex-direction: row-reverse; }
-  body.rtl #findbar .close-btn { margin-left: 0; margin-right: auto; }
-  body.rtl #text { direction: rtl; text-align: right; }
-  body.rtl #footer { flex-direction: row-reverse; }
+.tb-sep {
+  width: 1px;
+  height: 18px;
+  background: var(--border);
+  margin: 0 3px;
+  flex-shrink: 0;
+}
+
+/* ── FIND BAR ────────────────────────────────────────────── */
+#findbar {
+  display: none;
+  padding: 4px 8px;
+  gap: 5px;
+  align-items: center;
+  flex-wrap: wrap;
+  background: var(--findbar);
+  border-bottom: 1px solid var(--toolbar-b);
+  flex-shrink: 0;
+  font-size: 12px;
+}
+#findbar.visible { display: flex; }
+#findbar label { color: var(--text2); font-size: 11px; white-space: nowrap; }
+#findbar input {
+  padding: 3px 8px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  background: var(--surface);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  width: 160px;
+  outline: none;
+  transition: border-color .15s;
+}
+#findbar input:focus { border-color: var(--accent); }
+#findbar button {
+  padding: 3px 8px;
+  font-size: 11.5px;
+  font-family: 'Inter', sans-serif;
+  background: var(--surface);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background .1s;
+}
+#findbar button:hover { background: var(--btn-hover); }
+.match-info { font-size: 11px; color: var(--text2); min-width: 80px; }
+#findbar .close-btn { margin-left: auto; }
+#replace-row { display: none; align-items: center; gap: 5px; flex-wrap: wrap; }
+#replace-row.visible { display: flex; }
+
+/* ── EDITOR AREA ─────────────────────────────────────────── */
+#editor-wrap {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+  background: var(--editor);
+  min-height: 0;
+  position: relative;
+}
+
+#linenums {
+  user-select: none;
+  background: var(--lnum-bg);
+  color: var(--lnum-text);
+  padding: 10px 10px 10px 12px;
+  text-align: right;
+  border-right: 1px solid var(--border);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 14px;
+  line-height: 1.6em;
+  overflow: hidden;
+  white-space: pre;
+  min-width: 3.2em;
+  flex-shrink: 0;
+}
+
+#text {
+  flex: 1;
+  border: none;
+  resize: none;
+  outline: none;
+  padding: 10px 14px;
+  font-family: 'JetBrains Mono', Consolas, monospace;
+  font-size: 14px;
+  line-height: 1.6em;
+  white-space: pre;
+  overflow-y: scroll;
+  overflow-x: auto;
+  background: var(--editor);
+  color: var(--text);
+  caret-color: var(--accent);
+  tab-size: 2;
+  -moz-tab-size: 2;
+  min-width: 0;
+  transition: background .15s, color .15s;
+}
+#text.wrap-mode { white-space: pre-wrap; word-break: break-word; overflow-x: hidden; }
+#text:read-only { cursor: default; background: var(--editor); }
+
+/* Syntax highlight view */
+#hl-view {
+  display: none;
+  flex: 1;
+  padding: 10px 14px;
+  font-family: 'JetBrains Mono', Consolas, monospace;
+  font-size: 14px;
+  line-height: 1.6em;
+  white-space: pre;
+  overflow-y: scroll;
+  overflow-x: auto;
+  background: var(--editor);
+  color: var(--text);
+  tab-size: 2;
+  margin: 0;
+  border: none;
+  min-width: 0;
+  cursor: text;
+}
+#hl-view.show { display: block; }
+#hl-view.wrap-mode { white-space: pre-wrap; word-break: break-word; overflow-x: hidden; }
+
+/* ── STATUS BAR ──────────────────────────────────────────── */
+#statusbar {
+  height: 22px;
+  display: flex;
+  align-items: center;
+  padding: 0 10px;
+  background: var(--sb-bg);
+  color: var(--sb-text);
+  font-size: 11px;
+  font-family: 'Inter', sans-serif;
+  flex-shrink: 0;
+  gap: 0;
+  overflow: hidden;
+  white-space: nowrap;
+}
+#sb-left { flex: 1; overflow: hidden; text-overflow: ellipsis; }
+#sb-msg {
+  flex-shrink: 0;
+  opacity: 0;
+  transition: opacity .2s;
+  font-weight: 600;
+  padding-left: 10px;
+}
+#sb-msg.show { opacity: 1; }
+
+/* ── SYNTAX TOKEN COLORS ─────────────────────────────────── */
+/* Light */
+.t-cm { color: #008000; font-style: italic; }
+.t-st { color: #a31515; }
+.t-kw { color: #0000cc; font-weight: 600; }
+.t-bi { color: #267f99; }
+.t-nm { color: #098658; }
+.t-fn { color: #795e26; }
+.t-tg { color: #800000; }
+.t-at { color: #e50000; }
+.t-pr { color: #0070c1; }
+.t-sl { color: #800000; }
+/* Dark */
+.dark .t-cm { color: #6a9955; }
+.dark .t-st { color: #ce9178; }
+.dark .t-kw { color: #569cd6; }
+.dark .t-bi { color: #4ec9b0; }
+.dark .t-nm { color: #b5cea8; }
+.dark .t-fn { color: #dcdcaa; }
+.dark .t-tg { color: #4ec9b0; }
+.dark .t-at { color: #9cdcfe; }
+.dark .t-pr { color: #9cdcfe; }
+.dark .t-sl { color: #d7ba7d; }
+
+/* ── RTL ─────────────────────────────────────────────────── */
+body.rtl #app-header  { flex-direction: row-reverse; }
+body.rtl #lang-wrap   { margin-left: 0; margin-right: auto; }
+body.rtl #toolbar     { flex-direction: row-reverse; }
+body.rtl #findbar     { flex-direction: row-reverse; }
+body.rtl #findbar .close-btn { margin-left: 0; margin-right: auto; }
+body.rtl #text        { direction: rtl; text-align: right; }
+body.rtl #statusbar   { flex-direction: row-reverse; }
+
+/* Mobile hint bar hidden via media query */
+@media (hover: none), (max-width: 600px) { #toolbar .tb-hint { display: none; } }
 </style>
 </head>
 <body>
 
-<div id="page-header">
-  <span class="monitor-icon">
-    <svg viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+<!-- Web header (hidden in Electron via .is-electron class) -->
+<div id="app-header">
+  <div class="logo">
+    <svg viewBox="0 0 36 36" fill="none">
       <rect x="2" y="3" width="32" height="22" rx="2" fill="#444" stroke="#f5a623" stroke-width="1.5"/>
       <rect x="4" y="5" width="28" height="18" rx="1" fill="#1a2a1a"/>
       <line x1="7" y1="10" x2="24" y2="10" stroke="#6aff6a" stroke-width="1.2" stroke-linecap="round"/>
@@ -221,13 +442,12 @@
       <line x1="7" y1="17" x2="19" y2="17" stroke="#6aff6a" stroke-width="1.2" stroke-linecap="round"/>
       <rect x="19.5" y="15.5" width="1.2" height="3" fill="#f5a623"/>
       <rect x="15" y="25" width="6" height="4" fill="#555"/>
-      <rect x="11" y="29" width="14" height="2.5" rx="1" fill="#555" stroke="#f5a623" stroke-width="0.8"/>
+      <rect x="11" y="29" width="14" height="2.5" rx="1" fill="#555"/>
     </svg>
-  </span>
-  <h1>Quick <em>Web Notepad</em></h1>
-  <div id="langWrap">
-    <span class="tagline" data-i18n="tagline">Plain text editor</span>
-    <select id="uiLang" onchange="applyLang(this.value)" title="UI Language">
+    Quick <em>Web Notepad</em>
+  </div>
+  <div id="lang-wrap">
+    <select id="ui-lang" onchange="applyLang(this.value)" title="UI Language">
       <option value="en">🇬🇧 English</option>
       <option value="zh">🇨🇳 中文</option>
       <option value="es">🇪🇸 Español</option>
@@ -248,492 +468,746 @@
   </div>
 </div>
 
-<div id="wrapper">
-  <div id="app">
+<!-- Main app -->
+<div id="app">
 
-    <div id="hint">
-      <strong data-i18n="shortcutsLabel">Keyboard Shortcuts:</strong>
-      <span data-i18n="shortcutsText">Ctrl+Enter: Select All &amp; Copy | Esc: Clear | Ctrl+F: Find | Ctrl+H: Find &amp; Replace | Ctrl+O: Open File</span>
-    </div>
-
-    <div class="controls">
-      <button onclick="filePrompt()"    data-i18n="btnFile">📂 File</button>
-      <button onclick="pasteText()"     data-i18n="btnPaste">📋 Paste</button>
-      <button onclick="selectAndCopy()" data-i18n="btnCopy">📄 Select+Copy</button>
-      <button onclick="clearText()"     data-i18n="btnClear">🧹 Clear</button>
-      <div class="sep"></div>
-      <button id="wrapBtn"  onclick="toggleWrap()"        data-i18n="btnWrap">📏 Wrap</button>
-      <button id="linesBtn" onclick="toggleLineNumbers()" data-i18n="btnLines">🔢 Lines</button>
-      <div class="sep"></div>
-      <button onclick="openFind()"    data-i18n="btnFind">🔎 Find</button>
-      <button onclick="openReplace()" data-i18n="btnReplace">🔁 Replace</button>
-      <div class="sep"></div>
-      <input id="filename" value="Untitled.txt" onfocus="selectFilename(this)" title="Filename" />
-      <button onclick="saveFile()" data-i18n="btnDownload">💾 Download</button>
-      <div class="sep"></div>
-      <button onclick="toggleDark()" data-i18n="btnDark">🌙 Dark</button>
-      <button onclick="zoomOut()">➖</button>
-      <button onclick="zoomReset()">🔄</button>
-      <button onclick="zoomIn()">➕</button>
-      <span id="status"></span>
-    </div>
-
-    <div id="findbar">
-      <label data-i18n="findLabel">Find:</label>
-      <input id="findInput" data-i18n-ph="findPh" placeholder="Search…" oninput="onFindInput()" onkeydown="findBarKey(event)" />
-      <button onclick="findNext()" data-i18n="btnNext">▼ Next</button>
-      <button onclick="findPrev()" data-i18n="btnPrev">▲ Prev</button>
-      <span class="match-info" id="matchInfo"></span>
-      <div id="replaceRow">
-        <label data-i18n="replaceLabel">Replace:</label>
-        <input id="replaceInput" data-i18n-ph="replacePh" placeholder="Replace with…" onkeydown="replaceBarKey(event)" />
-        <button onclick="doReplace()"    data-i18n="btnReplaceOne">Replace</button>
-        <button onclick="doReplaceAll()" data-i18n="btnReplaceAll">All</button>
-      </div>
-      <button class="close-btn" onclick="closeFindBar()" title="Esc">✕</button>
-    </div>
-
-    <div id="container">
-      <div id="linenumbers" style="display:none"></div>
-      <textarea id="text" autofocus spellcheck="false"></textarea>
-    </div>
-
-    <div id="footer">
-      <span><span data-i18n="words">Words</span>: <b id="wordCount">0</b> &nbsp;|&nbsp; <span data-i18n="chars">Chars</span>: <b id="charCount">0</b></span>
-      <span id="cursorPos">Ln 1, Col 1</span>
-    </div>
-
+  <!-- Toolbar -->
+  <div id="toolbar">
+    <button onclick="filePrompt()"     data-i18n="btnFile"    title="Open file (Ctrl+O)">📂 File</button>
+    <button onclick="filePromptNew()"  data-i18n="btnFileNew" title="Open in new window (Ctrl+Shift+O)">⧉ File</button>
+    <button id="paste-btn" onclick="pasteText()"     data-i18n="btnPaste"   title="Paste (Ctrl+V)">📋 Paste</button>
+    <button onclick="selectAndCopy()"  data-i18n="btnCopy"    title="Select all & copy (Ctrl+Enter)">📄 Copy All</button>
+    <button id="copy-sel-btn" onclick="copySelection()" data-i18n="btnCopySel" title="Copy selection" disabled>📋 Copy Sel</button>
+    <button onclick="clearText()"      data-i18n="btnClear"   title="Clear (Esc)">🗑 Clear</button>
+    <div class="tb-sep"></div>
+    <button id="wrap-btn"    onclick="toggleWrap()"         data-i18n="btnWrap"    title="Toggle word wrap">↵ Wrap</button>
+    <button id="lines-btn"   onclick="toggleLineNumbers()"  data-i18n="btnLines"   title="Toggle line numbers">¶ Lines</button>
+    <div class="tb-sep"></div>
+    <button onclick="toggleFind()"  data-i18n="btnFind"    title="Find (Ctrl+F)">🔎 Find</button>
+    <button onclick="openReplace()" data-i18n="btnReplace" title="Find & Replace (Ctrl+H)">⇄ Replace</button>
+    <div class="tb-sep"></div>
+    <input id="filename" class="fname-input" value="Untitled.txt" onfocus="selectFilename(this)" title="Filename for save" />
+    <button id="save-btn"  onclick="triggerSave()"   data-i18n="btnSave"   title="Save (Ctrl+S)">💾 Save</button>
+    <button                onclick="triggerSaveAs()" data-i18n="btnSaveAs" title="Save As (Ctrl+Shift+S)">⬆ Save As</button>
+    <div class="tb-sep"></div>
+    <button id="protect-btn" onclick="toggleProtect()" data-i18n="btnProtect" title="Protect / lock from editing">🔓 Protect</button>
+    <button id="syntax-btn"  onclick="toggleSyntax()"  data-i18n="btnSyntax"  title="Syntax highlighting (enables Read Only)">✨ Syntax</button>
+    <select id="syntax-lang-select" onchange="onSyntaxLangChange()" title="Syntax language">
+      <option value="auto">Auto</option>
+      <option value="js">JavaScript</option>
+      <option value="ts">TypeScript</option>
+      <option value="py">Python</option>
+      <option value="html">HTML</option>
+      <option value="css">CSS</option>
+      <option value="json">JSON</option>
+      <option value="xml">XML</option>
+      <option value="sql">SQL</option>
+      <option value="sh">Shell</option>
+      <option value="c">C/C++</option>
+      <option value="java">Java</option>
+      <option value="rb">Ruby</option>
+      <option value="md">Markdown</option>
+    </select>
+    <div class="tb-sep"></div>
+    <button onclick="toggleDark()" data-i18n="btnDark" title="Toggle dark mode">🌙 Dark</button>
+    <button onclick="zoomOut()"   title="Zoom out">−</button>
+    <button onclick="zoomReset()" title="Reset zoom">↺</button>
+    <button onclick="zoomIn()"    title="Zoom in">+</button>
   </div>
-</div>
+
+  <!-- Find/Replace bar -->
+  <div id="findbar">
+    <label data-i18n="findLabel">Find:</label>
+    <input id="find-input" data-i18n-ph="findPh" placeholder="Search…" oninput="onFindInput()" onkeydown="findBarKey(event)" />
+    <button onclick="findNext()" data-i18n="btnNext">▼ Next</button>
+    <button onclick="findPrev()" data-i18n="btnPrev">▲ Prev</button>
+    <span class="match-info" id="match-info"></span>
+    <div id="replace-row">
+      <label data-i18n="replaceLabel">Replace:</label>
+      <input id="replace-input" data-i18n-ph="replacePh" placeholder="Replace with…" onkeydown="replaceBarKey(event)" />
+      <button onclick="doReplace()"    data-i18n="btnReplaceOne">Replace</button>
+      <button onclick="doReplaceAll()" data-i18n="btnReplaceAll">All</button>
+    </div>
+    <button class="close-btn" onclick="closeFindBar()" title="Close (Esc)">✕</button>
+  </div>
+
+  <!-- Clear confirm prompt (edition 4) -->
+  <div id="clear-confirm">
+    <span data-i18n="clearConfirmMsg">Unprotect and clear?</span>
+    <button class="cc-do"   onclick="forceUnprotectAndClear()" data-i18n="clearConfirmDo">Unprotect &amp; Clear (Esc)</button>
+    <button class="cc-keep" onclick="dismissClearConfirm()"    data-i18n="clearConfirmKeep">Keep</button>
+  </div>
+
+  <!-- Editor -->
+  <div id="editor-wrap">
+    <div id="linenums" style="display:none"></div>
+    <pre id="hl-view"></pre>
+    <textarea id="text" spellcheck="false" autofocus></textarea>
+  </div>
+
+  <!-- Status bar -->
+  <div id="statusbar">
+    <span id="sb-left">Ln 1/1, Col 1 │ 0 words │ 0 chars │ 100%</span>
+    <span id="sb-msg"></span>
+  </div>
+
+</div><!-- #app -->
 
 <script>
-// ─── TRANSLATIONS ─────────────────────────────────────────────────────────────
+// ═══════════════════════════════════════════════════════════════
+// TRANSLATIONS
+// ═══════════════════════════════════════════════════════════════
 const LANGS = {
   en: {
-    tagline:"Plain text editor",
-    shortcutsLabel:"Keyboard Shortcuts:",
-    shortcutsText:"Ctrl+Enter: Select All &amp; Copy | Esc: Clear | Ctrl+F: Find | Ctrl+H: Find &amp; Replace | Ctrl+O: Open File",
-    btnFile:"📂 File", btnPaste:"📋 Paste", btnCopy:"📄 Select+Copy", btnClear:"🧹 Clear",
-    btnWrap:"📏 Wrap", btnLines:"🔢 Lines", btnFind:"🔎 Find", btnReplace:"🔁 Replace",
-    btnDownload:"💾 Download", btnDark:"🌙 Dark", btnLight:"☀️ Light",
+    btnFile:"📂 File", btnFileNew:"⧉ File", btnPaste:"📋 Paste", btnCopy:"📄 Copy All", btnClear:"🗑 Clear",
+    btnWrap:"↵ Wrap", btnLines:"¶ Lines", btnFind:"🔎 Find", btnReplace:"⇄ Replace",
+    btnSave:"💾 Save", btnSaveAs:"⬆ Save As", btnProtect:"🔓 Protect", btnSyntax:"✨ Syntax",
+    btnDark:"🌙 Dark", btnLight:"☀️ Light",
     findLabel:"Find:", findPh:"Search…", replaceLabel:"Replace:", replacePh:"Replace with…",
     btnNext:"▼ Next", btnPrev:"▲ Prev", btnReplaceOne:"Replace", btnReplaceAll:"All",
-    words:"Words", chars:"Chars",
-    copied:"Copied!", replaced:"Replaced", allReplaced:"All replaced",
+    words:"words", chars:"chars", selected:"selected",
+    readOnly:"👁 Read Only", protectedLabel:"🔒 Protected",
+    btnCopySel:"📋 Copy Sel",
+    clearConfirmMsg:"Unprotect and clear?",
+    clearConfirmDo:"Unprotect & Clear (Esc)",
+    clearConfirmKeep:"Keep",
+    protectFirst:"Disable protection first",
+    escUnlock3:"Triple-ESC to unprotect & clear — 2 more",
+    escUnlock2:"2nd ESC — 1 more to unprotect & clear",
+    escUnlock1:"ESC again — unprotecting and clearing",
+    copied:"✔ Copied", saved:"✔ Saved", allReplaced:"✔ Replaced all", replaced:"✔ Replaced",
     noMatch:"No matches", disableWrapFirst:"Disable Wrap first",
-    linesHidden:"Lines hidden (Wrap mode)", copyFailed:"Copy failed",
-    longPress:"Use long-press to paste",
-    matches:"matches", match:"match",
+    linesHidden:"Lines hidden (Wrap on)", copyFailed:"Copy failed", longPress:"Long-press to paste",
+    matches:"matches", match:"match", binary:"Binary file — display may be incomplete",
   },
   es: {
-    tagline:"Editor de texto plano",
-    shortcutsLabel:"Atajos de teclado:",
-    shortcutsText:"Ctrl+Enter: Seleccionar y copiar | Esc: Borrar | Ctrl+F: Buscar | Ctrl+H: Buscar y reemplazar | Ctrl+O: Abrir archivo",
-    btnFile:"📂 Archivo", btnPaste:"📋 Pegar", btnCopy:"📄 Selec+Copiar", btnClear:"🧹 Borrar",
-    btnWrap:"📏 Ajuste", btnLines:"🔢 Líneas", btnFind:"🔎 Buscar", btnReplace:"🔁 Reemplazar",
-    btnDownload:"💾 Descargar", btnDark:"🌙 Oscuro", btnLight:"☀️ Claro",
+    btnFile:"📂 Archivo", btnFileNew:"⧉ Archivo", btnPaste:"📋 Pegar", btnCopy:"📄 Copiar Todo", btnClear:"🗑 Borrar",
+    btnWrap:"↵ Ajuste", btnLines:"¶ Líneas", btnFind:"🔎 Buscar", btnReplace:"⇄ Reemplazar",
+    btnSave:"💾 Guardar", btnSaveAs:"⬆ Guardar como", btnProtect:"🔓 Proteger", btnSyntax:"✨ Sintaxis",
+    btnDark:"🌙 Oscuro", btnLight:"☀️ Claro",
     findLabel:"Buscar:", findPh:"Buscar…", replaceLabel:"Reemplazar:", replacePh:"Reemplazar con…",
     btnNext:"▼ Siguiente", btnPrev:"▲ Anterior", btnReplaceOne:"Reemplazar", btnReplaceAll:"Todo",
-    words:"Palabras", chars:"Caracteres",
-    copied:"¡Copiado!", replaced:"Reemplazado", allReplaced:"Todo reemplazado",
+    words:"palabras", chars:"caracteres", selected:"seleccionado",
+    readOnly:"👁 Solo lectura", protectedLabel:"🔒 Protegido",
+    copied:"✔ Copiado", saved:"✔ Guardado", allReplaced:"✔ Todo reemplazado", replaced:"✔ Reemplazado",
     noMatch:"Sin coincidencias", disableWrapFirst:"Desactiva Ajuste primero",
-    linesHidden:"Líneas ocultas (modo Ajuste)", copyFailed:"Error al copiar",
-    longPress:"Mantén presionado para pegar",
-    matches:"coincidencias", match:"coincidencia",
+    linesHidden:"Líneas ocultas", copyFailed:"Error al copiar", longPress:"Mantén para pegar",
+    matches:"coincidencias", match:"coincidencia", binary:"Archivo binario — vista parcial",
   },
   zh: {
-    tagline:"纯文本编辑器",
-    shortcutsLabel:"键盘快捷键：",
-    shortcutsText:"Ctrl+Enter: 全选并复制 | Esc: 清空 | Ctrl+F: 查找 | Ctrl+H: 查找替换 | Ctrl+O: 打开文件",
-    btnFile:"📂 文件", btnPaste:"📋 粘贴", btnCopy:"📄 全选+复制", btnClear:"🧹 清空",
-    btnWrap:"📏 换行", btnLines:"🔢 行号", btnFind:"🔎 查找", btnReplace:"🔁 替换",
-    btnDownload:"💾 下载", btnDark:"🌙 深色", btnLight:"☀️ 浅色",
+    btnFile:"📂 文件", btnFileNew:"⧉ 文件", btnPaste:"📋 粘贴", btnCopy:"📄 复制全部", btnClear:"🗑 清空",
+    btnWrap:"↵ 换行", btnLines:"¶ 行号", btnFind:"🔎 查找", btnReplace:"⇄ 替换",
+    btnSave:"💾 保存", btnSaveAs:"⬆ 另存为", btnProtect:"🔓 保护", btnSyntax:"✨ 语法",
+    btnDark:"🌙 深色", btnLight:"☀️ 浅色",
     findLabel:"查找：", findPh:"搜索…", replaceLabel:"替换：", replacePh:"替换为…",
     btnNext:"▼ 下一个", btnPrev:"▲ 上一个", btnReplaceOne:"替换", btnReplaceAll:"全部",
-    words:"字词", chars:"字符",
-    copied:"已复制！", replaced:"已替换", allReplaced:"全部替换完成",
+    words:"字词", chars:"字符", selected:"已选",
+    readOnly:"👁 只读", protectedLabel:"🔒 已保护",
+    copied:"✔ 已复制", saved:"✔ 已保存", allReplaced:"✔ 全部替换", replaced:"✔ 已替换",
     noMatch:"无匹配", disableWrapFirst:"请先关闭换行",
-    linesHidden:"行号已隐藏（换行模式）", copyFailed:"复制失败",
-    longPress:"长按粘贴",
-    matches:"个匹配", match:"个匹配",
+    linesHidden:"行号已隐藏", copyFailed:"复制失败", longPress:"长按粘贴",
+    matches:"个匹配", match:"个匹配", binary:"二进制文件 — 显示可能不完整",
   },
   ja: {
-    tagline:"テキストエディター",
-    shortcutsLabel:"キーボードショートカット：",
-    shortcutsText:"Ctrl+Enter: 全選択してコピー | Esc: クリア | Ctrl+F: 検索 | Ctrl+H: 置換 | Ctrl+O: ファイルを開く",
-    btnFile:"📂 ファイル", btnPaste:"📋 貼付け", btnCopy:"📄 全選択+コピー", btnClear:"🧹 クリア",
-    btnWrap:"📏 折返し", btnLines:"🔢 行番号", btnFind:"🔎 検索", btnReplace:"🔁 置換",
-    btnDownload:"💾 ダウンロード", btnDark:"🌙 ダーク", btnLight:"☀️ ライト",
+    btnFile:"📂 ファイル", btnFileNew:"⧉ ファイル", btnPaste:"📋 貼付け", btnCopy:"📄 全コピー", btnClear:"🗑 クリア",
+    btnWrap:"↵ 折返し", btnLines:"¶ 行番号", btnFind:"🔎 検索", btnReplace:"⇄ 置換",
+    btnSave:"💾 保存", btnSaveAs:"⬆ 名前を付けて保存", btnProtect:"🔓 保護", btnSyntax:"✨ 構文",
+    btnDark:"🌙 ダーク", btnLight:"☀️ ライト",
     findLabel:"検索：", findPh:"検索…", replaceLabel:"置換：", replacePh:"置換後…",
     btnNext:"▼ 次へ", btnPrev:"▲ 前へ", btnReplaceOne:"置換", btnReplaceAll:"すべて",
-    words:"単語数", chars:"文字数",
-    copied:"コピーしました！", replaced:"置換しました", allReplaced:"すべて置換しました",
-    noMatch:"一致なし", disableWrapFirst:"折返しをオフにしてください",
-    linesHidden:"行番号非表示（折返しモード）", copyFailed:"コピー失敗",
-    longPress:"長押しで貼り付け",
-    matches:"件一致", match:"件一致",
+    words:"単語", chars:"文字", selected:"選択中",
+    readOnly:"👁 読み取り専用", protectedLabel:"🔒 保護済み",
+    copied:"✔ コピー完了", saved:"✔ 保存完了", allReplaced:"✔ すべて置換", replaced:"✔ 置換完了",
+    noMatch:"一致なし", disableWrapFirst:"折返しをオフに",
+    linesHidden:"行番号非表示", copyFailed:"コピー失敗", longPress:"長押しで貼り付け",
+    matches:"件一致", match:"件一致", binary:"バイナリファイル — 表示が不完全な場合あり",
   },
   it: {
-    tagline:"Editor di testo semplice",
-    shortcutsLabel:"Scorciatoie da tastiera:",
-    shortcutsText:"Ctrl+Enter: Seleziona tutto e copia | Esc: Cancella | Ctrl+F: Trova | Ctrl+H: Trova e sostituisci | Ctrl+O: Apri file",
-    btnFile:"📂 File", btnPaste:"📋 Incolla", btnCopy:"📄 Seleziona+Copia", btnClear:"🧹 Cancella",
-    btnWrap:"📏 A capo", btnLines:"🔢 Righe", btnFind:"🔎 Trova", btnReplace:"🔁 Sostituisci",
-    btnDownload:"💾 Scarica", btnDark:"🌙 Scuro", btnLight:"☀️ Chiaro",
+    btnFile:"📂 File", btnFileNew:"⧉ File", btnPaste:"📋 Incolla", btnCopy:"📄 Copia tutto", btnClear:"🗑 Cancella",
+    btnWrap:"↵ A capo", btnLines:"¶ Righe", btnFind:"🔎 Trova", btnReplace:"⇄ Sostituisci",
+    btnSave:"💾 Salva", btnSaveAs:"⬆ Salva come", btnProtect:"🔓 Proteggi", btnSyntax:"✨ Sintassi",
+    btnDark:"🌙 Scuro", btnLight:"☀️ Chiaro",
     findLabel:"Trova:", findPh:"Cerca…", replaceLabel:"Sostituisci:", replacePh:"Sostituisci con…",
     btnNext:"▼ Avanti", btnPrev:"▲ Indietro", btnReplaceOne:"Sostituisci", btnReplaceAll:"Tutto",
-    words:"Parole", chars:"Caratteri",
-    copied:"Copiato!", replaced:"Sostituito", allReplaced:"Tutto sostituito",
+    words:"parole", chars:"caratteri", selected:"selezionato",
+    readOnly:"👁 Sola lettura", protectedLabel:"🔒 Protetto",
+    copied:"✔ Copiato", saved:"✔ Salvato", allReplaced:"✔ Tutto sostituito", replaced:"✔ Sostituito",
     noMatch:"Nessuna corrispondenza", disableWrapFirst:"Disattiva prima A capo",
-    linesHidden:"Righe nascoste (modalità A capo)", copyFailed:"Copia fallita",
-    longPress:"Tieni premuto per incollare",
-    matches:"corrispondenze", match:"corrispondenza",
+    linesHidden:"Righe nascoste", copyFailed:"Copia fallita", longPress:"Tieni premuto per incollare",
+    matches:"corrispondenze", match:"corrispondenza", binary:"File binario — visualizzazione parziale",
   },
   ar: {
-    tagline:"محرر نص عادي",
-    shortcutsLabel:"اختصارات لوحة المفاتيح:",
-    shortcutsText:"Ctrl+Enter: تحديد الكل ونسخ | Esc: مسح | Ctrl+F: بحث | Ctrl+H: بحث واستبدال | Ctrl+O: فتح ملف",
-    btnFile:"📂 ملف", btnPaste:"📋 لصق", btnCopy:"📄 تحديد+نسخ", btnClear:"🧹 مسح",
-    btnWrap:"📏 التفاف", btnLines:"🔢 أرقام", btnFind:"🔎 بحث", btnReplace:"🔁 استبدال",
-    btnDownload:"💾 تنزيل", btnDark:"🌙 داكن", btnLight:"☀️ فاتح",
+    btnFile:"📂 ملف", btnFileNew:"⧉ ملف", btnPaste:"📋 لصق", btnCopy:"📄 نسخ الكل", btnClear:"🗑 مسح",
+    btnWrap:"↵ التفاف", btnLines:"¶ أرقام", btnFind:"🔎 بحث", btnReplace:"⇄ استبدال",
+    btnSave:"💾 حفظ", btnSaveAs:"⬆ حفظ باسم", btnProtect:"🔓 حماية", btnSyntax:"✨ بناء الجملة",
+    btnDark:"🌙 داكن", btnLight:"☀️ فاتح",
     findLabel:"بحث:", findPh:"ابحث…", replaceLabel:"استبدال:", replacePh:"استبدل بـ…",
     btnNext:"▼ التالي", btnPrev:"▲ السابق", btnReplaceOne:"استبدال", btnReplaceAll:"الكل",
-    words:"كلمات", chars:"أحرف",
-    copied:"تم النسخ!", replaced:"تم الاستبدال", allReplaced:"تم استبدال الكل",
+    words:"كلمات", chars:"أحرف", selected:"محدد",
+    readOnly:"👁 للقراءة فقط", protectedLabel:"🔒 محمي",
+    copied:"✔ تم النسخ", saved:"✔ تم الحفظ", allReplaced:"✔ تم استبدال الكل", replaced:"✔ تم الاستبدال",
     noMatch:"لا توجد نتائج", disableWrapFirst:"أوقف الالتفاف أولاً",
-    linesHidden:"الأرقام مخفية (وضع الالتفاف)", copyFailed:"فشل النسخ",
-    longPress:"اضغط مطولاً للصق",
-    matches:"نتيجة", match:"نتيجة",
+    linesHidden:"الأرقام مخفية", copyFailed:"فشل النسخ", longPress:"اضغط مطولاً للصق",
+    matches:"نتيجة", match:"نتيجة", binary:"ملف ثنائي — العرض قد يكون ناقصاً",
     rtl: true,
   },
   de: {
-    tagline:"Nur-Text-Editor",
-    shortcutsLabel:"Tastenkürzel:",
-    shortcutsText:"Ctrl+Enter: Alles auswählen und kopieren | Esc: Leeren | Ctrl+F: Suchen | Ctrl+H: Suchen und ersetzen | Ctrl+O: Datei öffnen",
-    btnFile:"📂 Datei", btnPaste:"📋 Einfügen", btnCopy:"📄 Auswählen+Kopieren", btnClear:"🧹 Leeren",
-    btnWrap:"📏 Umbruch", btnLines:"🔢 Zeilen", btnFind:"🔎 Suchen", btnReplace:"🔁 Ersetzen",
-    btnDownload:"💾 Herunterladen", btnDark:"🌙 Dunkel", btnLight:"☀️ Hell",
+    btnFile:"📂 Datei", btnFileNew:"⧉ Datei", btnPaste:"📋 Einfügen", btnCopy:"📄 Alles kopieren", btnClear:"🗑 Leeren",
+    btnWrap:"↵ Umbruch", btnLines:"¶ Zeilen", btnFind:"🔎 Suchen", btnReplace:"⇄ Ersetzen",
+    btnSave:"💾 Speichern", btnSaveAs:"⬆ Speichern unter", btnProtect:"🔓 Schützen", btnSyntax:"✨ Syntax",
+    btnDark:"🌙 Dunkel", btnLight:"☀️ Hell",
     findLabel:"Suchen:", findPh:"Suche…", replaceLabel:"Ersetzen:", replacePh:"Ersetzen durch…",
     btnNext:"▼ Weiter", btnPrev:"▲ Zurück", btnReplaceOne:"Ersetzen", btnReplaceAll:"Alle",
-    words:"Wörter", chars:"Zeichen",
-    copied:"Kopiert!", replaced:"Ersetzt", allReplaced:"Alles ersetzt",
+    words:"Wörter", chars:"Zeichen", selected:"ausgewählt",
+    readOnly:"👁 Schreibgeschützt", protectedLabel:"🔒 Geschützt",
+    copied:"✔ Kopiert", saved:"✔ Gespeichert", allReplaced:"✔ Alles ersetzt", replaced:"✔ Ersetzt",
     noMatch:"Keine Treffer", disableWrapFirst:"Zuerst Umbruch deaktivieren",
-    linesHidden:"Zeilen ausgeblendet (Umbruchmodus)", copyFailed:"Kopieren fehlgeschlagen",
-    longPress:"Gedrückt halten zum Einfügen",
-    matches:"Treffer", match:"Treffer",
+    linesHidden:"Zeilen ausgeblendet", copyFailed:"Kopieren fehlgeschlagen", longPress:"Gedrückt halten",
+    matches:"Treffer", match:"Treffer", binary:"Binärdatei — Anzeige unvollständig",
   },
   nl: {
-    tagline:"Platte teksteditor",
-    shortcutsLabel:"Sneltoetsen:",
-    shortcutsText:"Ctrl+Enter: Alles selecteren en kopiëren | Esc: Wissen | Ctrl+F: Zoeken | Ctrl+H: Zoeken en vervangen | Ctrl+O: Bestand openen",
-    btnFile:"📂 Bestand", btnPaste:"📋 Plakken", btnCopy:"📄 Selecteer+Kopieer", btnClear:"🧹 Wissen",
-    btnWrap:"📏 Terugloop", btnLines:"🔢 Regels", btnFind:"🔎 Zoeken", btnReplace:"🔁 Vervangen",
-    btnDownload:"💾 Downloaden", btnDark:"🌙 Donker", btnLight:"☀️ Licht",
+    btnFile:"📂 Bestand", btnFileNew:"⧉ Bestand", btnPaste:"📋 Plakken", btnCopy:"📄 Alles kopiëren", btnClear:"🗑 Wissen",
+    btnWrap:"↵ Terugloop", btnLines:"¶ Regels", btnFind:"🔎 Zoeken", btnReplace:"⇄ Vervangen",
+    btnSave:"💾 Opslaan", btnSaveAs:"⬆ Opslaan als", btnProtect:"🔓 Beveiligen", btnSyntax:"✨ Syntaxis",
+    btnDark:"🌙 Donker", btnLight:"☀️ Licht",
     findLabel:"Zoeken:", findPh:"Zoek…", replaceLabel:"Vervangen:", replacePh:"Vervangen door…",
     btnNext:"▼ Volgende", btnPrev:"▲ Vorige", btnReplaceOne:"Vervangen", btnReplaceAll:"Alles",
-    words:"Woorden", chars:"Tekens",
-    copied:"Gekopieerd!", replaced:"Vervangen", allReplaced:"Alles vervangen",
+    words:"woorden", chars:"tekens", selected:"geselecteerd",
+    readOnly:"👁 Alleen-lezen", protectedLabel:"🔒 Beveiligd",
+    copied:"✔ Gekopieerd", saved:"✔ Opgeslagen", allReplaced:"✔ Alles vervangen", replaced:"✔ Vervangen",
     noMatch:"Geen overeenkomsten", disableWrapFirst:"Schakel Terugloop eerst uit",
-    linesHidden:"Regels verborgen (Terugloop-modus)", copyFailed:"Kopiëren mislukt",
-    longPress:"Houd ingedrukt om te plakken",
-    matches:"overeenkomsten", match:"overeenkomst",
+    linesHidden:"Regels verborgen", copyFailed:"Kopiëren mislukt", longPress:"Ingedrukt houden",
+    matches:"overeenkomsten", match:"overeenkomst", binary:"Binair bestand — weergave onvolledig",
   },
   hi: {
-    tagline:"सादा पाठ संपादक",
-    shortcutsLabel:"कीबोर्ड शॉर्टकट:",
-    shortcutsText:"Ctrl+Enter: सब चुनें और कॉपी करें | Esc: साफ़ करें | Ctrl+F: खोजें | Ctrl+H: खोजें और बदलें | Ctrl+O: फ़ाइल खोलें",
-    btnFile:"📂 फ़ाइल", btnPaste:"📋 चिपकाएँ", btnCopy:"📄 चुनें+कॉपी", btnClear:"🧹 साफ़ करें",
-    btnWrap:"📏 लपेटें", btnLines:"🔢 पंक्तियाँ", btnFind:"🔎 खोजें", btnReplace:"🔁 बदलें",
-    btnDownload:"💾 डाउनलोड", btnDark:"🌙 डार्क", btnLight:"☀️ लाइट",
+    btnFile:"📂 फ़ाइल", btnFileNew:"⧉ फ़ाइल", btnPaste:"📋 चिपकाएँ", btnCopy:"📄 सब कॉपी करें", btnClear:"🗑 साफ़ करें",
+    btnWrap:"↵ लपेटें", btnLines:"¶ पंक्तियाँ", btnFind:"🔎 खोजें", btnReplace:"⇄ बदलें",
+    btnSave:"💾 सहेजें", btnSaveAs:"⬆ इस रूप में सहेजें", btnProtect:"🔓 सुरक्षित करें", btnSyntax:"✨ सिंटैक्स",
+    btnDark:"🌙 डार्क", btnLight:"☀️ लाइट",
     findLabel:"खोजें:", findPh:"खोजें…", replaceLabel:"बदलें:", replacePh:"इससे बदलें…",
     btnNext:"▼ अगला", btnPrev:"▲ पिछला", btnReplaceOne:"बदलें", btnReplaceAll:"सभी",
-    words:"शब्द", chars:"अक्षर",
-    copied:"कॉपी हो गया!", replaced:"बदल गया", allReplaced:"सब बदल गया",
+    words:"शब्द", chars:"अक्षर", selected:"चुना गया",
+    readOnly:"👁 केवल-पढ़ें", protectedLabel:"🔒 सुरक्षित",
+    copied:"✔ कॉपी हो गया", saved:"✔ सहेज लिया", allReplaced:"✔ सब बदल गया", replaced:"✔ बदल गया",
     noMatch:"कोई मिलान नहीं", disableWrapFirst:"पहले लपेटें बंद करें",
-    linesHidden:"पंक्तियाँ छुपी हैं (लपेटें मोड)", copyFailed:"कॉपी विफल",
-    longPress:"चिपकाने के लिए लंबे दबाएँ",
-    matches:"मिलान", match:"मिलान",
+    linesHidden:"पंक्तियाँ छुपी हैं", copyFailed:"कॉपी विफल", longPress:"लंबे दबाएँ",
+    matches:"मिलान", match:"मिलान", binary:"बाइनरी फ़ाइल — प्रदर्शन अधूरा हो सकता है",
   },
   fr: {
-    tagline:"Éditeur de texte brut",
-    shortcutsLabel:"Raccourcis clavier :",
-    shortcutsText:"Ctrl+Entrée: Tout sélectionner et copier | Échap: Effacer | Ctrl+F: Rechercher | Ctrl+H: Rechercher et remplacer | Ctrl+O: Ouvrir un fichier",
-    btnFile:"📂 Fichier", btnPaste:"📋 Coller", btnCopy:"📄 Sélect+Copier", btnClear:"🧹 Effacer",
-    btnWrap:"📏 Retour ligne", btnLines:"🔢 Lignes", btnFind:"🔎 Chercher", btnReplace:"🔁 Remplacer",
-    btnDownload:"💾 Télécharger", btnDark:"🌙 Sombre", btnLight:"☀️ Clair",
+    btnFile:"📂 Fichier", btnFileNew:"⧉ Fichier", btnPaste:"📋 Coller", btnCopy:"📄 Tout copier", btnClear:"🗑 Effacer",
+    btnWrap:"↵ Retour ligne", btnLines:"¶ Lignes", btnFind:"🔎 Chercher", btnReplace:"⇄ Remplacer",
+    btnSave:"💾 Enregistrer", btnSaveAs:"⬆ Enregistrer sous", btnProtect:"🔓 Protéger", btnSyntax:"✨ Syntaxe",
+    btnDark:"🌙 Sombre", btnLight:"☀️ Clair",
     findLabel:"Chercher :", findPh:"Recherche…", replaceLabel:"Remplacer :", replacePh:"Remplacer par…",
     btnNext:"▼ Suivant", btnPrev:"▲ Précédent", btnReplaceOne:"Remplacer", btnReplaceAll:"Tout",
-    words:"Mots", chars:"Caractères",
-    copied:"Copié !", replaced:"Remplacé", allReplaced:"Tout remplacé",
+    words:"mots", chars:"caractères", selected:"sélectionné",
+    readOnly:"👁 Lecture seule", protectedLabel:"🔒 Protégé",
+    copied:"✔ Copié", saved:"✔ Enregistré", allReplaced:"✔ Tout remplacé", replaced:"✔ Remplacé",
     noMatch:"Aucun résultat", disableWrapFirst:"Désactivez d'abord Retour ligne",
-    linesHidden:"Lignes masquées (mode Retour ligne)", copyFailed:"Échec de la copie",
-    longPress:"Appui long pour coller",
-    matches:"résultats", match:"résultat",
+    linesHidden:"Lignes masquées", copyFailed:"Échec de la copie", longPress:"Appui long pour coller",
+    matches:"résultats", match:"résultat", binary:"Fichier binaire — affichage incomplet",
   },
   pt: {
-    tagline:"Editor de texto simples",
-    shortcutsLabel:"Atalhos de teclado:",
-    shortcutsText:"Ctrl+Enter: Selecionar tudo e copiar | Esc: Limpar | Ctrl+F: Localizar | Ctrl+H: Localizar e substituir | Ctrl+O: Abrir arquivo",
-    btnFile:"📂 Arquivo", btnPaste:"📋 Colar", btnCopy:"📄 Selecionar+Copiar", btnClear:"🧹 Limpar",
-    btnWrap:"📏 Quebra linha", btnLines:"🔢 Linhas", btnFind:"🔎 Localizar", btnReplace:"🔁 Substituir",
-    btnDownload:"💾 Baixar", btnDark:"🌙 Escuro", btnLight:"☀️ Claro",
+    btnFile:"📂 Arquivo", btnFileNew:"⧉ Arquivo", btnPaste:"📋 Colar", btnCopy:"📄 Copiar tudo", btnClear:"🗑 Limpar",
+    btnWrap:"↵ Quebra linha", btnLines:"¶ Linhas", btnFind:"🔎 Localizar", btnReplace:"⇄ Substituir",
+    btnSave:"💾 Salvar", btnSaveAs:"⬆ Salvar como", btnProtect:"🔓 Proteger", btnSyntax:"✨ Sintaxe",
+    btnDark:"🌙 Escuro", btnLight:"☀️ Claro",
     findLabel:"Localizar:", findPh:"Buscar…", replaceLabel:"Substituir:", replacePh:"Substituir por…",
     btnNext:"▼ Próximo", btnPrev:"▲ Anterior", btnReplaceOne:"Substituir", btnReplaceAll:"Tudo",
-    words:"Palavras", chars:"Caracteres",
-    copied:"Copiado!", replaced:"Substituído", allReplaced:"Tudo substituído",
+    words:"palavras", chars:"caracteres", selected:"selecionado",
+    readOnly:"👁 Somente leitura", protectedLabel:"🔒 Protegido",
+    copied:"✔ Copiado", saved:"✔ Salvo", allReplaced:"✔ Tudo substituído", replaced:"✔ Substituído",
     noMatch:"Sem correspondências", disableWrapFirst:"Desative Quebra linha primeiro",
-    linesHidden:"Linhas ocultas (modo Quebra linha)", copyFailed:"Falha ao copiar",
-    longPress:"Pressione longamente para colar",
-    matches:"correspondências", match:"correspondência",
+    linesHidden:"Linhas ocultas", copyFailed:"Falha ao copiar", longPress:"Pressione para colar",
+    matches:"correspondências", match:"correspondência", binary:"Arquivo binário — exibição incompleta",
   },
   ru: {
-    tagline:"Простой текстовый редактор",
-    shortcutsLabel:"Горячие клавиши:",
-    shortcutsText:"Ctrl+Enter: Выделить всё и копировать | Esc: Очистить | Ctrl+F: Найти | Ctrl+H: Найти и заменить | Ctrl+O: Открыть файл",
-    btnFile:"📂 Файл", btnPaste:"📋 Вставить", btnCopy:"📄 Выделить+Копировать", btnClear:"🧹 Очистить",
-    btnWrap:"📏 Перенос", btnLines:"🔢 Строки", btnFind:"🔎 Найти", btnReplace:"🔁 Заменить",
-    btnDownload:"💾 Скачать", btnDark:"🌙 Тёмный", btnLight:"☀️ Светлый",
+    btnFile:"📂 Файл", btnFileNew:"⧉ Файл", btnPaste:"📋 Вставить", btnCopy:"📄 Копировать всё", btnClear:"🗑 Очистить",
+    btnWrap:"↵ Перенос", btnLines:"¶ Строки", btnFind:"🔎 Найти", btnReplace:"⇄ Заменить",
+    btnSave:"💾 Сохранить", btnSaveAs:"⬆ Сохранить как", btnProtect:"🔓 Защитить", btnSyntax:"✨ Синтаксис",
+    btnDark:"🌙 Тёмный", btnLight:"☀️ Светлый",
     findLabel:"Найти:", findPh:"Поиск…", replaceLabel:"Заменить:", replacePh:"Заменить на…",
     btnNext:"▼ Дальше", btnPrev:"▲ Назад", btnReplaceOne:"Заменить", btnReplaceAll:"Все",
-    words:"Слова", chars:"Символы",
-    copied:"Скопировано!", replaced:"Заменено", allReplaced:"Все заменены",
+    words:"слова", chars:"символы", selected:"выделено",
+    readOnly:"👁 Только чтение", protectedLabel:"🔒 Защищено",
+    copied:"✔ Скопировано", saved:"✔ Сохранено", allReplaced:"✔ Все заменены", replaced:"✔ Заменено",
     noMatch:"Нет совпадений", disableWrapFirst:"Сначала отключите перенос",
-    linesHidden:"Строки скрыты (режим переноса)", copyFailed:"Ошибка копирования",
-    longPress:"Удерживайте для вставки",
-    matches:"совпадения", match:"совпадение",
+    linesHidden:"Строки скрыты", copyFailed:"Ошибка копирования", longPress:"Удерживайте для вставки",
+    matches:"совпадения", match:"совпадение", binary:"Двоичный файл — отображение неполное",
   },
   tr: {
-    tagline:"Düz metin editörü",
-    shortcutsLabel:"Klavye kısayolları:",
-    shortcutsText:"Ctrl+Enter: Tümünü seç ve kopyala | Esc: Temizle | Ctrl+F: Bul | Ctrl+H: Bul ve değiştir | Ctrl+O: Dosya aç",
-    btnFile:"📂 Dosya", btnPaste:"📋 Yapıştır", btnCopy:"📄 Seç+Kopyala", btnClear:"🧹 Temizle",
-    btnWrap:"📏 Kaydır", btnLines:"🔢 Satırlar", btnFind:"🔎 Bul", btnReplace:"🔁 Değiştir",
-    btnDownload:"💾 İndir", btnDark:"🌙 Koyu", btnLight:"☀️ Açık",
+    btnFile:"📂 Dosya", btnFileNew:"⧉ Dosya", btnPaste:"📋 Yapıştır", btnCopy:"📄 Tümünü Kopyala", btnClear:"🗑 Temizle",
+    btnWrap:"↵ Kaydır", btnLines:"¶ Satırlar", btnFind:"🔎 Bul", btnReplace:"⇄ Değiştir",
+    btnSave:"💾 Kaydet", btnSaveAs:"⬆ Farklı Kaydet", btnProtect:"🔓 Kilitle", btnSyntax:"✨ Sözdizimi",
+    btnDark:"🌙 Koyu", btnLight:"☀️ Açık",
     findLabel:"Bul:", findPh:"Ara…", replaceLabel:"Değiştir:", replacePh:"Şununla değiştir…",
     btnNext:"▼ İleri", btnPrev:"▲ Geri", btnReplaceOne:"Değiştir", btnReplaceAll:"Tümü",
-    words:"Kelimeler", chars:"Karakterler",
-    copied:"Kopyalandı!", replaced:"Değiştirildi", allReplaced:"Tümü değiştirildi",
+    words:"kelime", chars:"karakter", selected:"seçili",
+    readOnly:"👁 Salt okunur", protectedLabel:"🔒 Korumalı",
+    copied:"✔ Kopyalandı", saved:"✔ Kaydedildi", allReplaced:"✔ Tümü değiştirildi", replaced:"✔ Değiştirildi",
     noMatch:"Eşleşme yok", disableWrapFirst:"Önce Kaydır'ı kapat",
-    linesHidden:"Satırlar gizlendi (Kaydır modu)", copyFailed:"Kopyalama başarısız",
-    longPress:"Yapıştırmak için uzun bas",
-    matches:"eşleşme", match:"eşleşme",
+    linesHidden:"Satırlar gizlendi", copyFailed:"Kopyalama başarısız", longPress:"Basılı tut",
+    matches:"eşleşme", match:"eşleşme", binary:"İkili dosya — görüntü eksik olabilir",
   },
   ko: {
-    tagline:"일반 텍스트 편집기",
-    shortcutsLabel:"키보드 단축키:",
-    shortcutsText:"Ctrl+Enter: 전체 선택 및 복사 | Esc: 지우기 | Ctrl+F: 찾기 | Ctrl+H: 찾기 및 바꾸기 | Ctrl+O: 파일 열기",
-    btnFile:"📂 파일", btnPaste:"📋 붙여넣기", btnCopy:"📄 선택+복사", btnClear:"🧹 지우기",
-    btnWrap:"📏 줄바꿈", btnLines:"🔢 줄 번호", btnFind:"🔎 찾기", btnReplace:"🔁 바꾸기",
-    btnDownload:"💾 다운로드", btnDark:"🌙 어둡게", btnLight:"☀️ 밝게",
+    btnFile:"📂 파일", btnFileNew:"⧉ 파일", btnPaste:"📋 붙여넣기", btnCopy:"📄 전체 복사", btnClear:"🗑 지우기",
+    btnWrap:"↵ 줄바꿈", btnLines:"¶ 줄 번호", btnFind:"🔎 찾기", btnReplace:"⇄ 바꾸기",
+    btnSave:"💾 저장", btnSaveAs:"⬆ 다른 이름으로", btnProtect:"🔓 보호", btnSyntax:"✨ 구문",
+    btnDark:"🌙 어둡게", btnLight:"☀️ 밝게",
     findLabel:"찾기:", findPh:"검색…", replaceLabel:"바꾸기:", replacePh:"바꿀 내용…",
     btnNext:"▼ 다음", btnPrev:"▲ 이전", btnReplaceOne:"바꾸기", btnReplaceAll:"모두",
-    words:"단어", chars:"글자",
-    copied:"복사되었습니다!", replaced:"바뀌었습니다", allReplaced:"모두 바뀌었습니다",
+    words:"단어", chars:"글자", selected:"선택됨",
+    readOnly:"👁 읽기 전용", protectedLabel:"🔒 보호됨",
+    copied:"✔ 복사됨", saved:"✔ 저장됨", allReplaced:"✔ 모두 바뀜", replaced:"✔ 바뀜",
     noMatch:"일치 없음", disableWrapFirst:"먼저 줄바꿈을 끄세요",
-    linesHidden:"줄 번호 숨김 (줄바꿈 모드)", copyFailed:"복사 실패",
-    longPress:"붙여넣기는 길게 누르세요",
-    matches:"개 일치", match:"개 일치",
+    linesHidden:"줄 번호 숨김", copyFailed:"복사 실패", longPress:"길게 눌러 붙여넣기",
+    matches:"개 일치", match:"개 일치", binary:"바이너리 파일 — 표시 불완전",
   },
   he: {
-    tagline:"עורך טקסט רגיל",
-    shortcutsLabel:"קיצורי מקלדת:",
-    shortcutsText:"Ctrl+Enter: בחר הכל והעתק | Esc: נקה | Ctrl+F: חפש | Ctrl+H: חפש והחלף | Ctrl+O: פתח קובץ",
-    btnFile:"📂 קובץ", btnPaste:"📋 הדבק", btnCopy:"📄 בחר+העתק", btnClear:"🧹 נקה",
-    btnWrap:"📏 גלישה", btnLines:"🔢 שורות", btnFind:"🔎 חפש", btnReplace:"🔁 החלף",
-    btnDownload:"💾 הורד", btnDark:"🌙 כהה", btnLight:"☀️ בהיר",
+    btnFile:"📂 קובץ", btnFileNew:"⧉ קובץ", btnPaste:"📋 הדבק", btnCopy:"📄 העתק הכל", btnClear:"🗑 נקה",
+    btnWrap:"↵ גלישה", btnLines:"¶ שורות", btnFind:"🔎 חפש", btnReplace:"⇄ החלף",
+    btnSave:"💾 שמור", btnSaveAs:"⬆ שמור בשם", btnProtect:"🔓 הגן", btnSyntax:"✨ תחביר",
+    btnDark:"🌙 כהה", btnLight:"☀️ בהיר",
     findLabel:"חפש:", findPh:"חיפוש…", replaceLabel:"החלף:", replacePh:"החלף ב…",
     btnNext:"▼ הבא", btnPrev:"▲ הקודם", btnReplaceOne:"החלף", btnReplaceAll:"הכל",
-    words:"מילים", chars:"תווים",
-    copied:"הועתק!", replaced:"הוחלף", allReplaced:"הכל הוחלף",
+    words:"מילים", chars:"תווים", selected:"נבחר",
+    readOnly:"👁 קריאה בלבד", protectedLabel:"🔒 מוגן",
+    copied:"✔ הועתק", saved:"✔ נשמר", allReplaced:"✔ הכל הוחלף", replaced:"✔ הוחלף",
     noMatch:"אין תוצאות", disableWrapFirst:"כבה תחילה את הגלישה",
-    linesHidden:"מספרי שורות מוסתרים (מצב גלישה)", copyFailed:"ההעתקה נכשלה",
-    longPress:"לחץ לחיצה ארוכה להדבקה",
-    matches:"תוצאות", match:"תוצאה",
+    linesHidden:"שורות מוסתרות", copyFailed:"ההעתקה נכשלה", longPress:"לחץ לחיצה ארוכה",
+    matches:"תוצאות", match:"תוצאה", binary:"קובץ בינארי — תצוגה חלקית",
     rtl: true,
   },
   ga: {
-    tagline:"Eagarthóir téacs gnáth",
-    shortcutsLabel:"Aicearraí méarchláir:",
-    shortcutsText:"Ctrl+Enter: Roghnaigh Uile agus Cóipeáil | Esc: Glan | Ctrl+F: Cuardaigh | Ctrl+H: Cuardaigh agus Ionadaigh | Ctrl+O: Oscail Comhad",
-    btnFile:"📂 Comhad", btnPaste:"📋 Greamaigh", btnCopy:"📄 Roghnaigh+Cóip", btnClear:"🧹 Glan",
-    btnWrap:"📏 Fillte", btnLines:"🔢 Línte", btnFind:"🔎 Cuardaigh", btnReplace:"🔁 Ionadaigh",
-    btnDownload:"💾 Íoslódáil", btnDark:"🌙 Dorcha", btnLight:"☀️ Geal",
+    btnFile:"📂 Comhad", btnFileNew:"⧉ Comhad", btnPaste:"📋 Greamaigh", btnCopy:"📄 Cóipeáil Uile", btnClear:"🗑 Glan",
+    btnWrap:"↵ Fillte", btnLines:"¶ Línte", btnFind:"🔎 Cuardaigh", btnReplace:"⇄ Ionadaigh",
+    btnSave:"💾 Sábháil", btnSaveAs:"⬆ Sábháil mar", btnProtect:"🔓 Cosain", btnSyntax:"✨ Comhréir",
+    btnDark:"🌙 Dorcha", btnLight:"☀️ Geal",
     findLabel:"Cuardaigh:", findPh:"Cuardaigh…", replaceLabel:"Ionadaigh:", replacePh:"Ionadaigh le…",
     btnNext:"▼ Ar Aghaidh", btnPrev:"▲ Ar Gcúl", btnReplaceOne:"Ionadaigh", btnReplaceAll:"Uile",
-    words:"Focail", chars:"Carachtair",
-    copied:"Cóipeáilte!", replaced:"Ionadaithe", allReplaced:"Uile ionadaithe",
+    words:"focal", chars:"carachtar", selected:"roghnaithe",
+    readOnly:"👁 Inléite amháin", protectedLabel:"🔒 Cosanta",
+    copied:"✔ Cóipeáilte", saved:"✔ Sábháilte", allReplaced:"✔ Uile ionadaithe", replaced:"✔ Ionadaithe",
     noMatch:"Gan mheaitseáil", disableWrapFirst:"Múch Fillte ar dtús",
-    linesHidden:"Línte i bhfolach (mód Fillte)", copyFailed:"Theip ar chóipeáil",
-    longPress:"Brúigh fada le greamú",
-    matches:"meaitseálacha", match:"meaitseáil",
+    linesHidden:"Línte i bhfolach", copyFailed:"Theip ar chóipeáil", longPress:"Brúigh fada",
+    matches:"meaitseálacha", match:"meaitseáil", binary:"Comhad dénártha — taispeáint neamhiomlán",
   },
 };
 
-let currentLang = "en";
-let T = LANGS.en; // active translation shortcut
+let T = LANGS.en;
 
 function applyLang(code) {
-  currentLang = code;
   T = LANGS[code] || LANGS.en;
   document.documentElement.lang = code;
-
-  // RTL toggle
   document.body.classList.toggle("rtl", !!T.rtl);
-
-  // Update all data-i18n elements
   document.querySelectorAll("[data-i18n]").forEach(el => {
-    const key = el.getAttribute("data-i18n");
-    if (T[key] !== undefined) el.innerHTML = T[key];
+    const k = el.getAttribute("data-i18n");
+    if (T[k] !== undefined) el.innerHTML = T[k];
   });
-  // Update placeholders
   document.querySelectorAll("[data-i18n-ph]").forEach(el => {
-    const key = el.getAttribute("data-i18n-ph");
-    if (T[key] !== undefined) el.placeholder = T[key];
+    const k = el.getAttribute("data-i18n-ph");
+    if (T[k] !== undefined) el.placeholder = T[k];
   });
-
-  // Refresh dark button label to match current state
-  const darkBtn = document.querySelector('[data-i18n="btnDark"]');
-  if (darkBtn) darkBtn.innerHTML = document.body.classList.contains("dark") ? T.btnLight : T.btnDark;
-
-  // Refresh match info if find bar is open
-  if (findbar.classList.contains("visible")) highlightMatches();
+  // Update dark button label
+  const db = document.querySelector('[data-i18n="btnDark"]');
+  if (db) db.innerHTML = document.body.classList.contains("dark") ? T.btnLight : T.btnDark;
+  // Update protect button label
+  updateProtectBtn();
+  updateStatusBar();
+  if (findbar.classList.contains("visible")) buildMatches();
+  if (isElectron && window.electronAPI) window.electronAPI.langChanged(code);
 }
 
-// ─── ELEMENTS ─────────────────────────────────────────────────────────────────
+// ═══════════════════════════════════════════════════════════════
+// ELEMENTS
+// ═══════════════════════════════════════════════════════════════
 const textarea    = document.getElementById("text");
-const wrapBtn     = document.getElementById("wrapBtn");
-const linesBtn    = document.getElementById("linesBtn");
-const linenums    = document.getElementById("linenumbers");
+const hlView      = document.getElementById("hl-view");
+const linenums    = document.getElementById("linenums");
 const findbar     = document.getElementById("findbar");
-const findInput   = document.getElementById("findInput");
-const replaceInput= document.getElementById("replaceInput");
-const replaceRow  = document.getElementById("replaceRow");
-const matchInfo   = document.getElementById("matchInfo");
+const findInputEl = document.getElementById("find-input");
+const replaceInputEl = document.getElementById("replace-input");
+const replaceRow  = document.getElementById("replace-row");
+const matchInfoEl = document.getElementById("match-info");
+const saveBtn     = document.getElementById("save-btn");
+const wrapBtn     = document.getElementById("wrap-btn");
+const linesBtn    = document.getElementById("lines-btn");
+const protectBtn  = document.getElementById("protect-btn");
+const syntaxBtn   = document.getElementById("syntax-btn");
+const syntaxLangSel = document.getElementById("syntax-lang-select");
+const sbLeft      = document.getElementById("sb-left");
+const sbMsg       = document.getElementById("sb-msg");
+const pasteBtn    = document.getElementById("paste-btn");
+const copySelBtn  = document.getElementById("copy-sel-btn");
+const clearConfirmBar = document.getElementById("clear-confirm");
 
-let wrap       = false;
-let showLines  = false;
-let fontSize   = 14;
-let allMatches = [];
-let matchCursor= -1;
+// ═══════════════════════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════════════════════
+let isProtected    = false;
+let syntaxOn       = false;
+let syntaxLang     = "auto";
+let wrap           = false;
+let showLines      = false;
+let fontSize       = 14;
+let allMatches     = [];
+let matchCursor    = -1;
+let msgTimer       = null;
+let escCount       = 0;   // triple-ESC unlock counter
+let escTimer       = null;
+const isElectron   = typeof window.electronAPI !== "undefined";
 
-// ─── LINE NUMBERS ─────────────────────────────────────────────────────────────
-function updateLineNumbers() {
-  if (!showLines) return;
-  const count = textarea.value.split("\n").length;
-  linenums.textContent = Array.from({ length: count }, (_, i) => i + 1).join("\n");
-  linenums.scrollTop = textarea.scrollTop;
+// ═══════════════════════════════════════════════════════════════
+// SYNTAX HIGHLIGHTING
+// ═══════════════════════════════════════════════════════════════
+const EXT_LANG = {
+  js:"js",mjs:"js",cjs:"js",jsx:"js",
+  ts:"ts",tsx:"ts",
+  html:"html",htm:"html",
+  css:"css",scss:"css",less:"css",
+  py:"py",python:"py",
+  json:"json",
+  xml:"xml",svg:"xml",
+  sh:"sh",bash:"sh",
+  c:"c",cpp:"c",h:"c",hpp:"c",
+  java:"java",
+  rb:"rb",
+  php:"php",
+  sql:"sql",
+  md:"md",markdown:"md",
+};
+
+function detectSyntaxLang(fname, content) {
+  const ext = (fname.split(".").pop()||"").toLowerCase();
+  if (EXT_LANG[ext]) return EXT_LANG[ext];
+  if (/^\s*<(!DOCTYPE\s+html|html[\s>])/i.test(content)) return "html";
+  if (/^\s*<\?xml/i.test(content)) return "xml";
+  if (/^\s*[\[{]/.test(content) && /"[^"]+"\s*:/.test(content)) return "json";
+  if (/\bdef |import |print\(|elif /.test(content)) return "py";
+  if (/\b(function |const |let |var |=>)/.test(content)) return "js";
+  if (/\bSELECT\b.*\bFROM\b/i.test(content)) return "sql";
+  return "plain";
 }
-function toggleLineNumbers() {
-  if (wrap) { status(T.disableWrapFirst); return; }
-  showLines = !showLines;
-  linesBtn.classList.toggle("active", showLines);
-  linenums.style.display = showLines ? "block" : "none";
-  if (showLines) updateLineNumbers();
-}
-textarea.addEventListener("scroll", () => {
-  if (showLines) linenums.scrollTop = textarea.scrollTop;
-});
 
-// ─── WRAP ──────────────────────────────────────────────────────────────────────
-function toggleWrap() {
-  wrap = !wrap;
-  wrapBtn.classList.toggle("active", wrap);
-  textarea.classList.toggle("wrap", wrap);
-  if (wrap && showLines) {
-    showLines = false;
-    linesBtn.classList.remove("active");
-    linenums.style.display = "none";
-    status(T.linesHidden);
+function esc(s) {
+  return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+}
+
+function tokenize(code, rules) {
+  if (!rules || !rules.length) return esc(code);
+  const rx = new RegExp(rules.map(r=>"("+r.re.source+")").join("|"), "gms");
+  let out = "", pos = 0, m;
+  while ((m = rx.exec(code)) !== null) {
+    if (m.index > pos) out += esc(code.slice(pos, m.index));
+    for (let i = 0; i < rules.length; i++) {
+      if (m[i+1] !== undefined) {
+        out += `<span class="t-${rules[i].c}">${esc(m[i+1])}</span>`;
+        break;
+      }
+    }
+    pos = rx.lastIndex;
+    if (pos === m.index) rx.lastIndex++;
+  }
+  if (pos < code.length) out += esc(code.slice(pos));
+  return out;
+}
+
+const RULES = {
+  js: [
+    {c:"cm", re:/\/\/[^\n]*|\/\*[\s\S]*?\*\//},
+    {c:"st", re:/`[\s\S]*?`|"(?:[^"\\\n]|\\.)*"|'(?:[^'\\\n]|\\.)*'/},
+    {c:"kw", re:/(?<![.\w])(?:async|await|break|case|catch|class|const|continue|debugger|default|delete|do|else|export|extends|finally|for|function|if|import|in|instanceof|let|new|of|return|static|super|switch|this|throw|try|typeof|var|void|while|with|yield)(?![\w$])/},
+    {c:"bi", re:/(?<![.\w])(?:Array|Boolean|console|Date|Error|false|Infinity|JSON|Map|Math|NaN|null|Number|Object|Promise|RegExp|Set|String|Symbol|true|undefined|window|document)(?![\w$])/},
+    {c:"nm", re:/\b(?:0x[\da-fA-F]+|\d+\.?\d*(?:[eE][+-]?\d+)?)\b/},
+    {c:"fn", re:/\b[A-Za-z_$][\w$]*(?=\s*\()/},
+  ],
+  py: [
+    {c:"cm", re:/#[^\n]*/},
+    {c:"st", re:/"""[\s\S]*?"""|'''[\s\S]*?'''|"(?:[^"\\\n]|\\.)*"|'(?:[^'\\\n]|\\.)*'/},
+    {c:"kw", re:/(?<!\w)(?:False|None|True|and|as|assert|async|await|break|class|continue|def|del|elif|else|except|finally|for|from|global|if|import|in|is|lambda|nonlocal|not|or|pass|raise|return|try|while|with|yield)(?!\w)/},
+    {c:"bi", re:/(?<!\w)(?:abs|all|any|bool|dict|enumerate|filter|float|format|frozenset|int|isinstance|len|list|map|max|min|next|object|open|print|range|repr|reversed|round|set|sorted|str|sum|super|tuple|type|vars|zip)(?!\w)/},
+    {c:"nm", re:/\b\d+\.?\d*(?:[eE][+-]?\d+)?j?\b/},
+    {c:"fn", re:/\b[A-Za-z_]\w*(?=\s*\()/},
+  ],
+  html: [
+    {c:"cm", re:/<!--[\s\S]*?-->/},
+    {c:"st", re:/"[^"]*"|'[^']*'/},
+    {c:"tg", re:/<\/?[A-Za-z][A-Za-z0-9-]*/},
+    {c:"at", re:/\b[a-zA-Z_:][a-zA-Z0-9_:\-.]*(?=\s*=)/},
+  ],
+  css: [
+    {c:"cm", re:/\/\*[\s\S]*?\*\//},
+    {c:"st", re:/"[^"]*"|'[^']*'/},
+    {c:"kw", re:/@[a-zA-Z-]+/},
+    {c:"sl", re:/[.#:*]?[a-zA-Z][\w-]*(?=\s*\{)/},
+    {c:"pr", re:/[a-zA-Z-]+(?=\s*:)/},
+    {c:"nm", re:/-?\d+\.?\d*(?:px|em|rem|%|vh|vw|s|ms|deg|fr)?/},
+  ],
+  json: [
+    {c:"at", re:/"(?:[^"\\]|\\.)*"(?=\s*:)/},
+    {c:"st", re:/"(?:[^"\\]|\\.)*"/},
+    {c:"nm", re:/-?\d+\.?\d*(?:[eE][+-]?\d+)?/},
+    {c:"kw", re:/\b(?:true|false|null)\b/},
+  ],
+  xml: [
+    {c:"cm", re:/<!--[\s\S]*?-->/},
+    {c:"st", re:/"[^"]*"|'[^']*'/},
+    {c:"tg", re:/<\/?[A-Za-z][\w:.]+/},
+    {c:"at", re:/\b[a-zA-Z_][\w:.]*(?=\s*=)/},
+  ],
+  sql: [
+    {c:"cm", re:/--[^\n]*|\/\*[\s\S]*?\*\//},
+    {c:"st", re:/'(?:[^'\\]|\\.)*'/},
+    {c:"kw", re:/\b(?:ALL|ALTER|AND|AS|ASC|BETWEEN|BY|CASE|CREATE|DELETE|DESC|DISTINCT|DROP|ELSE|END|EXISTS|FROM|FULL|GROUP|HAVING|IN|INNER|INSERT|INTO|IS|JOIN|LEFT|LIKE|LIMIT|NOT|NULL|OFFSET|ON|OR|ORDER|OUTER|RIGHT|SELECT|SET|TABLE|THEN|UNION|UPDATE|VALUES|WHEN|WHERE)\b/i},
+    {c:"fn", re:/\b(?:AVG|COALESCE|CONCAT|COUNT|DATE|IFNULL|LENGTH|LOWER|MAX|MIN|NOW|ROUND|SUBSTRING|SUM|TRIM|UPPER)\b/i},
+    {c:"nm", re:/\b\d+\.?\d*\b/},
+  ],
+  sh: [
+    {c:"cm", re:/#[^\n]*/},
+    {c:"st", re:/"(?:[^"\\\n]|\\.)*"|'[^'\n]*'/},
+    {c:"kw", re:/(?<!\w)(?:case|do|done|elif|else|esac|fi|for|function|if|in|return|then|until|while)(?!\w)/},
+    {c:"bi", re:/(?<!\w)(?:awk|cat|cd|chmod|cp|curl|echo|export|find|git|grep|ls|mkdir|mv|npm|pip|rm|sed|source|sudo|wget)(?!\w)/},
+    {c:"nm", re:/\$[\w{][\w}]*|\$\d/},
+  ],
+  c: [
+    {c:"cm", re:/\/\/[^\n]*|\/\*[\s\S]*?\*\//},
+    {c:"st", re:/"(?:[^"\\\n]|\\.)*"|'(?:[^'\\\n]|\\.)*'/},
+    {c:"kw", re:/(?<!\w)(?:auto|bool|break|case|catch|char|class|const|continue|default|delete|do|double|else|enum|extern|false|float|for|goto|if|inline|int|long|namespace|new|nullptr|operator|override|private|protected|public|register|return|short|signed|sizeof|static|struct|switch|template|this|throw|true|try|typedef|typename|union|unsigned|using|virtual|void|volatile|while)(?!\w)/},
+    {c:"nm", re:/\b(?:0x[\da-fA-F]+[uUlL]*|\d+\.?\d*(?:[eE][+-]?\d+)?[fFlLuU]*)\b/},
+    {c:"fn", re:/\b[A-Za-z_]\w*(?=\s*\()/},
+  ],
+  java: [
+    {c:"cm", re:/\/\/[^\n]*|\/\*[\s\S]*?\*\//},
+    {c:"st", re:/"(?:[^"\\\n]|\\.)*"|'(?:[^'\\\n]|\\.)*'/},
+    {c:"kw", re:/(?<!\w)(?:abstract|assert|boolean|break|byte|case|catch|char|class|const|continue|default|do|double|else|enum|extends|false|final|finally|float|for|if|implements|import|instanceof|int|interface|long|native|new|null|package|private|protected|public|return|short|static|super|switch|synchronized|this|throw|throws|true|try|var|void|volatile|while)(?!\w)/},
+    {c:"nm", re:/\b(?:0x[\da-fA-F]+[lL]?|\d+\.?\d*(?:[eE][+-]?\d+)?[fFdDlL]?)\b/},
+    {c:"fn", re:/\b[A-Za-z_]\w*(?=\s*\()/},
+  ],
+  rb: [
+    {c:"cm", re:/#[^\n]*/},
+    {c:"st", re:/"(?:[^"\\\n]|\\.)*"|'(?:[^'\\\n]|\\.)*'/},
+    {c:"kw", re:/(?<!\w)(?:BEGIN|END|alias|and|begin|break|case|class|def|do|else|elsif|end|ensure|false|for|if|in|module|next|nil|not|or|redo|rescue|retry|return|self|super|then|true|undef|unless|until|when|while|yield)(?!\w)/},
+    {c:"nm", re:/\b\d+\.?\d*\b/},
+    {c:"fn", re:/\b[A-Za-z_]\w*[?!]?(?=\s*\()/},
+  ],
+  md: [
+    {c:"kw", re:/^#{1,6} .+$/m},
+    {c:"st", re:/`[^`\n]+`/},
+    {c:"cm", re:/\*\*[^*\n]+\*\*|__[^_\n]+__/},
+    {c:"fn", re:/\[[^\]\n]*\]\([^)\n]*\)/},
+    {c:"bi", re:/^[ \t]*[-*+] /m},
+  ],
+  plain: [],
+};
+RULES.ts  = RULES.js;
+RULES.php = RULES.js;
+
+function renderSyntax() {
+  const lang = syntaxLang === "auto"
+    ? detectSyntaxLang(document.getElementById("filename").value, textarea.value)
+    : syntaxLang;
+  const rules = RULES[lang] || [];
+  hlView.innerHTML = tokenize(textarea.value, rules);
+  hlView.scrollTop  = textarea.scrollTop;
+  hlView.scrollLeft = textarea.scrollLeft;
+}
+
+function toggleSyntax() {
+  syntaxOn = !syntaxOn;
+  syntaxBtn.classList.toggle("active", syntaxOn);
+  syntaxLangSel.classList.toggle("show", syntaxOn);
+
+  if (syntaxOn) {
+    // Auto-detect lang and set dropdown
+    const detected = detectSyntaxLang(document.getElementById("filename").value, textarea.value);
+    if (syntaxLang === "auto") syntaxLangSel.value = "auto";
+    renderSyntax();
+    hlView.classList.add("show");
+    textarea.style.display = "none";
+    // Syntax ON always activates Protect
+    setProtected(true);
+  } else {
+    hlView.classList.remove("show");
+    hlView.innerHTML = "";
+    textarea.style.display = "";
+    textarea.focus();
+    // Protect stays ON — user must manually unlock
+  }
+  updateStatusBar();
+}
+
+function onSyntaxLangChange() {
+  syntaxLang = syntaxLangSel.value;
+  if (syntaxOn) renderSyntax();
+}
+
+// ═══════════════════════════════════════════════════════════════
+// PROTECT
+// ═══════════════════════════════════════════════════════════════
+function pulseProtect() {
+  protectBtn.classList.remove("pulse");
+  // Force reflow to restart animation
+  void protectBtn.offsetWidth;
+  protectBtn.classList.add("pulse");
+  protectBtn.addEventListener("animationend", () => protectBtn.classList.remove("pulse"), { once: true });
+}
+
+function setProtected(val) {
+  isProtected = val;
+  textarea.readOnly = val;
+  wrapBtn.disabled  = val;
+  escCount = 0;
+  updateProtectBtn();
+  updateStatusBar();
+  updatePasteGlow();
+}
+
+function toggleProtect() {
+  if (syntaxOn) {
+    // Syntax is driving protect — turn off both together
+    syntaxOn = false;
+    syntaxBtn.classList.remove("active");
+    syntaxLangSel.classList.remove("show");
+    hlView.classList.remove("show");
+    hlView.innerHTML = "";
+    textarea.style.display = "";
+    setProtected(false);
+    textarea.focus();
+  } else {
+    setProtected(!isProtected);
   }
 }
 
-// ─── FIND / REPLACE ───────────────────────────────────────────────────────────
+function updateProtectBtn() {
+  if (isProtected) {
+    protectBtn.classList.add("active");
+    protectBtn.innerHTML = T.btnProtect.replace("🔓","🔒");
+  } else {
+    protectBtn.classList.remove("active");
+    protectBtn.innerHTML = T.btnProtect;
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// FIND & REPLACE (fixed off-by-one)
+// ═══════════════════════════════════════════════════════════════
+// Edition 2: Find button toggles the bar open/closed
+function toggleFind() {
+  if (findbar.classList.contains("visible")) { closeFindBar(); return; }
+  openFind();
+}
 function openFind() {
   findbar.classList.add("visible");
   replaceRow.classList.remove("visible");
-  findInput.focus(); findInput.select();
-  if (findInput.value) highlightMatches();
+  // Edition 5: pre-fill with current selection
+  const sel = textarea.value.substring(textarea.selectionStart, textarea.selectionEnd).trim();
+  if (sel) findInputEl.value = sel;
+  findInputEl.focus(); findInputEl.select();
+  if (findInputEl.value) { buildMatches(); if (allMatches.length) { matchCursor = 0; jumpToMatch(allMatches[0]); } }
 }
 function openReplace() {
   findbar.classList.add("visible");
   replaceRow.classList.add("visible");
-  findInput.focus(); findInput.select();
-  if (findInput.value) highlightMatches();
+  const sel = textarea.value.substring(textarea.selectionStart, textarea.selectionEnd).trim();
+  if (sel) findInputEl.value = sel;
+  findInputEl.focus(); findInputEl.select();
+  if (findInputEl.value) { buildMatches(); if (allMatches.length) { matchCursor = 0; jumpToMatch(allMatches[0]); } }
 }
 function closeFindBar() {
   findbar.classList.remove("visible");
-  allMatches = []; matchCursor = -1; matchInfo.textContent = "";
+  allMatches = []; matchCursor = -1; matchInfoEl.textContent = "";
   textarea.focus();
 }
-function onFindInput() { matchCursor = -1; highlightMatches(); }
+// Edition 6: typing in find box immediately jumps to first match
+function onFindInput() {
+  matchCursor = -1;
+  buildMatches();
+  if (allMatches.length) { matchCursor = 0; jumpToMatch(allMatches[0]); }
+}
 
-function highlightMatches() {
-  const q = findInput.value;
-  allMatches = []; matchInfo.textContent = "";
+function buildMatches() {
+  const q = findInputEl.value;
+  allMatches = []; matchInfoEl.textContent = "";
   if (!q) return;
-  const lower = textarea.value.toLowerCase();
-  const ql = q.toLowerCase();
-  let i = 0;
-  while (true) {
-    const idx = lower.indexOf(ql, i);
+
+  // FIX: use the raw textarea.value directly, case-insensitive via toUpperCase
+  // toUpperCase avoids locale-specific toLowerCase issues (e.g. Turkish İ)
+  const text  = textarea.value;
+  const textU = text.toUpperCase();
+  const qU    = q.toUpperCase();
+  const qLen  = q.length;
+
+  let start = 0;
+  while (start <= text.length - qLen) {
+    const idx = textU.indexOf(qU, start);
     if (idx === -1) break;
-    allMatches.push(idx);
-    i = idx + 1;
+    allMatches.push(idx);  // store exact start index from original string
+    start = idx + 1;
   }
+
   if (allMatches.length) {
     const word = allMatches.length === 1 ? T.match : T.matches;
-    matchInfo.textContent = `${allMatches.length} ${word}`;
+    matchInfoEl.textContent = `${allMatches.length} ${word}`;
   } else {
-    matchInfo.textContent = T.noMatch;
+    matchInfoEl.textContent = T.noMatch;
   }
 }
+
 function findNext() {
-  if (!allMatches.length) { highlightMatches(); if (!allMatches.length) return; }
+  if (!allMatches.length) { buildMatches(); if (!allMatches.length) return; }
   matchCursor = (matchCursor + 1) % allMatches.length;
-  jumpToMatch();
+  jumpToMatch(allMatches[matchCursor]);
 }
 function findPrev() {
-  if (!allMatches.length) { highlightMatches(); if (!allMatches.length) return; }
+  if (!allMatches.length) { buildMatches(); if (!allMatches.length) return; }
   matchCursor = (matchCursor - 1 + allMatches.length) % allMatches.length;
-  jumpToMatch();
+  jumpToMatch(allMatches[matchCursor]);
 }
-function jumpToMatch() {
-  const idx = allMatches[matchCursor];
-  const len = findInput.value.length;
+
+function jumpToMatch(idx) {
+  const q = findInputEl.value;
+  // Select exactly from idx to idx + q.length in the original string
   textarea.focus();
-  textarea.setSelectionRange(idx, idx + len);
-  const linesBefore = textarea.value.substring(0, idx).split("\n").length - 1;
-  const lineH = parseFloat(getComputedStyle(textarea).lineHeight) || 22;
-  textarea.scrollTop = Math.max(0, linesBefore * lineH - textarea.clientHeight / 2);
-  const word = allMatches.length === 1 ? T.match : T.matches;
-  matchInfo.textContent = `${matchCursor + 1} / ${allMatches.length} ${word}`;
+  textarea.setSelectionRange(idx, idx + q.length);
+  // Scroll to show the match
+  const before  = textarea.value.substring(0, idx);
+  const lineNum = (before.match(/\n/g) || []).length;
+  const lineH   = parseFloat(getComputedStyle(textarea).lineHeight) || 22.4;
+  textarea.scrollTop = Math.max(0, lineNum * lineH - textarea.clientHeight / 2 + lineH);
+  // Update match counter
+  matchInfoEl.textContent = `${matchCursor + 1} / ${allMatches.length} ${allMatches.length === 1 ? T.match : T.matches}`;
 }
+
 function doReplace() {
   if (!allMatches.length || matchCursor < 0) { findNext(); return; }
-  const q = findInput.value, r = replaceInput.value;
+  const q = findInputEl.value;
+  const r = replaceInputEl.value;
   const idx = allMatches[matchCursor];
   textarea.value = textarea.value.substring(0, idx) + r + textarea.value.substring(idx + q.length);
-  highlightMatches();
+  buildMatches();
   matchCursor = Math.min(matchCursor, allMatches.length - 1);
   updateCount(); updateLineNumbers();
-  if (allMatches.length) jumpToMatch();
-  else status(T.replaced);
+  if (allMatches.length) jumpToMatch(allMatches[matchCursor]);
+  else showMsg(T.replaced);
 }
+
 function doReplaceAll() {
-  const q = findInput.value; if (!q) return;
-  const r = replaceInput.value;
-  const lower = textarea.value.toLowerCase(), ql = q.toLowerCase();
-  let result = "", i = 0;
+  const q = findInputEl.value; if (!q) return;
+  const r = replaceInputEl.value;
+  const textU = textarea.value.toUpperCase();
+  const qU = q.toUpperCase();
+  let result = "", pos = 0;
   while (true) {
-    const idx = lower.indexOf(ql, i);
-    if (idx === -1) { result += textarea.value.substring(i); break; }
-    result += textarea.value.substring(i, idx) + r;
-    i = idx + q.length;
+    const idx = textU.indexOf(qU, pos);
+    if (idx === -1) { result += textarea.value.substring(pos); break; }
+    result += textarea.value.substring(pos, idx) + r;
+    pos = idx + q.length;
   }
   textarea.value = result;
-  highlightMatches(); updateCount(); updateLineNumbers();
-  status(T.allReplaced);
+  buildMatches(); updateCount(); updateLineNumbers();
+  showMsg(T.allReplaced);
 }
+
 function findBarKey(e) {
   if (e.key === "Enter") { e.shiftKey ? findPrev() : findNext(); e.preventDefault(); }
   if (e.key === "Escape") closeFindBar();
@@ -743,158 +1217,409 @@ function replaceBarKey(e) {
   if (e.key === "Escape") closeFindBar();
 }
 
-// ─── COPY ──────────────────────────────────────────────────────────────────────
-function selectAndCopy() {
-  textarea.select();
-  if (navigator.clipboard && navigator.clipboard.writeText) {
-    navigator.clipboard.writeText(textarea.value).then(() => status(T.copied)).catch(fallbackCopy);
-  } else { fallbackCopy(); }
-}
-function fallbackCopy() {
-  try { document.execCommand("copy"); status(T.copied); }
-  catch(e) { status(T.copyFailed); }
-}
+// ═══════════════════════════════════════════════════════════════
+// STATUS BAR (Edition 8 — full format)
+// ═══════════════════════════════════════════════════════════════
+function updateStatusBar() {
+  const val  = textarea.value;
+  const sel  = textarea.selectionEnd - textarea.selectionStart;
+  const before = val.substring(0, textarea.selectionStart);
+  const lines  = before.split("\n");
+  const ln     = lines.length;
+  const col    = lines[lines.length - 1].length + 1;
+  const totalLn = (val.match(/\n/g) || []).length + 1;
+  const totalW  = val.trim() ? val.trim().split(/\s+/).length : 0;
+  const totalC  = val.length;
+  const zoom    = Math.round(fontSize / 14 * 100) + "%";
 
-// ─── PASTE ────────────────────────────────────────────────────────────────────
-function pasteText() {
-  if (navigator.clipboard && navigator.clipboard.readText) {
-    navigator.clipboard.readText().then(insertText).catch(() => status(T.longPress));
-  } else {
-    textarea.focus();
-    if (!document.execCommand("paste")) status(T.longPress);
+  const parts = [`Ln ${ln}/${totalLn}, Col ${col}`];
+
+  // Selection info (only when something is selected)
+  if (sel > 0) {
+    const selText  = val.substring(textarea.selectionStart, textarea.selectionEnd);
+    const selWords = selText.trim() ? selText.trim().split(/\s+/).length : 0;
+    parts.push(`${selWords} ${T.words}, ${sel} ${T.chars} ${T.selected}`);
   }
-}
-function insertText(t) {
-  const s = textarea.selectionStart;
-  textarea.value = textarea.value.substring(0, s) + t + textarea.value.substring(textarea.selectionEnd);
-  textarea.selectionStart = textarea.selectionEnd = s + t.length;
-  updateCount(); updateLineNumbers();
+
+  parts.push(`${totalW} ${T.words}`);
+  parts.push(`${totalC} ${T.chars}`);
+  parts.push(zoom);
+
+  // Mode indicators
+  if (syntaxOn)         parts.push(T.readOnly);
+  else if (isProtected) parts.push(T.protectedLabel);
+
+  sbLeft.textContent = parts.join(" │ ");
 }
 
-// ─── WORD COUNT ───────────────────────────────────────────────────────────────
-function updateCount() {
-  const t = textarea.value.trim();
-  document.getElementById("wordCount").textContent = t ? t.split(/\s+/).length : 0;
-  document.getElementById("charCount").textContent = textarea.value.length;
+function showMsg(msg) {
+  clearTimeout(msgTimer);
+  sbMsg.textContent = msg;
+  sbMsg.classList.add("show");
+  msgTimer = setTimeout(() => { sbMsg.classList.remove("show"); }, 2200);
 }
 
-// ─── CURSOR POS ───────────────────────────────────────────────────────────────
-function updateCursor() {
-  const lines = textarea.value.substr(0, textarea.selectionStart).split("\n");
-  document.getElementById("cursorPos").textContent =
-    `Ln ${lines.length}, Col ${lines[lines.length - 1].length + 1}`;
+// ═══════════════════════════════════════════════════════════════
+// LINE NUMBERS
+// ═══════════════════════════════════════════════════════════════
+function updateLineNumbers() {
+  if (!showLines) return;
+  const n = textarea.value.split("\n").length;
+  linenums.textContent = Array.from({length: n}, (_, i) => i + 1).join("\n");
+  linenums.scrollTop = textarea.scrollTop;
 }
-
-// ─── TAB ──────────────────────────────────────────────────────────────────────
-textarea.addEventListener("keydown", e => {
-  if (e.key === "Tab") {
-    e.preventDefault();
-    const s = textarea.selectionStart;
-    textarea.value = textarea.value.substring(0, s) + "  " + textarea.value.substring(textarea.selectionEnd);
-    textarea.selectionStart = textarea.selectionEnd = s + 2;
-    updateLineNumbers();
+function toggleLineNumbers() {
+  if (isProtected && !showLines) { pulseProtect(); showMsg(T.protectFirst); return; }
+  // Edition 1: enabling Lines disables Wrap
+  if (!showLines && wrap) {
+    wrap = false;
+    wrapBtn.classList.remove("active");
+    textarea.classList.remove("wrap-mode");
+    hlView.classList.remove("wrap-mode");
   }
+  showLines = !showLines;
+  linesBtn.classList.toggle("active", showLines);
+  linenums.style.display = showLines ? "block" : "none";
+  if (showLines) updateLineNumbers();
+}
+textarea.addEventListener("scroll", () => {
+  if (showLines)  linenums.scrollTop  = textarea.scrollTop;
+  if (syntaxOn)   { hlView.scrollTop  = textarea.scrollTop; hlView.scrollLeft = textarea.scrollLeft; }
 });
 
-// ─── MISC ─────────────────────────────────────────────────────────────────────
-function toggleDark() {
-  const isDark = document.body.classList.toggle("dark");
-  const btn = document.querySelector('[data-i18n="btnDark"]');
-  if (btn) btn.innerHTML = isDark ? T.btnLight : T.btnDark;
+// ═══════════════════════════════════════════════════════════════
+// WRAP
+// ═══════════════════════════════════════════════════════════════
+function toggleWrap() {
+  if (isProtected) return;
+  wrap = !wrap;
+  wrapBtn.classList.toggle("active", wrap);
+  textarea.classList.toggle("wrap-mode", wrap);
+  hlView.classList.toggle("wrap-mode", wrap);
+  if (wrap && showLines) {
+    showLines = false; linesBtn.classList.remove("active");
+    linenums.style.display = "none"; showMsg(T.linesHidden);
+  }
 }
-function clearText() {
-  textarea.value = ""; closeFindBar(); updateCount(); updateLineNumbers();
-  document.getElementById("filename").value = "Untitled.txt";
+
+// ═══════════════════════════════════════════════════════════════
+// COPY / PASTE
+// ═══════════════════════════════════════════════════════════════
+function selectAndCopy() {
+  const content = textarea.value;
+  if (navigator.clipboard && navigator.clipboard.writeText)
+    navigator.clipboard.writeText(content).then(() => showMsg(T.copied)).catch(() => fallbackCopy());
+  else fallbackCopy();
+}
+function fallbackCopy() {
+  const wasHidden = textarea.style.display === "none";
+  if (wasHidden) textarea.style.display = "";
+  textarea.select();
+  try { document.execCommand("copy"); showMsg(T.copied); }
+  catch(e) { showMsg(T.copyFailed); }
+  if (wasHidden) textarea.style.display = "none";
+}
+
+// Edition 7: copy only the selected text
+function copySelection() {
+  const sel = textarea.value.substring(textarea.selectionStart, textarea.selectionEnd);
+  if (!sel) return;
+  if (navigator.clipboard && navigator.clipboard.writeText)
+    navigator.clipboard.writeText(sel).then(() => showMsg(T.copied)).catch(() => {
+      try { document.execCommand("copy"); showMsg(T.copied); } catch(e) { showMsg(T.copyFailed); }
+    });
+  else {
+    try { document.execCommand("copy"); showMsg(T.copied); } catch(e) { showMsg(T.copyFailed); }
+  }
+}
+
+// Update copy-sel button enabled state
+function updateCopySelBtn() {
+  const hasSel = textarea.selectionStart !== textarea.selectionEnd;
+  copySelBtn.disabled = !hasSel;
+}
+
+// Edition 8: paste glow when textarea is empty
+function updatePasteGlow() {
+  const empty = textarea.value.length === 0;
+  pasteBtn.classList.toggle("glow", empty && !isProtected);
+}
+
+function pasteText() {
+  // Edition 3: if protected AND textarea is empty, allow one paste then re-lock
+  if (isProtected && textarea.value.length === 0) {
+    const doInsert = (t) => {
+      textarea.readOnly = false;
+      const s = textarea.selectionStart;
+      textarea.value = t;
+      textarea.selectionStart = textarea.selectionEnd = t.length;
+      textarea.readOnly = true;
+      updateCount(); updateLineNumbers();
+      if (syntaxOn) renderSyntax();
+      updatePasteGlow();
+    };
+    if (navigator.clipboard && navigator.clipboard.readText)
+      navigator.clipboard.readText().then(doInsert).catch(() => showMsg(T.longPress));
+    else showMsg(T.longPress);
+    return;
+  }
+  if (isProtected) { pulseProtect(); showMsg(T.protectFirst); return; }
+  if (navigator.clipboard && navigator.clipboard.readText)
+    navigator.clipboard.readText().then(insertAtCursor).catch(() => showMsg(T.longPress));
+  else { textarea.focus(); if (!document.execCommand("paste")) showMsg(T.longPress); }
+}
+function insertAtCursor(t) {
+  if (isProtected) return;
+  const s = textarea.selectionStart;
+  textarea.value = textarea.value.substring(0,s) + t + textarea.value.substring(textarea.selectionEnd);
+  textarea.selectionStart = textarea.selectionEnd = s + t.length;
+  updateCount(); updateLineNumbers();
+  if (syntaxOn) renderSyntax();
+  updatePasteGlow();
+}
+
+// ═══════════════════════════════════════════════════════════════
+// WORD / CHAR COUNT
+// ═══════════════════════════════════════════════════════════════
+function updateCount() {
+  updateStatusBar();
+  updatePasteGlow();
+}
+
+// ═══════════════════════════════════════════════════════════════
+// FILE OPERATIONS
+// ═══════════════════════════════════════════════════════════════
+// Binary detection: too many replacement chars = likely binary
+function isBinary(content) {
+  return (content.match(/\uFFFD/g) || []).length > 8 ||
+         (content.match(/\x00/g)   || []).length > 8;
+}
+
+function loadContent(content, fname) {
+  // Strip BOM
+  if (content.charCodeAt(0) === 0xFEFF) content = content.slice(1);
+  textarea.value = content;
+  if (fname) document.getElementById("filename").value = fname;
+  updateCount(); updateLineNumbers();
+  if (syntaxOn) renderSyntax();
+  if (isBinary(content)) showMsg(T.binary);
   textarea.focus();
 }
-function setZoom(n) {
-  fontSize = n;
-  textarea.style.fontSize = fontSize + "px";
-  linenums.style.fontSize = fontSize + "px";
-}
-function zoomIn()    { setZoom(fontSize + 1); }
-function zoomOut()   { setZoom(Math.max(6, fontSize - 1)); }
-function zoomReset() { setZoom(14); }
 
-function saveFile() {
-  const blob = new Blob([textarea.value], { type: "text/plain" });
+function filePrompt() {
+  if (isElectron) { window.electronAPI.triggerOpen(); return; }
+  const inp = document.createElement("input");
+  inp.type = "file";
+  inp.accept = "*/*";   // Web: accept ALL file types
+  inp.onchange = e => {
+    const file = e.target.files[0]; if (!file) return;
+    document.getElementById("filename").value = file.name;
+    const reader = new FileReader();
+    reader.onload = ev => loadContent(ev.target.result, file.name);
+    reader.readAsText(file, "utf-8");
+  };
+  inp.click();
+}
+
+function filePromptNew() {
+  if (isElectron) { window.electronAPI.triggerOpenNew(); return; }
+  window.open(location.href, "_blank");
+}
+
+function triggerSave() {
+  if (isElectron) { window.electronAPI.triggerSave(); return; }
+  downloadFile();
+}
+function triggerSaveAs() {
+  if (isElectron) { window.electronAPI.triggerSaveAs(); return; }
+  downloadFile();
+}
+function downloadFile() {
+  const blob = new Blob([textarea.value], {type:"text/plain"});
   const a = document.createElement("a");
   a.href = URL.createObjectURL(blob);
   a.download = document.getElementById("filename").value || "Untitled.txt";
   a.click();
+  showMsg(T.saved);
 }
-function filePrompt() {
-  const inp = document.createElement("input");
-  inp.type = "file";
-  inp.onchange = e => {
-    const file = e.target.files[0];
-    document.getElementById("filename").value = file.name;
-    const reader = new FileReader();
-    reader.onload = evt => {
-      textarea.value = evt.target.result;
-      updateCount(); updateLineNumbers(); textarea.focus();
-    };
-    reader.readAsText(file);
-  };
-  inp.click();
+
+// ═══════════════════════════════════════════════════════════════
+// MISC
+// ═══════════════════════════════════════════════════════════════
+function toggleDark() {
+  const dark = document.body.classList.toggle("dark");
+  const btn = document.querySelector('[data-i18n="btnDark"]');
+  if (btn) btn.innerHTML = dark ? T.btnLight : T.btnDark;
 }
-function status(msg) {
-  const s = document.getElementById("status");
-  s.textContent = msg;
-  setTimeout(() => s.textContent = "", 1800);
+
+function clearText() {
+  if (isProtected) {
+    // Edition 4: show inline confirm prompt instead of blocking
+    clearConfirmBar.classList.add("show");
+    return;
+  }
+  _doClear();
 }
+function _doClear() {
+  clearConfirmBar.classList.remove("show");
+  textarea.value = "";
+  document.getElementById("filename").value = "Untitled.txt";
+  saveBtn.classList.remove("has-file");
+  closeFindBar();
+  if (syntaxOn) { syntaxOn = false; syntaxBtn.classList.remove("active"); syntaxLangSel.classList.remove("show"); hlView.classList.remove("show"); hlView.innerHTML = ""; textarea.style.display = ""; }
+  updateCount(); updateLineNumbers();
+  if (isElectron) window.electronAPI.fileCleared();
+  updatePasteGlow();
+  textarea.focus();
+}
+function forceUnprotectAndClear() {
+  setProtected(false);
+  if (syntaxOn) { syntaxOn = false; syntaxBtn.classList.remove("active"); syntaxLangSel.classList.remove("show"); hlView.classList.remove("show"); hlView.innerHTML = ""; textarea.style.display = ""; }
+  _doClear();
+}
+function dismissClearConfirm() {
+  clearConfirmBar.classList.remove("show");
+  escCount = 0;
+  textarea.focus();
+}
+
+function setZoom(n) {
+  fontSize = n;
+  [textarea, linenums, hlView].forEach(el => el.style.fontSize = fontSize + "px");
+  updateStatusBar();
+}
+function zoomIn()    { setZoom(Math.min(40, fontSize + 1)); }
+function zoomOut()   { setZoom(Math.max(6,  fontSize - 1)); }
+function zoomReset() { setZoom(14); }
+
 function selectFilename(el) {
   const dot = el.value.lastIndexOf(".");
   setTimeout(() => el.setSelectionRange(0, dot > 0 ? dot : el.value.length), 0);
 }
 
-// ─── EVENTS ───────────────────────────────────────────────────────────────────
+// ═══════════════════════════════════════════════════════════════
+// ELECTRON BRIDGE
+// ═══════════════════════════════════════════════════════════════
+if (isElectron) {
+  document.body.classList.add("is-electron");
+
+  window.electronAPI.onFileOpened(({content, name}) => {
+    loadContent(content, name);
+    saveBtn.classList.add("has-file");
+  });
+  window.electronAPI.onRequestContentForSave(({mode}) => {
+    window.electronAPI.saveContent({
+      content: textarea.value,
+      mode,
+      suggestedName: document.getElementById("filename").value || "Untitled.txt",
+    });
+  });
+  window.electronAPI.onSaveSuccess(({filePath}) => {
+    const name = filePath.split(/[\\/]/).pop();
+    document.getElementById("filename").value = name;
+    saveBtn.classList.add("has-file");
+    showMsg(T.saved);
+  });
+  window.electronAPI.onApplyLang(code => {
+    const sel = document.getElementById("ui-lang");
+    if (sel) sel.value = code;
+    applyLang(code);
+  });
+}
+
+// ═══════════════════════════════════════════════════════════════
+// EVENTS
+// ═══════════════════════════════════════════════════════════════
 textarea.addEventListener("input", () => {
-  updateCount(); updateCursor(); updateLineNumbers();
-  if (findbar.classList.contains("visible")) highlightMatches();
+  updateCount(); updateLineNumbers();
+  if (syntaxOn) renderSyntax();
+  if (findbar.classList.contains("visible")) buildMatches();
 });
-textarea.addEventListener("click", updateCursor);
-textarea.addEventListener("keyup",  updateCursor);
+textarea.addEventListener("click",   () => { updateStatusBar(); updateCopySelBtn(); });
+textarea.addEventListener("keyup",   () => { updateStatusBar(); updateCopySelBtn(); });
+textarea.addEventListener("select",  () => { updateStatusBar(); updateCopySelBtn(); });
+textarea.addEventListener("selectionchange", () => { updateStatusBar(); updateCopySelBtn(); });
+
+textarea.addEventListener("keydown", e => {
+  if (e.key === "Tab") {
+    e.preventDefault();
+    if (isProtected) { pulseProtect(); showMsg(T.protectFirst); return; }
+    const s = textarea.selectionStart;
+    textarea.value = textarea.value.substring(0,s) + "  " + textarea.value.substring(textarea.selectionEnd);
+    textarea.selectionStart = textarea.selectionEnd = s + 2;
+    updateLineNumbers();
+    if (syntaxOn) renderSyntax();
+    return;
+  }
+  // Pulse protect on any printable key attempt while protected
+  if (isProtected && !e.ctrlKey && !e.metaKey && !e.altKey && e.key.length === 1) {
+    pulseProtect(); showMsg(T.protectFirst);
+  }
+});
 
 document.addEventListener("keydown", e => {
-  if (e.target === findInput || e.target === replaceInput) return;
-  if (e.ctrlKey && e.key === "Enter")            { e.preventDefault(); selectAndCopy(); }
-  if (e.key === "Escape")                        { e.preventDefault(); findbar.classList.contains("visible") ? closeFindBar() : clearText(); }
-  if (e.ctrlKey && e.key === "f")                { e.preventDefault(); openFind(); }
-  if (e.ctrlKey && e.key.toLowerCase() === "h") { e.preventDefault(); openReplace(); }
-  if (e.ctrlKey && e.key.toLowerCase() === "o") { e.preventDefault(); filePrompt(); }
+  if (e.target === findInputEl || e.target === replaceInputEl) return;
+  const ctrl = e.ctrlKey || e.metaKey;
+
+  // Edition 4: triple-ESC unlock sequence
+  if (e.key === "Escape") {
+    e.preventDefault();
+    if (clearConfirmBar.classList.contains("show")) { dismissClearConfirm(); return; }
+    if (findbar.classList.contains("visible")) { closeFindBar(); escCount = 0; return; }
+    if (isProtected) {
+      escCount++;
+      clearTimeout(escTimer);
+      escTimer = setTimeout(() => { escCount = 0; }, 4000);
+      if (escCount === 1) showMsg(T.escUnlock3);
+      else if (escCount === 2) showMsg(T.escUnlock2);
+      else if (escCount >= 3) { showMsg(T.escUnlock1); forceUnprotectAndClear(); escCount = 0; }
+      return;
+    }
+    escCount = 0;
+    clearText();
+    return;
+  }
+
+  if (ctrl && e.key === "Enter")                          { e.preventDefault(); selectAndCopy(); }
+  if (ctrl && e.key === "f")                              { e.preventDefault(); toggleFind(); }
+  if (ctrl && e.key.toLowerCase() === "h")               { e.preventDefault(); openReplace(); }
+  if (ctrl && e.key.toLowerCase() === "o" && !e.shiftKey){ e.preventDefault(); filePrompt(); }
+  if (ctrl && e.key.toLowerCase() === "o" && e.shiftKey) { e.preventDefault(); filePromptNew(); }
+  if (ctrl && e.shiftKey && e.key.toLowerCase() === "s") { e.preventDefault(); triggerSaveAs(); }
+  if (ctrl && !e.shiftKey && e.key.toLowerCase() === "s"){ e.preventDefault(); triggerSave(); }
+  if (ctrl && e.key.toLowerCase() === "n") { e.preventDefault(); if (isElectron) window.electronAPI.triggerNewWin(); }
+  // Edition 10: Ctrl+W closes current window (Electron only)
+  if (ctrl && e.key.toLowerCase() === "w") { e.preventDefault(); if (isElectron) window.electronAPI.closeWin(); }
 });
 
-// ─── INIT ─────────────────────────────────────────────────────────────────────
-updateCount();
-updateCursor();
+// ═══════════════════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════════════════
+updateStatusBar();
+updatePasteGlow();
+updateCopySelBtn();
+
+// Ensure textarea is focused on every new window/tab load (edition 1)
+window.addEventListener("load", () => textarea.focus());
 
 // Auto-detect browser language
 (function() {
-  const browserLang = (navigator.language || navigator.userLanguage || "en").toLowerCase();
-  // Map browser codes to our supported keys
+  const bl = (navigator.language || "en").toLowerCase();
   const MAP = {
-    en:"en", "en-us":"en", "en-gb":"en",
-    es:"es", "es-es":"es", "es-mx":"es",
-    zh:"zh", "zh-cn":"zh", "zh-tw":"zh", "zh-hk":"zh",
-    ja:"ja",
-    it:"it",
-    ar:"ar", "ar-sa":"ar",
-    de:"de",
-    nl:"nl",
-    hi:"hi",
-    fr:"fr", "fr-fr":"fr",
-    pt:"pt", "pt-br":"pt", "pt-pt":"pt",
-    ru:"ru",
-    tr:"tr",
-    ko:"ko",
-    he:"he",
-    ga:"ga",
+    en:"en","en-us":"en","en-gb":"en",
+    es:"es","es-es":"es","es-mx":"es",
+    zh:"zh","zh-cn":"zh","zh-tw":"zh","zh-hk":"zh",
+    ja:"ja", it:"it", ar:"ar","ar-sa":"ar",
+    de:"de", nl:"nl", hi:"hi",
+    fr:"fr","fr-fr":"fr",
+    pt:"pt","pt-br":"pt","pt-pt":"pt",
+    ru:"ru", tr:"tr", ko:"ko", he:"he", ga:"ga",
   };
-  const detected = MAP[browserLang] || MAP[browserLang.split("-")[0]];
-  if (detected && detected !== "en") {
-    document.getElementById("uiLang").value = detected;
-    applyLang(detected);
+  const d = MAP[bl] || MAP[bl.split("-")[0]];
+  if (d && d !== "en") {
+    const sel = document.getElementById("ui-lang");
+    if (sel) sel.value = d;
+    applyLang(d);
   }
 })();
 </script>
