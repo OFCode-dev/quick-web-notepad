@@ -1,0 +1,412 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Untitled.txt — Quick Web Notepad</title>
+<style>
+:root{--bg:#1e1e1e;--ti:#111;--ba:#252526;--br:#3e3e42;--tx:#d4d4d4;--ac:#0078d7;--bn:#2d2d2d;--bh:#3e3e3e;--bb:#4a4a4a;--ed:#1e1e1e;--st:#007acc;--sc:#4a4a4a;--in:#1a1a1a}
+.L{--bg:#f5f5f5;--ti:#e4e4e4;--ba:#f3f3f3;--br:#ddd;--tx:#1e1e1e;--bn:#e4e4e4;--bh:#d0d0d0;--bb:#bbb;--ed:#fff;--st:#0078d7;--sc:#bbb;--in:#fff}
+*{box-sizing:border-box;margin:0;padding:0}html,body{height:100%;overflow:hidden}
+body{display:flex;flex-direction:column;background:var(--bg);color:var(--tx);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;font-size:12px}
+#ti{background:var(--ti);border-bottom:2px solid var(--ac);padding:5px 12px;display:flex;align-items:center;gap:8px;flex-shrink:0;user-select:none}
+.aname{font-size:13px;letter-spacing:.4px;white-space:nowrap;flex-shrink:0}
+.aname .q{color:#4db8ff;font-weight:700}.aname .r{color:var(--tx);opacity:.7}
+#ver{font-size:10px;opacity:.35;flex-shrink:0;letter-spacing:.3px}
+#nb{background:transparent;border:none;outline:none;color:var(--tx);font-family:inherit;font-size:12px;text-align:left;padding:3px 4px;flex:1;min-width:60px;max-width:420px;opacity:.65;transition:opacity .15s}
+#nb:hover,#nb:focus{opacity:1}
+#ui-lang{margin-left:auto;background:transparent;border:none;outline:none;color:var(--tx);font-size:12px;cursor:pointer;flex-shrink:0;opacity:.7;padding:0}
+#ui-lang:hover{opacity:1}
+#to{background:var(--ba);border-bottom:1px solid var(--br);padding:4px 8px;display:flex;align-items:center;gap:2px;flex-shrink:0;overflow-x:auto;user-select:none}
+#to::-webkit-scrollbar{height:3px}#to::-webkit-scrollbar-thumb{background:var(--sc);border-radius:2px}
+.sp{width:1px;height:18px;background:var(--br);margin:0 4px;flex-shrink:0}
+button{background:var(--bn);border:1px solid var(--bb);border-radius:4px;color:var(--tx);font-size:11px;padding:3px 9px;cursor:pointer;white-space:nowrap;font-family:inherit;line-height:1.4;position:relative;flex-shrink:0}
+button:hover{background:var(--bh);border-color:var(--ac)}button.on{background:var(--ac);border-color:var(--ac);color:#fff}
+button[data-tip]:hover::after{content:attr(data-tip);position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%);background:#0d0d0d;color:#ddd;font-size:10px;padding:3px 8px;border-radius:3px;white-space:nowrap;z-index:9999;pointer-events:none;border:1px solid #2a2a2a}
+@keyframes lf{0%,100%{background:var(--bn);border-color:var(--bb);color:var(--tx)}35%,65%{background:#c0392b;border-color:#922b21;color:#fff}}
+.fl{animation:lf .55s ease!important}
+@keyframes pg{0%,100%{box-shadow:none;border-color:var(--bb)}50%{box-shadow:0 0 9px 2px rgba(46,204,113,.55);border-color:rgba(46,204,113,.75)}}
+.pg{animation:pg 1.8s ease-in-out infinite}
+#fb{background:var(--ba);border-bottom:1px solid var(--br);padding:5px 10px;display:none;align-items:center;gap:5px;flex-wrap:wrap;flex-shrink:0}
+#fb.open{display:flex}
+#fb input[type=text]{background:var(--in);border:1px solid var(--bb);border-radius:3px;color:var(--tx);font-size:11px;padding:3px 8px;outline:none;width:135px;font-family:inherit}
+#fb input[type=text]:focus{border-color:var(--ac)}
+#fc{font-size:11px;opacity:.6;min-width:62px}
+#fb label{font-size:11px;display:flex;align-items:center;gap:3px;cursor:pointer}
+#ew{flex:1;display:flex;overflow:hidden;background:var(--ed)}
+#ed,#hl{flex:1;min-width:0;padding:10px 14px;font-family:Menlo,Consolas,'Courier New',monospace;font-size:13px;line-height:1.65;white-space:pre;tab-size:2;overflow:auto;background:var(--ed);color:var(--tx)}
+#ed{border:none;outline:none;resize:none;caret-color:var(--ac)}
+#hl{display:none;margin:0;border:none;cursor:text}
+#hl.show{display:block}
+.wp{white-space:pre-wrap!important;word-break:break-word!important;overflow-x:hidden!important}
+#ed::-webkit-scrollbar,#hl::-webkit-scrollbar{width:8px;height:8px}
+#ed::-webkit-scrollbar-thumb,#hl::-webkit-scrollbar-thumb{background:var(--sc);border-radius:4px}
+#sb{background:var(--st);color:#fff;padding:2px 10px;display:flex;align-items:center;justify-content:space-between;font-size:11px;flex-shrink:0;user-select:none;overflow:hidden;white-space:nowrap}
+.sl,.sr{display:flex;align-items:center;gap:6px}.dim{opacity:.45}
+#slk{color:#ffb0b0;font-weight:700}
+#toast{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(.95);background:rgba(120,120,120,.25);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-radius:22px;padding:28px 40px 26px;text-align:center;pointer-events:none;z-index:99999;opacity:0;transition:opacity .15s ease-out,transform .15s ease-out;min-width:180px}
+#toast.show{opacity:1;transform:translate(-50%,-50%) scale(1)}
+#toast.out{opacity:0;transform:translate(-50%,-50%) scale(.95);transition:opacity 2s ease,transform 2s ease}
+#ticon{width:110px;height:110px;border-radius:50%;background:rgba(255,255,255,.14);display:flex;align-items:center;justify-content:center;margin:0 auto 14px;font-size:72px;line-height:1;color:#fff}
+#tmsg{font-size:24px;font-weight:700;color:#fff}
+.kw{color:#569cd6}.st{color:#ce9178}.cm{color:#6a9955}.nm{color:#b5cea8}.fn{color:#dcdcaa}.tp{color:#4ec9b0}.at{color:#9cdcfe}
+.L .kw{color:#0000af}.L .st{color:#a31515}.L .cm{color:#008000}.L .nm{color:#098658}.L .fn{color:#795e26}.L .tp{color:#267f99}.L .at{color:#e50000}
+</style></head><body>
+
+<div id="ti">
+  <svg width="20" height="20" viewBox="0 0 36 36" fill="none"><rect x="2" y="3" width="32" height="22" rx="2" fill="#1565c0" stroke="#0078d7" stroke-width="1.5"/><rect x="4" y="5" width="28" height="18" rx="1" fill="#0a1a2e"/><line x1="7" y1="10" x2="24" y2="10" stroke="#4db8ff" stroke-width="1.2" stroke-linecap="round"/><line x1="7" y1="13.5" x2="22" y2="13.5" stroke="#4db8ff" stroke-width="1.2" stroke-linecap="round"/><line x1="7" y1="17" x2="19" y2="17" stroke="#4db8ff" stroke-width="1.2" stroke-linecap="round"/><rect x="19.5" y="15.5" width="1.2" height="3" fill="#0078d7"/><rect x="15" y="25" width="6" height="4" fill="#1565c0"/><rect x="11" y="29" width="14" height="2.5" rx="1" fill="#1565c0"/></svg>
+  <div class="aname"><span class="q">QUICK</span> <span class="r">WEB NOTEPAD</span></div>
+  <span id="ver">v2.1</span>
+  <input id="nb" type="text" value="Untitled.txt" spellcheck="false" autocomplete="off">
+  <select id="ui-lang" title="Language">
+    <option value="en">🇬🇧 English</option>
+    <option value="es">🇪🇸 Español</option>
+    <option value="zh">🇨🇳 中文</option>
+    <option value="hi">🇮🇳 हिन्दी</option>
+    <option value="ar">🇸🇦 العربية</option>
+    <option value="fr">🇫🇷 Français</option>
+    <option value="pt">🇧🇷 Português</option>
+    <option value="id">🇮🇩 Indonesian</option>
+    <option value="vi">🇻🇳 Tiếng Việt</option>
+    <option value="tr">🇹🇷 Türkçe</option>
+    <option value="th">🇹🇭 ภาษาไทย</option>
+    <option value="de">🇩🇪 Deutsch</option>
+    <option value="ja">🇯🇵 日本語</option>
+    <option value="ko">🇰🇷 한국어</option>
+    <option value="ru">🇷🇺 Русский</option>
+  </select>
+</div>
+
+<div id="to">
+  <button id="bFi" data-tip="Open file  Ctrl+O">📂 File</button>
+  <button id="bNt" data-tip="New tab  Ctrl+T">⊞ New Tab</button>
+  <div class="sp"></div>
+  <button id="bSv" data-tip="Save  Ctrl+S">💾 Save</button>
+  <div class="sp"></div>
+  <button id="bPs" data-tip="Paste  Ctrl+V">⎘ Paste</button>
+  <button id="bCp" data-tip="Copy  Ctrl+Shift+C">⊕ Copy</button>
+  <button id="bCl" data-tip="Clear  double-Esc">✕ Clear</button>
+  <div class="sp"></div>
+  <button id="bWp" data-tip="Word wrap  Ctrl+Shift+W">↵ Wrap</button>
+  <button id="bFb" data-tip="Find &amp; Replace  Ctrl+F">⌕ Find</button>
+  <div class="sp"></div>
+  <button id="bSy" data-tip="Syntax  Ctrl+Shift+H">⬡ Syntax</button>
+  <div class="sp"></div>
+  <button id="bLk" data-tip="Lock  Ctrl+Shift+L">🔓 Lock</button>
+  <div class="sp"></div>
+  <button id="bZo" data-tip="Zoom out  Ctrl+−">A−</button>
+  <button id="bZr" data-tip="Reset zoom  Ctrl+0">100%</button>
+  <button id="bZi" data-tip="Zoom in  Ctrl+=">A+</button>
+  <div class="sp"></div>
+  <button id="bTh" data-tip="Toggle theme">☀ Light</button>
+</div>
+
+<div id="fb">
+  <input id="fq" type="text" placeholder="Find…" spellcheck="false">
+  <button id="bFp" data-tip="Previous  Shift+Enter">↑</button>
+  <button id="bFn" data-tip="Next  Enter">↓</button>
+  <span id="fc">—</span>
+  <input id="rq" type="text" placeholder="Replace…" spellcheck="false">
+  <button id="bRp">Replace</button><button id="bRa">All</button>
+  <label><input type="checkbox" id="chkC"> Case</label>
+  <label><input type="checkbox" id="chkX"> Regex</label>
+  <button id="bFc" style="margin-left:auto">✕</button>
+</div>
+
+<div id="ew">
+  <textarea id="ed" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off"></textarea>
+  <pre id="hl" aria-hidden="true"></pre>
+</div>
+
+<div id="sb">
+  <div class="sl">
+    <span id="sps">Ln 1/1 · Col 1</span>
+    <span class="dim">|</span><span id="swd">0 words</span>
+    <span class="dim">|</span><span id="sch">0 chars</span>
+    <span class="dim">|</span><span id="szm">100%</span>
+    <span class="dim" id="s1" style="display:none">|</span>
+    <span id="ssel" style="display:none"></span>
+  </div>
+  <div class="sr">
+    <span id="slk" style="display:none">🔒 LOCKED</span>
+    <span id="sln" style="margin-left:4px;opacity:.85"></span>
+    <span style="opacity:.35;margin-left:6px">v2.1</span>
+  </div>
+</div>
+
+<div id="toast"><div id="ticon">✓</div><div id="tmsg"></div></div>
+<input type="file" id="fi" style="display:none">
+
+<script>
+/* ── LANGS (defined first, no DOM calls) ── */
+var LANGS={
+en:{file:'📂 File',newt:'⊞ New Tab',save:'💾 Save',paste:'⎘ Paste',copy:'⊕ Copy',clear:'✕ Clear',wrap:'↵ Wrap',find:'⌕ Find',syntax:'⬡ Syntax',lock:'🔓 Lock',unlock:'🔒 Lock',themeL:'☀ Light',themeD:'🌙 Dark',words:'words',chars:'chars',noMatch:'No match',match:'match',matches:'matches',copied:'Copied',selCopied:'Selection Copied',pasted:'Pasted',cleared:'Cleared',locked:'Locked',unlocked:'Unlocked',saved:'Saved',opened:'opened',ctrlV:'Press Ctrl+V to paste',escAgain:'Press Esc again to clear',esc2:'🔒 Esc ×2 more to unlock & clear',esc1:'🔒 Esc ×1 more — last chance',unlockCleared:'Unlocked & Cleared'},
+es:{file:'📂 Archivo',newt:'⊞ Nueva pestaña',save:'💾 Guardar',paste:'⎘ Pegar',copy:'⊕ Copiar',clear:'✕ Borrar',wrap:'↵ Ajuste',find:'⌕ Buscar',syntax:'⬡ Sintaxis',lock:'🔓 Bloquear',unlock:'🔒 Bloquear',themeL:'☀ Claro',themeD:'🌙 Oscuro',words:'palabras',chars:'caracteres',noMatch:'Sin resultados',match:'resultado',matches:'resultados',copied:'Copiado',selCopied:'Selección copiada',pasted:'Pegado',cleared:'Borrado',locked:'Bloqueado',unlocked:'Desbloqueado',saved:'Guardado',opened:'abierto',ctrlV:'Pulsa Ctrl+V',escAgain:'Pulsa Esc de nuevo para borrar',esc2:'🔒 Esc ×2 para desbloquear',esc1:'🔒 Esc ×1 — última oportunidad',unlockCleared:'Desbloqueado y borrado'},
+zh:{file:'📂 打开',newt:'⊞ 新标签',save:'💾 保存',paste:'⎘ 粘贴',copy:'⊕ 复制',clear:'✕ 清空',wrap:'↵ 换行',find:'⌕ 查找',syntax:'⬡ 语法',lock:'🔓 锁定',unlock:'🔒 锁定',themeL:'☀ 浅色',themeD:'🌙 深色',words:'词',chars:'字符',noMatch:'无结果',match:'个',matches:'个',copied:'已复制',selCopied:'已复制选中',pasted:'已粘贴',cleared:'已清空',locked:'已锁定',unlocked:'已解锁',saved:'已保存',opened:'已打开',ctrlV:'请按 Ctrl+V 粘贴',escAgain:'再按 Esc 清空',esc2:'🔒 再按 Esc ×2',esc1:'🔒 最后机会',unlockCleared:'已解锁并清空'},
+hi:{file:'📂 खोलें',newt:'⊞ नया टैब',save:'💾 सहेजें',paste:'⎘ चिपकाएँ',copy:'⊕ कॉपी',clear:'✕ साफ़',wrap:'↵ रैप',find:'⌕ खोजें',syntax:'⬡ सिंटैक्स',lock:'🔓 लॉक',unlock:'🔒 लॉक',themeL:'☀ लाइट',themeD:'🌙 डार्क',words:'शब्द',chars:'अक्षर',noMatch:'कोई नहीं',match:'परिणाम',matches:'परिणाम',copied:'कॉपी हुआ',selCopied:'चयन कॉपी हुआ',pasted:'चिपकाया',cleared:'साफ़ हुआ',locked:'लॉक हुआ',unlocked:'अनलॉक हुआ',saved:'सहेजा',opened:'खुला',ctrlV:'Ctrl+V दबाएँ',escAgain:'साफ़ करने के लिए Esc फिर दबाएँ',esc2:'🔒 Esc ×2 और दबाएँ',esc1:'🔒 आखिरी मौका',unlockCleared:'अनलॉक और साफ़'},
+ar:{file:'📂 فتح',newt:'⊞ تبويب جديد',save:'💾 حفظ',paste:'⎘ لصق',copy:'⊕ نسخ',clear:'✕ مسح',wrap:'↵ التفاف',find:'⌕ بحث',syntax:'⬡ بناء الجملة',lock:'🔓 قفل',unlock:'🔒 قفل',themeL:'☀ فاتح',themeD:'🌙 داكن',words:'كلمات',chars:'أحرف',noMatch:'لا نتائج',match:'نتيجة',matches:'نتائج',copied:'تم النسخ',selCopied:'تم نسخ التحديد',pasted:'تم اللصق',cleared:'تم المسح',locked:'مقفل',unlocked:'مفتوح',saved:'تم الحفظ',opened:'تم الفتح',ctrlV:'اضغط Ctrl+V للصق',escAgain:'اضغط Esc مرة أخرى للمسح',esc2:'🔒 Esc ×2 للفتح والمسح',esc1:'🔒 الفرصة الأخيرة',unlockCleared:'تم الفتح والمسح',rtl:true},
+fr:{file:'📂 Fichier',newt:'⊞ Nouvel onglet',save:'💾 Enregistrer',paste:'⎘ Coller',copy:'⊕ Copier',clear:'✕ Effacer',wrap:'↵ Retour ligne',find:'⌕ Chercher',syntax:'⬡ Syntaxe',lock:'🔓 Verrouiller',unlock:'🔒 Verrouiller',themeL:'☀ Clair',themeD:'🌙 Sombre',words:'mots',chars:'caractères',noMatch:'Aucun résultat',match:'résultat',matches:'résultats',copied:'Copié',selCopied:'Sélection copiée',pasted:'Collé',cleared:'Effacé',locked:'Verrouillé',unlocked:'Déverrouillé',saved:'Enregistré',opened:'ouvert',ctrlV:'Appuyez sur Ctrl+V',escAgain:'Appuyez à nouveau sur Esc',esc2:'🔒 Esc ×2 pour déverrouiller',esc1:'🔒 Dernière chance',unlockCleared:'Déverrouillé et effacé'},
+pt:{file:'📂 Arquivo',newt:'⊞ Nova aba',save:'💾 Salvar',paste:'⎘ Colar',copy:'⊕ Copiar',clear:'✕ Limpar',wrap:'↵ Quebra linha',find:'⌕ Localizar',syntax:'⬡ Sintaxe',lock:'🔓 Bloquear',unlock:'🔒 Bloquear',themeL:'☀ Claro',themeD:'🌙 Escuro',words:'palavras',chars:'caracteres',noMatch:'Sem resultados',match:'resultado',matches:'resultados',copied:'Copiado',selCopied:'Seleção copiada',pasted:'Colado',cleared:'Limpo',locked:'Bloqueado',unlocked:'Desbloqueado',saved:'Salvo',opened:'aberto',ctrlV:'Pressione Ctrl+V',escAgain:'Pressione Esc novamente',esc2:'🔒 Esc ×2 para desbloquear',esc1:'🔒 Última chance',unlockCleared:'Desbloqueado e limpo'},
+id:{file:'📂 Buka',newt:'⊞ Tab baru',save:'💾 Simpan',paste:'⎘ Tempel',copy:'⊕ Salin',clear:'✕ Hapus',wrap:'↵ Bungkus',find:'⌕ Cari',syntax:'⬡ Sintaks',lock:'🔓 Kunci',unlock:'🔒 Kunci',themeL:'☀ Terang',themeD:'🌙 Gelap',words:'kata',chars:'karakter',noMatch:'Tidak ada',match:'hasil',matches:'hasil',copied:'Disalin',selCopied:'Pilihan disalin',pasted:'Ditempel',cleared:'Dihapus',locked:'Dikunci',unlocked:'Dibuka',saved:'Disimpan',opened:'dibuka',ctrlV:'Tekan Ctrl+V',escAgain:'Tekan Esc lagi',esc2:'🔒 Esc ×2 untuk buka kunci',esc1:'🔒 Kesempatan terakhir',unlockCleared:'Dibuka dan dihapus'},
+vi:{file:'📂 Mở',newt:'⊞ Tab mới',save:'💾 Lưu',paste:'⎘ Dán',copy:'⊕ Sao chép',clear:'✕ Xóa',wrap:'↵ Ngắt dòng',find:'⌕ Tìm',syntax:'⬡ Cú pháp',lock:'🔓 Khóa',unlock:'🔒 Khóa',themeL:'☀ Sáng',themeD:'🌙 Tối',words:'từ',chars:'ký tự',noMatch:'Không có',match:'kết quả',matches:'kết quả',copied:'Đã sao chép',selCopied:'Đã sao chép lựa chọn',pasted:'Đã dán',cleared:'Đã xóa',locked:'Đã khóa',unlocked:'Đã mở khóa',saved:'Đã lưu',opened:'đã mở',ctrlV:'Nhấn Ctrl+V để dán',escAgain:'Nhấn Esc lần nữa để xóa',esc2:'🔒 Esc ×2 để mở khóa',esc1:'🔒 Lần cuối',unlockCleared:'Đã mở khóa và xóa'},
+tr:{file:'📂 Dosya',newt:'⊞ Yeni sekme',save:'💾 Kaydet',paste:'⎘ Yapıştır',copy:'⊕ Kopyala',clear:'✕ Temizle',wrap:'↵ Kaydır',find:'⌕ Bul',syntax:'⬡ Sözdizimi',lock:'🔓 Kilitle',unlock:'🔒 Kilitle',themeL:'☀ Açık',themeD:'🌙 Koyu',words:'kelime',chars:'karakter',noMatch:'Eşleşme yok',match:'eşleşme',matches:'eşleşme',copied:'Kopyalandı',selCopied:'Seçim kopyalandı',pasted:'Yapıştırıldı',cleared:'Temizlendi',locked:'Kilitlendi',unlocked:'Kilit açıldı',saved:'Kaydedildi',opened:'açıldı',ctrlV:'Yapıştırmak için Ctrl+V',escAgain:'Temizlemek için tekrar Esc',esc2:'🔒 Kilit açmak için Esc ×2',esc1:'🔒 Son şans',unlockCleared:'Kilit açıldı ve temizlendi'},
+th:{file:'📂 เปิด',newt:'⊞ แท็บใหม่',save:'💾 บันทึก',paste:'⎘ วาง',copy:'⊕ คัดลอก',clear:'✕ ล้าง',wrap:'↵ ตัดบรรทัด',find:'⌕ ค้นหา',syntax:'⬡ ไวยากรณ์',lock:'🔓 ล็อก',unlock:'🔒 ล็อก',themeL:'☀ สว่าง',themeD:'🌙 มืด',words:'คำ',chars:'ตัวอักษร',noMatch:'ไม่พบ',match:'ผล',matches:'ผล',copied:'คัดลอกแล้ว',selCopied:'คัดลอกที่เลือกแล้ว',pasted:'วางแล้ว',cleared:'ล้างแล้ว',locked:'ล็อกแล้ว',unlocked:'ปลดล็อกแล้ว',saved:'บันทึกแล้ว',opened:'เปิดแล้ว',ctrlV:'กด Ctrl+V เพื่อวาง',escAgain:'กด Esc อีกครั้งเพื่อล้าง',esc2:'🔒 Esc ×2 เพื่อปลดล็อก',esc1:'🔒 โอกาสสุดท้าย',unlockCleared:'ปลดล็อกและล้างแล้ว'},
+de:{file:'📂 Datei',newt:'⊞ Neuer Tab',save:'💾 Speichern',paste:'⎘ Einfügen',copy:'⊕ Kopieren',clear:'✕ Leeren',wrap:'↵ Umbruch',find:'⌕ Suchen',syntax:'⬡ Syntax',lock:'🔓 Sperren',unlock:'🔒 Sperren',themeL:'☀ Hell',themeD:'🌙 Dunkel',words:'Wörter',chars:'Zeichen',noMatch:'Keine Treffer',match:'Treffer',matches:'Treffer',copied:'Kopiert',selCopied:'Auswahl kopiert',pasted:'Eingefügt',cleared:'Geleert',locked:'Gesperrt',unlocked:'Entsperrt',saved:'Gespeichert',opened:'geöffnet',ctrlV:'Strg+V zum Einfügen',escAgain:'Nochmals Esc zum Leeren',esc2:'🔒 Esc ×2 zum Entsperren',esc1:'🔒 Letzte Chance',unlockCleared:'Entsperrt und geleert'},
+ja:{file:'📂 開く',newt:'⊞ 新しいタブ',save:'💾 保存',paste:'⎘ 貼り付け',copy:'⊕ コピー',clear:'✕ クリア',wrap:'↵ 折り返し',find:'⌕ 検索',syntax:'⬡ 構文',lock:'🔓 ロック',unlock:'🔒 ロック',themeL:'☀ ライト',themeD:'🌙 ダーク',words:'語',chars:'文字',noMatch:'一致なし',match:'件',matches:'件',copied:'コピー済み',selCopied:'選択範囲をコピー',pasted:'貼り付け済み',cleared:'クリア済み',locked:'ロック済み',unlocked:'ロック解除',saved:'保存済み',opened:'を開きました',ctrlV:'Ctrl+V で貼り付け',escAgain:'もう一度 Esc でクリア',esc2:'🔒 Esc ×2 でロック解除',esc1:'🔒 最後のチャンス',unlockCleared:'ロック解除してクリア'},
+ko:{file:'📂 열기',newt:'⊞ 새 탭',save:'💾 저장',paste:'⎘ 붙여넣기',copy:'⊕ 복사',clear:'✕ 지우기',wrap:'↵ 줄바꿈',find:'⌕ 찾기',syntax:'⬡ 구문',lock:'🔓 잠금',unlock:'🔒 잠금',themeL:'☀ 밝게',themeD:'🌙 어둡게',words:'단어',chars:'글자',noMatch:'일치 없음',match:'개',matches:'개',copied:'복사됨',selCopied:'선택 복사됨',pasted:'붙여넣기됨',cleared:'지워짐',locked:'잠김',unlocked:'잠금 해제',saved:'저장됨',opened:'열림',ctrlV:'Ctrl+V로 붙여넣기',escAgain:'Esc 한 번 더 — 지우기',esc2:'🔒 Esc ×2 — 잠금 해제',esc1:'🔒 마지막 기회',unlockCleared:'잠금 해제 및 지우기'},
+ru:{file:'📂 Открыть',newt:'⊞ Новая вкладка',save:'💾 Сохранить',paste:'⎘ Вставить',copy:'⊕ Копировать',clear:'✕ Очистить',wrap:'↵ Перенос',find:'⌕ Найти',syntax:'⬡ Синтаксис',lock:'🔓 Блокировать',unlock:'🔒 Блокировать',themeL:'☀ Светлый',themeD:'🌙 Тёмный',words:'слов',chars:'символов',noMatch:'Нет совпадений',match:'совпадение',matches:'совпадений',copied:'Скопировано',selCopied:'Выделение скопировано',pasted:'Вставлено',cleared:'Очищено',locked:'Заблокировано',unlocked:'Разблокировано',saved:'Сохранено',opened:'открыт',ctrlV:'Нажмите Ctrl+V',escAgain:'Нажмите Esc ещё раз',esc2:'🔒 Esc ×2 для разблокировки',esc1:'🔒 Последний шанс',unlockCleared:'Разблокировано и очищено'}
+};
+
+/* ── DOM ready — all G() calls below this line ── */
+var G=function(i){return document.getElementById(i)};
+var ed=G('ed'),hl=G('hl'),nb=G('nb');
+var lk=false,sy=false,wp=false,zm=100,dk=true,lg='';
+var mt=[],mi=-1,dT=null,eC=0,eT=null,e1=false,e1T=null;
+var T=LANGS.en;
+
+function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+
+function toast(msg){
+  var el=G('toast');
+  el.classList.remove('out');void el.offsetWidth;
+  G('tmsg').textContent=msg;el.classList.add('show');
+  clearTimeout(el._t);
+  el._t=setTimeout(function(){el.classList.remove('show');el.classList.add('out');},1900);
+}
+
+function updGlow(){G('bPs').classList.toggle('pg',!ed.value&&!lk);}
+
+function flash(){var b=G('bLk');b.classList.remove('fl');void b.offsetWidth;b.classList.add('fl');}
+function guard(){if(lk){flash();return true;}return false;}
+
+function updSt(){
+  var txt=ed.value,s=ed.selectionStart,e=ed.selectionEnd;
+  var pre=txt.slice(0,s),ls=txt.split('\n');
+  G('sps').textContent='Ln '+pre.split('\n').length+'/'+ls.length+' · Col '+(pre.split('\n').pop().length+1);
+  G('swd').textContent=(txt.trim()?txt.trim().split(/\s+/).length:0)+' '+T.words;
+  G('sch').textContent=txt.length+' '+T.chars;
+  G('szm').textContent=zm+'%';
+  if(s!==e){
+    var st=txt.slice(s,e);
+    G('ssel').textContent='Sel '+st.length+' · '+(st.trim()?st.trim().split(/\s+/).length:0)+' '+T.words;
+    G('s1').style.display=G('ssel').style.display='inline';
+  }else G('s1').style.display=G('ssel').style.display='none';
+  G('slk').style.display=lk?'inline':'none';
+}
+
+/* ── Lang detect ── */
+function dLng(n,t){
+  var e=(n.split('.').pop()||'').toLowerCase(),s=t.slice(0,400);
+  var m={js:'js',jsx:'js',ts:'js',tsx:'js',html:'html',htm:'html',css:'css',json:'json',py:'py',sh:'sh',bash:'sh',sql:'sql',c:'c',cpp:'c',h:'c',md:'md'};
+  if(m[e])return m[e];
+  if(/^\s*<(!DOCTYPE|html)/i.test(s))return 'html';
+  if(/^\s*\{[\s\S]{0,40}"\w+":/m.test(s))return 'json';
+  if(/\bdef\s+\w+\s*\(/.test(s))return 'py';
+  if(/\b(const|let|var)\s+\w+/.test(s))return 'js';
+  if(/\bSELECT\b.{1,40}\bFROM\b/i.test(s))return 'sql';
+  return '';
+}
+
+/* ── Tokenizer ── */
+var RLS={
+  js:[['cm',/\/\/[^\n]*|\/\*[\s\S]*?\*\//],['st',/`[\s\S]*?`|"(?:[^"\\\n]|\\.)*"|'(?:[^'\\\n]|\\.)*'/],
+      ['kw',/\b(const|let|var|function|return|if|else|for|while|do|switch|case|break|continue|new|this|typeof|class|extends|import|export|default|async|await|try|catch|finally|throw|null|undefined|true|false)\b/],
+      ['tp',/\b(Promise|Array|Object|Map|Set|Error|Date|Math|JSON|console|window|document|Number|String|Boolean)\b/],
+      ['nm',/\b\d+\.?\d*\b/],['fn',/\b[A-Za-z_$][\w$]*(?=\s*\()/]],
+  py:[['cm',/#[^\n]*/],['st',/"""[\s\S]*?"""|"(?:[^"\\\n]|\\.)*"|'(?:[^'\\\n]|\\.)*'/],
+      ['kw',/\b(def|class|return|if|elif|else|for|while|try|except|finally|with|as|import|from|pass|break|continue|lambda|yield|raise|True|False|None|async|await)\b/],
+      ['nm',/\b\d+\.?\d*\b/],['fn',/\b[A-Za-z_]\w*(?=\s*\()/]],
+  html:[['cm',/<!--[\s\S]*?-->/],['st',/"[^"]*"|'[^']*'/],['tp',/<\/?\w[\w-]*/],['at',/\b[\w-]+(?=\s*=)/]],
+  css:[['cm',/\/\*[\s\S]*?\*\//],['st',/"[^"]*"|'[^']*'/],
+       ['nm',/#[0-9a-fA-F]{3,8}|\b\d+\.?\d*(px|em|rem|%|vh|vw|s|ms)?\b/],
+       ['tp',/[\w-]+(?=\s*\{)/],['kw',/\b(color|background|border|margin|padding|font|display|position|width|height|flex|grid|overflow|opacity|transition|transform|content|cursor)\b/]],
+  json:[['at',/"(?:[^"\\]|\\.)*"(?=\s*:)/],['st',/"(?:[^"\\]|\\.)*"/],['nm',/-?\d+\.?\d*\b/],['kw',/\b(true|false|null)\b/]],
+  sql:[['cm',/--[^\n]*/],['st',/'(?:[^'\\]|\\.)*'/],['nm',/\b\d+\.?\d*\b/],
+       ['kw',/\b(SELECT|FROM|WHERE|JOIN|LEFT|RIGHT|INNER|ON|GROUP|BY|ORDER|HAVING|INSERT|INTO|VALUES|UPDATE|SET|DELETE|CREATE|TABLE|DROP|AS|AND|OR|NOT|IN|NULL|IS|LIMIT|CASE|WHEN|THEN|ELSE|END)\b/i]],
+  sh:[['cm',/#[^\n]*/],['st',/"(?:[^"\\\n]|\\.)*"|'[^'\n]*'/],
+      ['kw',/\b(if|then|else|elif|fi|for|do|done|while|function|return|exit|export|local|source|case|esac)\b/],['at',/\$[\w{][^}]*}?|\$\d+/]],
+  md:[['kw',/^#{1,6} .+$/m],['st',/`{1,3}[\s\S]*?`{1,3}/],['cm',/\*\*[\s\S]*?\*\*|__[\s\S]*?__/],['fn',/\[[^\]\n]*\]\([^)\n]*\)/]],
+  c:[['cm',/\/\/[^\n]*|\/\*[\s\S]*?\*\//],['st',/"(?:[^"\\\n]|\\.)*"|'(?:[^'\\\n]|\\.)*'/],
+     ['kw',/\b(auto|bool|break|case|char|const|continue|default|do|double|else|enum|extern|float|for|goto|if|int|long|return|short|sizeof|static|struct|switch|typedef|void|volatile|while)\b/],
+     ['nm',/\b\d+\.?\d*\b/],['fn',/\b[A-Za-z_]\w*(?=\s*\()/]]
+};
+
+function tok(txt,lng){
+  if(!txt||!lng)return esc(txt);
+  var rs=RLS[lng];if(!rs)return esc(txt);
+  var rx=new RegExp(rs.map(function(r){return'('+r[1].source+')'}).join('|'),'gm');
+  var out='',pos=0,m;
+  while((m=rx.exec(txt))!==null){
+    if(m.index>pos)out+=esc(txt.slice(pos,m.index));
+    for(var i=0;i<rs.length;i++){if(m[i+1]!==undefined){out+='<span class="'+rs[i][0]+'">'+esc(m[i+1])+'</span>';break;}}
+    pos=rx.lastIndex;if(pos===m.index)rx.lastIndex++;
+  }
+  if(pos<txt.length)out+=esc(txt.slice(pos));
+  return out;
+}
+
+function renderSy(){
+  lg=dLng(nb.value,ed.value);
+  hl.innerHTML=tok(ed.value,lg);
+  hl.scrollTop=ed.scrollTop;hl.scrollLeft=ed.scrollLeft;
+  G('sln').textContent=lg?lg.toUpperCase():'';
+}
+
+function setLock(val){
+  lk=val;ed.readOnly=val;
+  G('bLk').textContent=val?T.unlock:T.lock;
+  G('bLk').classList.toggle('on',val);
+  G('slk').style.display=val?'inline':'none';
+  updGlow();
+}
+
+function insText(t){
+  if(!t)return;
+  var ro=ed.readOnly;if(ro)ed.readOnly=false;
+  var s=ed.selectionStart,e2=ed.selectionEnd,v=ed.value;
+  ed.value=v.slice(0,s)+t+v.slice(e2);
+  ed.selectionStart=ed.selectionEnd=s+t.length;
+  if(ro)ed.readOnly=true;
+  if(sy)renderSy();updSt();updGlow();
+}
+
+function doCopy(t,msg){
+  if(navigator.clipboard)navigator.clipboard.writeText(t).then(function(){toast(msg);}).catch(function(){fbCopy(t,msg);});
+  else fbCopy(t,msg);
+}
+function fbCopy(t,msg){var x=document.createElement('textarea');x.value=t;x.style.cssText='position:fixed;opacity:0';document.body.appendChild(x);x.select();try{document.execCommand('copy');toast(msg);}catch(e){toast('Copy failed');}document.body.removeChild(x);}
+
+function getR(){var q=G('fq').value;if(!q)return null;var fl='g'+(G('chkC').checked?'':'i');try{return G('chkX').checked?new RegExp(q,fl):new RegExp(q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'),fl);}catch(x){return null;}}
+function doFind(){mt=[];mi=-1;var re=getR();if(re){var txt=ed.value,m;re.lastIndex=0;while((m=re.exec(txt))!==null){mt.push([m.index,m.index+m[0].length]);if(!m[0].length)re.lastIndex++;}if(mt.length)mi=0;}G('fc').textContent=mt.length?mt.length+' '+(mt.length===1?T.match:T.matches):T.noMatch;}
+function goM(i){if(!mt.length){doFind();if(!mt.length)return;}mi=((i%mt.length)+mt.length)%mt.length;var m=mt[mi];ed.focus();ed.setSelectionRange(m[0],m[1]);var lh=parseFloat(getComputedStyle(ed).lineHeight)||22;ed.scrollTop=Math.max(0,(ed.value.slice(0,m[0]).split('\n').length-3)*lh);G('fc').textContent=(mi+1)+'/'+mt.length+' '+(mt.length===1?T.match:T.matches);updSt();}
+function openF(){G('fb').classList.add('open');var s=ed.value.slice(ed.selectionStart,ed.selectionEnd).trim();if(s)G('fq').value=s;G('fq').focus();G('fq').select();}
+function closeF(){G('fb').classList.remove('open');mt=[];mi=-1;ed.focus();}
+
+function doSave(){var name=nb.value||'Untitled.txt';var a=document.createElement('a');a.href=URL.createObjectURL(new Blob([ed.value],{type:'text/plain'}));a.download=name;a.click();setTimeout(function(){URL.revokeObjectURL(a.href);},1000);toast(T.saved+': '+name);}
+
+function doEsc(){
+  if(G('fb').classList.contains('open')){closeF();e1=false;eC=0;return;}
+  if(lk){
+    eC++;clearTimeout(eT);
+    eT=setTimeout(function(){eC=0;G('sln').textContent=sy?lg.toUpperCase():'';},4000);
+    if(eC===1)G('sln').textContent=T.esc2;
+    else if(eC===2)G('sln').textContent=T.esc1;
+    else if(eC>=3){
+      if(sy){sy=false;hl.classList.remove('show');hl.innerHTML='';ed.style.display='';G('bSy').classList.remove('on');}
+      setLock(false);ed.value='';eC=0;G('sln').textContent='';updSt();updGlow();toast(T.unlockCleared);ed.focus();
+    }
+    return;
+  }
+  if(!ed.value)return;
+  if(!e1){
+    e1=true;G('sln').textContent=T.escAgain;
+    clearTimeout(e1T);e1T=setTimeout(function(){e1=false;G('sln').textContent='';},500);
+  }else{
+    e1=false;clearTimeout(e1T);G('sln').textContent='';
+    ed.value='';if(sy)hl.innerHTML='';updSt();updGlow();toast(T.cleared);ed.focus();
+  }
+}
+
+/* ── Paste ── */
+ed.addEventListener('paste',function(e){
+  var empty=!ed.value;
+  if(lk&&!empty){e.preventDefault();flash();return;}
+  var t=(e.clipboardData||window.clipboardData).getData('text');
+  e.preventDefault();insText(t);
+  if(empty)toast(T.pasted);
+});
+
+/* ── Button wiring ── */
+G('bFi').onclick=function(){G('fi').value='';G('fi').click();};
+G('fi').onchange=function(){
+  var f=G('fi').files[0];if(!f)return;
+  var r=new FileReader();
+  r.onload=function(ev){ed.value=ev.target.result;nb.value=f.name;document.title=f.name+' \u2014 Quick Web Notepad';if(sy)renderSy();updSt();updGlow();ed.focus();toast(f.name+' '+T.opened);};
+  r.readAsText(f);
+};
+G('bNt').onclick=function(){window.open(location.href,'_blank');};
+G('bSv').onclick=doSave;
+G('bPs').onclick=function(){
+  if(lk&&ed.value){flash();return;}
+  ed.focus();
+  if(navigator.clipboard&&navigator.clipboard.readText){
+    navigator.clipboard.readText().then(function(t){insText(t);toast(T.pasted);}).catch(function(){toast(T.ctrlV);});
+  }else toast(T.ctrlV);
+};
+G('bCp').onclick=function(){var s=ed.selectionStart,e=ed.selectionEnd,h=s!==e;doCopy(h?ed.value.slice(s,e):ed.value,h?T.selCopied:T.copied);};
+G('bCl').onclick=function(){if(guard())return;if(!ed.value)return;ed.value='';if(sy)hl.innerHTML='';updSt();updGlow();toast(T.cleared);ed.focus();};
+G('bWp').onclick=function(){if(lk)return;wp=!wp;[ed,hl].forEach(function(x){x.classList.toggle('wp',wp);});G('bWp').classList.toggle('on',wp);};
+G('bFb').onclick=openF;G('bFc').onclick=closeF;
+G('bFp').onclick=function(){goM(mi<=0?mt.length-1:mi-1);};
+G('bFn').onclick=function(){goM(mi+1);};
+G('fq').oninput=function(){clearTimeout(dT);dT=setTimeout(doFind,380);};
+G('fq').onkeydown=function(e){if(e.key==='Enter'){e.preventDefault();clearTimeout(dT);doFind();e.shiftKey?goM(mi<=0?mt.length-1:mi-1):goM(mi+1);}if(e.key==='Escape'){e.stopPropagation();closeF();}};
+G('chkC').onchange=G('chkX').onchange=function(){clearTimeout(dT);dT=setTimeout(doFind,100);};
+G('bRp').onclick=function(){if(guard())return;if(!mt.length){doFind();if(!mt.length)return;}var m=mt[mi],v=ed.value;ed.value=v.slice(0,m[0])+G('rq').value+v.slice(m[1]);doFind();if(mt.length)goM(mi);toast(T.saved.replace(T.saved,'Replaced'));updSt();if(sy)renderSy();};
+G('bRa').onclick=function(){if(guard())return;var re=getR();if(!re)return;var cnt=0;ed.value=ed.value.replace(re,function(){cnt++;return G('rq').value;});doFind();toast('Replaced '+cnt);updSt();if(sy)renderSy();};
+G('bSy').onclick=function(){
+  sy=!sy;
+  if(sy){renderSy();hl.classList.add('show');ed.style.display='none';setLock(true);}
+  else{hl.classList.remove('show');hl.innerHTML='';ed.style.display='';G('sln').textContent='';if(!lk)ed.focus();}
+  G('bSy').classList.toggle('on',sy);updSt();
+};
+G('bLk').onclick=function(){
+  if(!lk){setLock(true);toast(T.locked);}
+  else{if(sy){sy=false;hl.classList.remove('show');hl.innerHTML='';ed.style.display='';G('bSy').classList.remove('on');G('sln').textContent='';}setLock(false);toast(T.unlocked);ed.focus();}
+  eC=0;
+};
+function setZm(z){zm=Math.max(50,Math.min(300,z));var px=Math.round(13*zm/100)+'px';ed.style.fontSize=hl.style.fontSize=px;G('bZr').textContent=zm+'%';G('szm').textContent=zm+'%';}
+G('bZo').onclick=function(){setZm(zm-10);};G('bZr').onclick=function(){setZm(100);};G('bZi').onclick=function(){setZm(zm+10);};
+G('bTh').onclick=function(){dk=!dk;document.body.classList.toggle('L',!dk);G('bTh').textContent=dk?T.themeL:T.themeD;};
+G('bNt').onclick=function(){window.open(location.href,'_blank');};
+nb.onclick=function(){var v=nb.value,d=v.lastIndexOf('.');setTimeout(function(){nb.setSelectionRange(0,d>0?d:v.length);},0);};
+nb.oninput=function(){var v=nb.value.trim();if(v)document.title=(v.includes('.')?v:v+'.txt')+' \u2014 Quick Web Notepad';};
+nb.onblur=function(){var v=nb.value.trim()||'Untitled';if(!v.includes('.'))v+='.txt';nb.value=v;document.title=v+' \u2014 Quick Web Notepad';if(sy)renderSy();};
+ed.oninput=function(){if(sy)renderSy();updSt();updGlow();if(G('fb').classList.contains('open')){clearTimeout(dT);dT=setTimeout(doFind,380);}};
+ed.onscroll=function(){if(sy){hl.scrollTop=ed.scrollTop;hl.scrollLeft=ed.scrollLeft;}};
+G('hl').onscroll=function(){ed.scrollTop=hl.scrollTop;ed.scrollLeft=hl.scrollLeft;};
+ed.addEventListener('keyup',updSt);ed.addEventListener('click',updSt);ed.addEventListener('select',updSt);
+ed.onkeydown=function(e){
+  if(e.key==='Tab'){e.preventDefault();if(guard())return;var s=ed.selectionStart,v=ed.value;ed.value=v.slice(0,s)+'  '+v.slice(ed.selectionEnd);ed.selectionStart=ed.selectionEnd=s+2;updSt();}
+  if(lk&&!e.ctrlKey&&!e.metaKey&&!e.altKey&&e.key.length===1)flash();
+};
+document.addEventListener('keydown',function(e){
+  if(e.target===G('fq')||e.target===G('rq'))return;
+  if(e.key==='Escape'){e.preventDefault();doEsc();return;}
+  var c=e.ctrlKey||e.metaKey,k=e.key.toLowerCase();if(!c)return;
+  if(k==='s'){e.preventDefault();doSave();}
+  else if(k==='o'){e.preventDefault();G('bFi').click();}
+  else if(k==='t'){e.preventDefault();window.open(location.href,'_blank');}
+  else if(k==='f'){e.preventDefault();openF();}
+  else if(k==='0'){e.preventDefault();setZm(100);}
+  else if(e.key==='-'){e.preventDefault();setZm(zm-10);}
+  else if(e.key==='='||e.key==='+'){e.preventDefault();setZm(zm+10);}
+  else if(e.shiftKey&&k==='w'){e.preventDefault();G('bWp').click();}
+  else if(e.shiftKey&&k==='h'){e.preventDefault();G('bSy').click();}
+  else if(e.shiftKey&&k==='l'){e.preventDefault();G('bLk').click();}
+  else if(e.shiftKey&&k==='c'){e.preventDefault();var s=ed.selectionStart,en=ed.selectionEnd,h=s!==en;doCopy(h?ed.value.slice(s,en):ed.value,h?T.selCopied:T.copied);}
+});
+
+/* ── applyLang — after all G() and state ready ── */
+function applyLang(code){
+  T=LANGS[code]||LANGS.en;
+  document.body.dir=T.rtl?'rtl':'ltr';
+  G('bFi').textContent=T.file;G('bNt').textContent=T.newt;G('bSv').textContent=T.save;
+  G('bPs').textContent=T.paste;G('bCp').textContent=T.copy;G('bCl').textContent=T.clear;
+  G('bWp').textContent=T.wrap;G('bFb').textContent=T.find;G('bSy').textContent=T.syntax;
+  G('bLk').textContent=lk?T.unlock:T.lock;
+  G('bTh').textContent=dk?T.themeL:T.themeD;
+  G('fq').placeholder=T.find.replace(/^.\s/,'')+'\u2026';
+  updSt();
+}
+G('ui-lang').onchange=function(){applyLang(this.value);};
+
+/* ── Auto-detect browser language ── */
+(function(){
+  var bl=(navigator.language||'en').toLowerCase();
+  var MAP={'en':'en','en-us':'en','en-gb':'en','es':'es','es-es':'es','es-mx':'es','zh':'zh','zh-cn':'zh','zh-tw':'zh','hi':'hi','ar':'ar','ar-sa':'ar','fr':'fr','fr-fr':'fr','pt':'pt','pt-br':'pt','id':'id','vi':'vi','tr':'tr','th':'th','de':'de','de-de':'de','ja':'ja','ko':'ko','ru':'ru'};
+  var d=MAP[bl]||MAP[bl.split('-')[0]]||'en';
+  if(d!=='en'){G('ui-lang').value=d;applyLang(d);}
+})();
+
+document.title='Untitled.txt \u2014 Quick Web Notepad';
+updSt();updGlow();ed.focus();
+</script>
+</body></html>
