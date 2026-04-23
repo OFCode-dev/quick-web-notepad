@@ -30,6 +30,12 @@ A refined compact variant that adds multilingual UI support, automatic browser-l
 
 This project is being actively improved through multiple parallel versions.
 
+## File Guide
+
+- `index.html` — classic version
+- `index_v2.html` — enhanced version
+- `index_v2.1.html` — localized / refined version
+
 ## Live Demo
 
 - [Classic](https://ofcode-dev.github.io/quick-web-notepad/)
