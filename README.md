@@ -2,33 +2,33 @@
 
 A lightweight browser-based notepad built with HTML, CSS, and JavaScript.
 
-## Live versions
+## Versions
 
-- Classic version: `index.html`
-- Enhanced version: `index_v2.html`
+### `index.html` — Classic
+The original compact version of Quick Web Notepad with a lightweight layout and minimal editing interface.
+
+### `index_v2.html` — Enhanced
+A more polished version with broader UI improvements and a more app-like presentation.
+
+### `index_v2.1.html` — Localized / Refined
+A refined compact variant that adds multilingual UI support, automatic browser-language detection, visible version labels, and additional interface polish.
 
 ## Features
 
 - Plain text editing in the browser
-- Save and open local files
-- Copy and paste support
+- Open and save local text files
+- Paste and copy support
 - Word wrap
 - Find and replace
 - Syntax highlighting
 - Lock / protect mode
-- Light and dark theme options
-
-## Versions
-
-### Classic
-The original compact version with a minimal interface.
-
-### Enhanced
-A newer version with updated behavior, UI refinements, and additional polish.
+- Theme toggle
+- Zoom controls
+- Multiple project variants for different UI styles
 
 ## Project status
 
-This project is actively being refined and improved.
+This project is being actively improved through multiple parallel versions.
 
 ## Author
 
