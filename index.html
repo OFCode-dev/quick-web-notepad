@@ -1,374 +1,1627 @@
-<!DOCTYPE html><html lang="en"><head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 36 36'><rect x='2' y='3' width='32' height='22' rx='2' fill='%231565c0' stroke='%230078d7' stroke-width='1.5'/><rect x='4' y='5' width='28' height='18' rx='1' fill='%230a1a2e'/><line x1='7' y1='10' x2='24' y2='10' stroke='%234db8ff' stroke-width='1.2' stroke-linecap='round'/><line x1='7' y1='13.5' x2='22' y2='13.5' stroke='%234db8ff' stroke-width='1.2' stroke-linecap='round'/><line x1='7' y1='17' x2='19' y2='17' stroke='%234db8ff' stroke-width='1.2' stroke-linecap='round'/><rect x='19.5' y='15.5' width='1.2' height='3' fill='%230078d7'/><rect x='15' y='25' width='6' height='4' fill='%231565c0'/><rect x='11' y='29' width='14' height='2.5' rx='1' fill='%231565c0'/></svg>">
-<title>Untitled.txt — Quick Web Notepad</title>
+<html lang="en"><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Quick Web Notepad</title>
+<meta name="description" content="A fast, distraction-free plain text editor. Works offline, supports multiple languages.">
+<meta name="author" content="OFCode">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,&lt;svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 36 36'&gt;&lt;rect x='2' y='3' width='32' height='22' rx='2' fill='%23444'/&gt;&lt;rect x='4' y='5' width='28' height='18' rx='1' fill='%231a2a1a'/&gt;&lt;line x1='7' y1='10' x2='24' y2='10' stroke='%236aff6a' stroke-width='1.2' stroke-linecap='round'/&gt;&lt;line x1='7' y1='13.5' x2='22' y2='13.5' stroke='%236aff6a' stroke-width='1.2' stroke-linecap='round'/&gt;&lt;line x1='7' y1='17' x2='19' y2='17' stroke='%236aff6a' stroke-width='1.2' stroke-linecap='round'/&gt;&lt;rect x='19.5' y='15.5' width='1.2' height='3' fill='%23f5a623'/&gt;&lt;rect x='15' y='25' width='6' height='4' fill='%23555'/&gt;&lt;rect x='11' y='29' width='14' height='2.5' rx='1' fill='%23555'/&gt;&lt;/svg&gt;">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
 <style>
-:root{--bg:#1e1e1e;--ti:#111;--ba:#252526;--br:#3e3e42;--tx:#d4d4d4;--ac:#0078d7;--bn:#2d2d2d;--bh:#3e3e3e;--bb:#4a4a4a;--ed:#1e1e1e;--st:#007acc;--sc:#4a4a4a;--in:#1a1a1a}
-.L{--bg:#f5f5f5;--ti:#e4e4e4;--ba:#f3f3f3;--br:#ddd;--tx:#1e1e1e;--bn:#e4e4e4;--bh:#d0d0d0;--bb:#bbb;--ed:#fff;--st:#0078d7;--sc:#bbb;--in:#fff}
-*{box-sizing:border-box;margin:0;padding:0}html,body{height:100%;overflow:hidden}
-body{display:flex;flex-direction:column;background:var(--bg);color:var(--tx);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;font-size:12px}
-#ti{background:var(--ti);border-bottom:2px solid var(--ac);padding:5px 12px;display:flex;align-items:center;gap:10px;flex-shrink:0;user-select:none}
-.aname{font-size:13px;letter-spacing:.4px;white-space:nowrap;flex-shrink:0}
-.aname .q{color:#4db8ff;font-weight:700}.aname .r{color:var(--tx);opacity:.7}
-#nb{background:transparent;border:none;outline:none;color:var(--tx);font-family:inherit;font-size:12px;text-align:left;padding:3px 4px;flex:1;min-width:80px;max-width:420px;opacity:.65;transition:opacity .15s}
-#nb:hover,#nb:focus{opacity:1}
-#to{background:var(--ba);border-bottom:1px solid var(--br);padding:4px 8px;display:flex;align-items:center;gap:2px;flex-shrink:0;overflow-x:auto;user-select:none}
-#to::-webkit-scrollbar{height:3px}#to::-webkit-scrollbar-thumb{background:var(--sc);border-radius:2px}
-.sp{width:1px;height:18px;background:var(--br);margin:0 4px;flex-shrink:0}
-button{background:var(--bn);border:1px solid var(--bb);border-radius:4px;color:var(--tx);font-size:11px;padding:3px 9px;cursor:pointer;white-space:nowrap;font-family:inherit;line-height:1.4;position:relative;flex-shrink:0}
-button:hover{background:var(--bh);border-color:var(--ac)}button.on{background:var(--ac);border-color:var(--ac);color:#fff}
-button[data-tip]:hover::after{content:attr(data-tip);position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%);background:#0d0d0d;color:#ddd;font-size:10px;padding:3px 8px;border-radius:3px;white-space:nowrap;z-index:9999;pointer-events:none;border:1px solid #2a2a2a}
-@keyframes lf{0%,100%{background:var(--bn);border-color:var(--bb);color:var(--tx)}35%,65%{background:#c0392b;border-color:#922b21;color:#fff}}
-.fl{animation:lf .55s ease!important}
-@keyframes pg{0%,100%{box-shadow:none;border-color:var(--bb)}50%{box-shadow:0 0 9px 2px rgba(46,204,113,.55);border-color:rgba(46,204,113,.75)}}
-.pg{animation:pg 1.8s ease-in-out infinite}
-#fb{background:var(--ba);border-bottom:1px solid var(--br);padding:5px 10px;display:none;align-items:center;gap:5px;flex-wrap:wrap;flex-shrink:0}
-#fb.open{display:flex}
-#fb input[type=text]{background:var(--in);border:1px solid var(--bb);border-radius:3px;color:var(--tx);font-size:11px;padding:3px 8px;outline:none;width:135px;font-family:inherit}
-#fb input[type=text]:focus{border-color:var(--ac)}
-#fc{font-size:11px;opacity:.6;min-width:62px}
-#fb label{font-size:11px;display:flex;align-items:center;gap:3px;cursor:pointer}
-#ew{flex:1;display:flex;overflow:hidden;background:var(--ed)}
-#ed,#hl{flex:1;min-width:0;padding:10px 14px;font-family:Menlo,Consolas,'Courier New',monospace;font-size:13px;line-height:1.65;white-space:pre;tab-size:2;overflow:auto;background:var(--ed);color:var(--tx)}
-#ed{border:none;outline:none;resize:none;caret-color:var(--ac)}
-#hl{display:none;margin:0;border:none;cursor:text}
-#hl.show{display:block}
-.wp{white-space:pre-wrap!important;word-break:break-word!important;overflow-x:hidden!important}
-#ed::-webkit-scrollbar,#hl::-webkit-scrollbar{width:8px;height:8px}
-#ed::-webkit-scrollbar-thumb,#hl::-webkit-scrollbar-thumb{background:var(--sc);border-radius:4px}
-#sb{background:var(--st);color:#fff;padding:2px 10px;display:flex;align-items:center;justify-content:space-between;font-size:11px;flex-shrink:0;user-select:none;overflow:hidden;white-space:nowrap}
-.sl,.sr{display:flex;align-items:center;gap:6px}.dim{opacity:.45}
-#slk{color:#ffb0b0;font-weight:700}
-#toast{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(.95);background:rgba(120,120,120,.25);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-radius:22px;padding:28px 40px 26px;text-align:center;pointer-events:none;z-index:99999;opacity:0;transition:opacity .15s ease-out,transform .15s ease-out;min-width:180px}
-#toast.show{opacity:1;transform:translate(-50%,-50%) scale(1)}
-#toast.out{opacity:0;transform:translate(-50%,-50%) scale(.95);transition:opacity 2s ease,transform 2s ease}
-#ticon{width:110px;height:110px;border-radius:50%;background:rgba(255,255,255,.14);display:flex;align-items:center;justify-content:center;margin:0 auto 14px;font-size:72px;line-height:1;color:#fff}
-#tmsg{font-size:24px;font-weight:700;color:#fff}
-.kw{color:#569cd6}.st{color:#ce9178}.cm{color:#6a9955}.nm{color:#b5cea8}.fn{color:#dcdcaa}.tp{color:#4ec9b0}.at{color:#9cdcfe}
-.L .kw{color:#0000af}.L .st{color:#a31515}.L .cm{color:#008000}.L .nm{color:#098658}.L .fn{color:#795e26}.L .tp{color:#267f99}.L .at{color:#e50000}
-</style></head><body>
-<div id="ti">
-  <svg width="20" height="20" viewBox="0 0 36 36" fill="none"><rect x="2" y="3" width="32" height="22" rx="2" fill="#1565c0" stroke="#0078d7" stroke-width="1.5"/><rect x="4" y="5" width="28" height="18" rx="1" fill="#0a1a2e"/><line x1="7" y1="10" x2="24" y2="10" stroke="#4db8ff" stroke-width="1.2" stroke-linecap="round"/><line x1="7" y1="13.5" x2="22" y2="13.5" stroke="#4db8ff" stroke-width="1.2" stroke-linecap="round"/><line x1="7" y1="17" x2="19" y2="17" stroke="#4db8ff" stroke-width="1.2" stroke-linecap="round"/><rect x="19.5" y="15.5" width="1.2" height="3" fill="#0078d7"/><rect x="15" y="25" width="6" height="4" fill="#1565c0"/><rect x="11" y="29" width="14" height="2.5" rx="1" fill="#1565c0"/></svg>
-  <div class="aname"><span class="q">QUICK</span> <span class="r">WEB NOTEPAD</span></div>
-  <input id="nb" type="text" value="Untitled.txt" spellcheck="false" autocomplete="off">
-</div>
-<div id="to">
-  <button id="bFi" data-tip="Open file  Ctrl+O">📂 File</button>
-  <button id="bNt" data-tip="New tab  Ctrl+T">⊞ New Tab</button>
-  <div class="sp"></div>
-  <button id="bSv" data-tip="Save  Ctrl+S">💾 Save</button>
-  <div class="sp"></div>
-  <button id="bPs" data-tip="Focus editor then Ctrl+V">⎘ Paste</button>
-  <button id="bCp" data-tip="Copy selection or all  Ctrl+Shift+C">⊕ Copy</button>
-  <button id="bCl" data-tip="Clear  double-Esc">✕ Clear</button>
-  <div class="sp"></div>
-  <button id="bWp" data-tip="Word wrap  Ctrl+Shift+W">↵ Wrap</button>
-  <button id="bFb" data-tip="Find &amp; Replace  Ctrl+F">⌕ Find</button>
-  <div class="sp"></div>
-  <button id="bSy" data-tip="Syntax highlight  Ctrl+Shift+H">⬡ Syntax</button>
-  <div class="sp"></div>
-  <button id="bLk" data-tip="Lock / Unlock  Ctrl+Shift+L">🔓 Lock</button>
-  <div class="sp"></div>
-  <button id="bZo" data-tip="Zoom out  Ctrl+−">A−</button>
-  <button id="bZr" data-tip="Reset zoom  Ctrl+0">100%</button>
-  <button id="bZi" data-tip="Zoom in  Ctrl+=">A+</button>
-  <div class="sp"></div>
-  <button id="bTh" data-tip="Toggle theme">☀ Light</button>
-</div>
-<div id="fb">
-  <input id="fq" type="text" placeholder="Find…" spellcheck="false">
-  <button id="bFp" data-tip="Previous  Shift+Enter">↑</button>
-  <button id="bFn" data-tip="Next  Enter">↓</button>
-  <span id="fc">—</span>
-  <input id="rq" type="text" placeholder="Replace…" spellcheck="false">
-  <button id="bRp">Replace</button><button id="bRa">All</button>
-  <label><input type="checkbox" id="chkC"> Case</label>
-  <label><input type="checkbox" id="chkX"> Regex</label>
-  <button id="bFc" style="margin-left:auto">✕</button>
-</div>
-<div id="ew">
-  <textarea id="ed" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off"></textarea>
-  <pre id="hl" aria-hidden="true"></pre>
-</div>
-<div id="sb">
-  <div class="sl">
-    <span id="sps">Ln 1/1 · Col 1</span>
-    <span class="dim">|</span><span id="swd">0 words</span>
-    <span class="dim">|</span><span id="sch">0 chars</span>
-    <span class="dim">|</span><span id="szm">100%</span>
-    <span class="dim" id="s1" style="display:none">|</span>
-    <span id="ssel" style="display:none"></span>
+/* ── VARIABLES ───────────────────────────────────────────── */
+:root {
+  --bg:           #f5f5f5;
+  --surface:      #ffffff;
+  --toolbar:      #f3f3f3;
+  --toolbar-b:    #e0e0e0;
+  --border:       #e8e8e8;
+  --text:         #1e1e1e;
+  --text2:        #6e7681;
+  --accent:       #0066cc;
+  --accent-bg:    rgba(0,102,204,.10);
+  --btn-hover:    rgba(0,0,0,.06);
+  --editor:       #ffffff;
+  --lnum-bg:      #f8f8f8;
+  --lnum-text:    #a8a8a8;
+  --findbar:      #ebebeb;
+  --sb-bg:        #007acc;
+  --sb-text:      #ffffff;
+  --header:       #1e1e1e;
+  --header-text:  #cccccc;
+  --protect-col:  #e87d0d;
+  --syntax-col:   #8c64c8;
+  --shadow:       0 1px 3px rgba(0,0,0,.10);
+}
+.dark {
+  --bg:           #1e1e1e;
+  --surface:      #1e1e1e;
+  --toolbar:      #2d2d2d;
+  --toolbar-b:    #3e3e42;
+  --border:       #3e3e42;
+  --text:         #d4d4d4;
+  --text2:        #858585;
+  --accent:       #4fc1ff;
+  --accent-bg:    rgba(79,193,255,.12);
+  --btn-hover:    rgba(255,255,255,.07);
+  --editor:       #1e1e1e;
+  --lnum-bg:      #1e1e1e;
+  --lnum-text:    #505050;
+  --findbar:      #252526;
+  --sb-bg:        #007acc;
+  --sb-text:      #ffffff;
+  --header:       #111111;
+  --header-text:  #aaaaaa;
+  --protect-col:  #e87d0d;
+  --syntax-col:   #b08ae0;
+  --shadow:       0 1px 3px rgba(0,0,0,.35);
+}
+
+/* ── RESET ───────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; overflow: hidden; }
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 13px;
+  background: var(--bg);
+  color: var(--text);
+  display: flex;
+  flex-direction: column;
+  transition: background .15s, color .15s;
+}
+
+/* ── WEB HEADER (hidden in Electron) ─────────────────────── */
+#app-header {
+  background: var(--header);
+  height: 42px;
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  gap: 10px;
+  flex-shrink: 0;
+  border-bottom: 2px solid #f5a623;
+}
+.is-electron #app-header { display: none; }
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Inter', sans-serif;
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #fff;
+}
+.logo svg { width: 22px; height: 22px; flex-shrink: 0; }
+.logo em { color: #f5a623; font-style: normal; }
+
+#lang-wrap { margin-left: auto; }
+#ui-lang {
+  background: #333;
+  color: #ccc;
+  border: 1px solid #555;
+  border-radius: 4px;
+  padding: 3px 6px;
+  font-size: 11px;
+  font-family: inherit;
+  cursor: pointer;
+  outline: none;
+}
+#ui-lang:focus { border-color: var(--accent); }
+
+/* ── APP CONTAINER ───────────────────────────────────────── */
+#app {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* ── TOOLBAR ─────────────────────────────────────────────── */
+#toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1px;
+  padding: 3px 6px;
+  background: var(--toolbar);
+  border-bottom: 1px solid var(--toolbar-b);
+  flex-shrink: 0;
+}
+#toolbar button {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 9px;
+  font-size: 11.5px;
+  font-family: 'Inter', sans-serif;
+  font-weight: 500;
+  background: transparent;
+  color: var(--text);
+  border: 1px solid transparent;
+  border-radius: 4px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background .1s, border-color .1s, color .1s;
+  line-height: 1.2;
+  user-select: none;
+}
+#toolbar button:hover {
+  background: var(--btn-hover);
+  border-color: var(--border);
+}
+#toolbar button.active {
+  background: var(--accent-bg);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+#toolbar button:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+#save-btn.has-file {
+  background: var(--accent);
+  color: #fff !important;
+  border-color: var(--accent) !important;
+}
+#save-btn.has-file:hover { filter: brightness(.9); }
+
+#protect-btn.active {
+  background: rgba(232,125,13,.13);
+  border-color: var(--protect-col);
+  color: var(--protect-col);
+}
+@keyframes protect-pulse {
+  0%,100% { box-shadow: none; }
+  40%      { box-shadow: 0 0 0 3px rgba(232,125,13,.55); }
+}
+#protect-btn.pulse { animation: protect-pulse .35s ease 3; }
+
+@keyframes paste-glow {
+  0%,100% { box-shadow: none; border-color: transparent; }
+  50%      { box-shadow: 0 0 7px 2px rgba(50,200,100,.45); border-color: rgba(50,200,100,.6); }
+}
+#paste-btn.glow { animation: paste-glow 2s ease-in-out infinite; }
+
+#copy-sel-btn { transition: opacity .15s; }
+#copy-sel-btn:disabled { opacity: 0.28; cursor: not-allowed; pointer-events: none; }
+
+#clear-confirm {
+  display: none; align-items: center; gap: 6px;
+  padding: 3px 10px; flex-shrink: 0;
+  background: rgba(232,125,13,.10);
+  border-bottom: 1px solid var(--protect-col);
+  font-size: 12px; color: var(--text);
+}
+#clear-confirm.show { display: flex; }
+#clear-confirm span { flex: 1; font-size: 11.5px; }
+#clear-confirm button {
+  padding: 2px 10px; font-size: 11.5px; border-radius: 4px; cursor: pointer;
+  font-family: 'Inter', sans-serif; font-weight: 500; border: 1px solid;
+}
+#clear-confirm .cc-do   { background: var(--protect-col); color:#fff; border-color: var(--protect-col); }
+#clear-confirm .cc-keep { background: transparent; color: var(--text); border-color: var(--border); }
+#clear-confirm .cc-do:hover   { filter: brightness(.9); }
+#clear-confirm .cc-keep:hover { background: var(--btn-hover); }
+
+#syntax-btn.active {
+  background: rgba(140,100,200,.13);
+  border-color: var(--syntax-col);
+  color: var(--syntax-col);
+}
+
+.fname-input {
+  padding: 4px 8px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11.5px;
+  background: var(--surface);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  width: 140px;
+  outline: none;
+  transition: border-color .15s;
+}
+.fname-input:focus { border-color: var(--accent); }
+
+#syntax-lang-select {
+  display: none;
+  font-size: 11px;
+  font-family: 'Inter', sans-serif;
+  padding: 4px 6px;
+  background: var(--surface);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  cursor: pointer;
+  outline: none;
+}
+#syntax-lang-select.show { display: inline-block; }
+#syntax-lang-select:focus { border-color: var(--accent); }
+
+.tb-sep {
+  width: 1px;
+  height: 18px;
+  background: var(--border);
+  margin: 0 3px;
+  flex-shrink: 0;
+}
+
+/* ── FIND BAR ────────────────────────────────────────────── */
+#findbar {
+  display: none;
+  padding: 4px 8px;
+  gap: 5px;
+  align-items: center;
+  flex-wrap: wrap;
+  background: var(--findbar);
+  border-bottom: 1px solid var(--toolbar-b);
+  flex-shrink: 0;
+  font-size: 12px;
+}
+#findbar.visible { display: flex; }
+#findbar label { color: var(--text2); font-size: 11px; white-space: nowrap; }
+#findbar input {
+  padding: 3px 8px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  background: var(--surface);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  width: 160px;
+  outline: none;
+  transition: border-color .15s;
+}
+#findbar input:focus { border-color: var(--accent); }
+#findbar button {
+  padding: 3px 8px;
+  font-size: 11.5px;
+  font-family: 'Inter', sans-serif;
+  background: var(--surface);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background .1s;
+}
+#findbar button:hover { background: var(--btn-hover); }
+.match-info { font-size: 11px; color: var(--text2); min-width: 80px; }
+#findbar .close-btn { margin-left: auto; }
+#replace-row { display: none; align-items: center; gap: 5px; flex-wrap: wrap; }
+#replace-row.visible { display: flex; }
+
+/* ── EDITOR AREA ─────────────────────────────────────────── */
+#editor-wrap {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+  background: var(--editor);
+  min-height: 0;
+  position: relative;
+}
+
+#linenums {
+  user-select: none;
+  background: var(--lnum-bg);
+  color: var(--lnum-text);
+  padding: 10px 10px 10px 12px;
+  text-align: right;
+  border-right: 1px solid var(--border);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 14px;
+  line-height: 1.6em;
+  overflow: hidden;
+  white-space: pre;
+  min-width: 3.2em;
+  flex-shrink: 0;
+}
+
+#text {
+  flex: 1;
+  border: none;
+  resize: none;
+  outline: none;
+  padding: 10px 14px;
+  font-family: 'JetBrains Mono', Consolas, monospace;
+  font-size: 14px;
+  line-height: 1.6em;
+  white-space: pre;
+  overflow-y: scroll;
+  overflow-x: auto;
+  background: var(--editor);
+  color: var(--text);
+  caret-color: var(--accent);
+  tab-size: 2;
+  -moz-tab-size: 2;
+  min-width: 0;
+  transition: background .15s, color .15s;
+}
+#text.wrap-mode { white-space: pre-wrap; word-break: break-word; overflow-x: hidden; }
+#text:read-only { cursor: default; background: var(--editor); }
+
+/* Syntax highlight view */
+#hl-view {
+  display: none;
+  flex: 1;
+  padding: 10px 14px;
+  font-family: 'JetBrains Mono', Consolas, monospace;
+  font-size: 14px;
+  line-height: 1.6em;
+  white-space: pre;
+  overflow-y: scroll;
+  overflow-x: auto;
+  background: var(--editor);
+  color: var(--text);
+  tab-size: 2;
+  margin: 0;
+  border: none;
+  min-width: 0;
+  cursor: text;
+}
+#hl-view.show { display: block; }
+#hl-view.wrap-mode { white-space: pre-wrap; word-break: break-word; overflow-x: hidden; }
+
+/* ── STATUS BAR ──────────────────────────────────────────── */
+#statusbar {
+  height: 22px;
+  display: flex;
+  align-items: center;
+  padding: 0 10px;
+  background: var(--sb-bg);
+  color: var(--sb-text);
+  font-size: 11px;
+  font-family: 'Inter', sans-serif;
+  flex-shrink: 0;
+  gap: 0;
+  overflow: hidden;
+  white-space: nowrap;
+}
+#sb-left { flex: 1; overflow: hidden; text-overflow: ellipsis; }
+#sb-msg {
+  flex-shrink: 0;
+  opacity: 0;
+  transition: opacity .2s;
+  font-weight: 600;
+  padding-left: 10px;
+}
+#sb-msg.show { opacity: 1; }
+
+/* ── SYNTAX TOKEN COLORS ─────────────────────────────────── */
+/* Light */
+.t-cm { color: #008000; font-style: italic; }
+.t-st { color: #a31515; }
+.t-kw { color: #0000cc; font-weight: 600; }
+.t-bi { color: #267f99; }
+.t-nm { color: #098658; }
+.t-fn { color: #795e26; }
+.t-tg { color: #800000; }
+.t-at { color: #e50000; }
+.t-pr { color: #0070c1; }
+.t-sl { color: #800000; }
+/* Dark */
+.dark .t-cm { color: #6a9955; }
+.dark .t-st { color: #ce9178; }
+.dark .t-kw { color: #569cd6; }
+.dark .t-bi { color: #4ec9b0; }
+.dark .t-nm { color: #b5cea8; }
+.dark .t-fn { color: #dcdcaa; }
+.dark .t-tg { color: #4ec9b0; }
+.dark .t-at { color: #9cdcfe; }
+.dark .t-pr { color: #9cdcfe; }
+.dark .t-sl { color: #d7ba7d; }
+
+/* ── RTL ─────────────────────────────────────────────────── */
+body.rtl #app-header  { flex-direction: row-reverse; }
+body.rtl #lang-wrap   { margin-left: 0; margin-right: auto; }
+body.rtl #toolbar     { flex-direction: row-reverse; }
+body.rtl #findbar     { flex-direction: row-reverse; }
+body.rtl #findbar .close-btn { margin-left: 0; margin-right: auto; }
+body.rtl #text        { direction: rtl; text-align: right; }
+body.rtl #statusbar   { flex-direction: row-reverse; }
+
+/* Mobile hint bar hidden via media query */
+@media (hover: none), (max-width: 600px) { #toolbar .tb-hint { display: none; } }
+</style>
+<style>.ssBtnDefault{position:absolute;z-index:1000000000;background:none;border:none;outline:none;right:0;cursor:pointer;width:26px;height:26px;margin:0;padding:0;top:8px;right:8px;opacity:.6;pointer-events:all;transition-duration:.25s}.ssBtnDefault:hover{opacity:1 !important;transition-duration:.25s}.ssBtnDefault .fade{transition-duration:5s;opacity:0}.ssBtnYouTube{background:none;border:none}ytd-watch-flexy .ytp-right-controls-left .ssBtnYouTube svg{margin:1px auto;width:22px;height:auto}.ytp-embed .ytp-right-controls .ssBtnYouTube{width:20px !important;margin-right:15px !important}ytd-shorts ytd-shorts-player-controls #right-controls .ssBtnYouTube{pointer-events:auto;width:48px;padding:12px;position:relative}ytd-shorts ytd-shorts-player-controls #right-controls .ssBtnYouTube:hover::after{content:"";display:block;position:absolute;border-radius:28px;background-color:hsla(0,0%,100%,.1);inset:4px}.ytwPlayerTopControlsPlayerControlsTopRight .ssBtnYouTube{max-height:48px;padding:12px;min-width:48px}.ytwPlayerTopControlsPlayerControlsTopRight .ssBtnYouTube svg{width:auto}.ssBtnVimeo{height:2rem !important;width:2rem !important;margin-top:8px !important;justify-self:flex-end}.ssBtnVimeo button{width:100% !important;height:100% !important}.ssBtnVimeo button svg{width:19px}.ssBtnNetflix{background:none;border:none;cursor:pointer;width:4rem;margin:0 .5rem;display:inline-block;flex-shrink:0}.ssBtnNetflix>svg{transform:translateY(-0.5rem)}.ssBtnNetflix:hover{transform:scale(1.2);transition-duration:.25s}.ssBtnHulu{width:27px;margin-top:4px;margin-right:10px;opacity:.7;cursor:pointer}.ssBtnHulu:hover{opacity:1}.ssBtnAmazon{outline:none;cursor:pointer;opacity:.8;padding:0;cursor:pointer;border-radius:100px;position:relative;z-index:1;transition:all .25s}.ssBtnAmazon:hover{opacity:1;background-color:hsla(0,0%,100%,.1)}.ssBtnAmazon svg{margin-top:3px}@media(min-width: 1200px){.ssBtnAmazon{width:3.1666666667vw;height:3.1666666667vw}.ssBtnAmazon svg{height:1.5vw}}@media(max-width: 1199px){.ssBtnAmazon{width:38px;height:38px}.ssBtnAmazon svg{height:18px;width:18px}}.ssBtnMax{width:24px;height:24px;margin:4px;padding:12px;box-sizing:content-box;position:relative;opacity:.7;cursor:pointer;display:flex;justify-content:center;align-items:center}.ssBtnMax:hover{opacity:1;transform:scale(1.2)}.ssBtnMax svg{width:24px;height:24px}.ssBtnDisney{opacity:.7}.ssBtnDisney:hover{opacity:1}.ssBtnDisney svg{width:25px !important;height:31px !important;padding-top:4px;margin-right:7px}.ssBtnApple{cursor:pointer;opacity:.7}.ssBtnApple:hover{opacity:1}.ssBtnApple svg{width:22px !important;height:22px !important;margin-right:2px !important}.ssBtnPeacock{width:3.5rem;height:3.5rem;padding:1rem;opacity:.7;cursor:pointer}.ssBtnPeacock:hover{opacity:1}.ssBtnFrameio{display:flex;align-items:center;justify-content:center;cursor:pointer;opacity:.7;width:32px;height:32px;border-radius:6px}.ssBtnFrameio:hover{background-color:#1f1f1f}.ssBtnFrameio svg{width:18px !important;height:18px !important}body .vsNotification{display:flex;align-items:center;z-index:1000000000;margin-top:0;padding:.75rem 1.25em;border:1px solid rgba(0,0,0,0);border-radius:.25em;font-size:12px;justify-self:center;animation-name:notification;animation-iteration-count:1;animation-duration:2s}@keyframes notification{0%{top:-4rem}25%{top:3rem}85%{top:3rem}100%{top:-4rem}}body .vsNotification.persist{top:3rem;animation-name:notification-persist;animation-iteration-count:1;animation-duration:1s}@keyframes notification-persist{0%{top:-4rem}100%{top:3rem}}body .vsNotification.success{background-color:#d4edda;border-color:#c3e6cb;color:#155724}body .vsNotification.fail{background-color:#edd4d4;border-color:#e6c3c3;color:#b62424}body .vsNotification .vsNotificationClose{color:#b62424;border:none;background-color:rgba(0,0,0,0);padding:0;line-height:0;position:relative;left:.5rem;cursor:pointer}body .vsNotification .vsNContent{position:absolute;z-index:1000000000;margin-bottom:1em;padding:.75rem 1.25em;border:1px solid rgba(0,0,0,0);border-radius:.25em;font-size:12px;height:fit-content;top:0}body .vsNotification a{color:#b62424;text-decoration:underline}.ssModal{display:none}.ssModal.visible{display:block}.ssModal{position:fixed;z-index:100000000;right:20px;opacity:0;background-color:#fffefa;border-radius:3px;padding:25px;color:#525252;font-family:muli,sans-serif;box-shadow:0px 4px 8px 0px rgba(0,0,0,.15);animation-name:animateOn;animation-duration:.2s;animation-fill-mode:forwards}.ssModal *{vertical-align:middle;line-height:normal;font-weight:normal}@keyframes animateOn{from{opacity:0;top:0px}to{opacity:1;top:20px}}.ssModal .close{position:absolute;right:10px;top:10px;cursor:pointer;opacity:.5;background-image:url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4KPCEtLSBHZW5lcmF0b3I6IEFkb2JlIElsbHVzdHJhdG9yIDI3LjAuMCwgU1ZHIEV4cG9ydCBQbHVnLUluIC4gU1ZHIFZlcnNpb246IDYuMDAgQnVpbGQgMCkgIC0tPgo8c3ZnIHZlcnNpb249IjEuMSIgaWQ9IkxheWVyXzEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHg9IjBweCIgeT0iMHB4IgoJIHZpZXdCb3g9IjAgMCA0NDMuNCA0NDMuNCIgc3R5bGU9ImVuYWJsZS1iYWNrZ3JvdW5kOm5ldyAwIDAgNDQzLjQgNDQzLjQ7IiB4bWw6c3BhY2U9InByZXNlcnZlIj4KPHBhdGggZD0iTTYuOCw0MDMuNWwxODEuOC0xODEuOEw2LjgsMzkuOWMtNS45LTUuOS04LjItMTQuNS02LTIyLjZDMyw5LjIsOS4yLDMsMTcuMywwLjhjOC4xLTIuMiwxNi43LDAuMSwyMi42LDZsMTgxLjgsMTgxLjgKCUw0MDMuNSw2LjhjNS45LTUuOSwxNC41LTguMiwyMi42LTZjOC4xLDIuMiwxNC40LDguNCwxNi41LDE2LjVjMi4yLDguMS0wLjEsMTYuNy02LDIyLjZMMjU0LjcsMjIxLjdsMTgxLjgsMTgxLjgKCWM1LjksNS45LDguMiwxNC41LDYsMjIuNmMtMi4yLDguMS04LjQsMTQuNC0xNi41LDE2LjVjLTguMSwyLjItMTYuNy0wLjEtMjIuNi02TDIyMS43LDI1NC43TDM5LjksNDM2LjVjLTUuOSw1LjktMTQuNSw4LjItMjIuNiw2CglDOS4yLDQ0MC40LDMsNDM0LjEsMC44LDQyNkMtMS40LDQxOCwwLjksNDA5LjQsNi44LDQwMy41TDYuOCw0MDMuNXoiLz4KPC9zdmc+Cg==);width:10px;height:10px}.ssModal .ssButtons{margin-top:25px;text-align:right}.ssModal .ssButtons .ssButton,.ssModal .ssButtons a .ssButton{display:inline-block;height:20px;padding:3px 12px 3px;margin-left:14px;border-radius:4px;box-shadow:0px 4px 8px 0px rgba(0,0,0,.15);background-color:#fff;font-size:12px;color:#525252;line-height:20px;font-weight:normal;cursor:pointer;text-decoration:none}.ssModal .ssButtons .ssButton .emoji,.ssModal .ssButtons a .ssButton .emoji{font-size:15px;vertical-align:bottom}.ssModal .ssButtons .ssButton.blue,.ssModal .ssButtons a .ssButton.blue{background-color:#19acef;color:#fff}.ssModal .icon{background-image:url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4KPCEtLSBHZW5lcmF0b3I6IEFkb2JlIElsbHVzdHJhdG9yIDI1LjIuMywgU1ZHIEV4cG9ydCBQbHVnLUluIC4gU1ZHIFZlcnNpb246IDYuMDAgQnVpbGQgMCkgIC0tPgo8c3ZnIHZlcnNpb249IjEuMSIKCSBpZD0iTGF5ZXJfMSIgeG1sbnM6Y2M9Imh0dHA6Ly9jcmVhdGl2ZWNvbW1vbnMub3JnL25zIyIgeG1sbnM6ZGM9Imh0dHA6Ly9wdXJsLm9yZy9kYy9lbGVtZW50cy8xLjEvIiB4bWxuczppbmtzY2FwZT0iaHR0cDovL3d3dy5pbmtzY2FwZS5vcmcvbmFtZXNwYWNlcy9pbmtzY2FwZSIgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIiB4bWxuczpzb2RpcG9kaT0iaHR0cDovL3NvZGlwb2RpLnNvdXJjZWZvcmdlLm5ldC9EVEQvc29kaXBvZGktMC5kdGQiIHhtbG5zOnN2Zz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciCgkgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgeD0iMHB4IiB5PSIwcHgiIHZpZXdCb3g9IjAgMCAxMDAgODMuOSIKCSBzdHlsZT0iZW5hYmxlLWJhY2tncm91bmQ6bmV3IDAgMCAxMDAgODMuOTsiIHhtbDpzcGFjZT0icHJlc2VydmUiPgo8c3R5bGUgdHlwZT0idGV4dC9jc3MiPgoJLnN0MHtmaWxsOiMwMEFERUY7fQo8L3N0eWxlPgo8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgwLC05NTIuMzYyMTgpIj4KCTxwYXRoIGNsYXNzPSJzdDAiIGQ9Ik0zNS42LDk1Mi40Yy0xLjMsMC0yLjQsMS0yLjksMS44bC01LjYsMTEuMUgxMWMtNiwwLTExLDUtMTEsMTF2NDljMCw2LDUsMTEsMTEsMTFoNzhjNiwwLDExLTUsMTEtMTF2LTQ5CgkJYzAtNi01LTExLTExLTExSDcyLjlsLTUuNi0xMS4xYy0wLjUtMS4xLTEuNi0xLjgtMi45LTEuOEwzNS42LDk1Mi40TDM1LjYsOTUyLjR6IE0zNy42LDk1OC44aDI1LjJsNS41LDExLjEKCQljMC41LDEuMSwxLjYsMS44LDIuOSwxLjhoMTguMWMyLjYsMCw0LjUsMS45LDQuNSw0LjV2NDljMCwyLjYtMS45LDQuNS00LjUsNC41SDExLjFjLTIuNiwwLTQuNS0xLjktNC41LTQuNXYtNDkKCQljMC0yLjYsMS45LTQuNSw0LjUtNC41aDE4LjFjMS4xLDAsMi40LTAuOCwyLjktMS44TDM3LjYsOTU4Ljh6IE01MC4yLDk3OS44Yy0xMS42LDAtMjEsOS40LTIxLDIxczkuNCwyMSwyMSwyMXMyMS05LjQsMjEtMjEKCQlTNjEuOCw5NzkuOCw1MC4yLDk3OS44eiBNNTAuMiw5ODYuMmM4LjEsMCwxNC41LDYuNSwxNC41LDE0LjVzLTYuNSwxNC41LTE0LjUsMTQuNXMtMTQuNS02LjUtMTQuNS0xNC41UzQyLjEsOTg2LjIsNTAuMiw5ODYuMnoiLz4KPC9nPgo8L3N2Zz4K);background-repeat:no-repeat;width:30px;height:30px;vertical-align:top;margin-right:22px;margin-top:2px;display:inline-block}.ssModal .body{display:inline-block;width:315px}.ssModal .body .title{font-size:15px;font-weight:600;margin-bottom:7px}.ssModal .body .description{font-size:13px;font-weight:lighter}body #ssTempHolder{position:fixed;z-index:1000000000000;width:100%;height:100%;top:0;pointer-events:none}body #ssTempHolder video{width:auto !important;height:auto !important;max-width:100% !important;max-height:100% !important;top:0 !important;left:0 !important;transform:none !important}body.ssTakeScreenshot .ssElement{z-index:10000000000 !important}body.ssTakeScreenshot.ssNetflix [data-uia=video-canvas]{z-index:10000000}body.ssTakeScreenshot.ssNetflix video{background-color:#000}body.ssTakeScreenshot.ssNetflix .player-timedtext{display:none !important}body.ssTakeScreenshot.ssNetflix.showSubs .player-timedtext{display:block !important}body.ssTakeScreenshot.ssAmazon .dv-player-fullscreen video{z-index:99999999 !important}body.ssTakeScreenshot.ssAmazon.showSubs .atvwebplayersdk-captions-overlay{z-index:999999999 !important;position:relative;opacity:1 !important}body.ssTakeScreenshot.ssDisney .btm-media-overlays-container{display:none}body.ssTakeScreenshot.ssDisney .TimedTextOverlay{display:none}body.ssTakeScreenshot.ssDisney.showSubs .TimedTextOverlay{display:block}body.ssTakeScreenshot.ssHulu .ContentPlayer__contentArea{z-index:10000000000;position:relative}body.ssTakeScreenshot.ssHulu .ClosedCaption{display:none}body.ssTakeScreenshot.ssHulu.showSubs .ClosedCaption{display:block}body.ssTakeScreenshot.ssMax video{z-index:99999999;position:relative}body.ssTakeScreenshot.ssMax.showSubs [data-testid=caption_renderer_overlay]{z-index:999999999;position:relative;width:100%;height:100%;display:block !important}body.ssTakeScreenshot.ssYoutube .html5-video-container,body.ssTakeScreenshot.ssYoutube .ytp-caption-window-container{z-index:999999999 !important}body.ssTakeScreenshot.ssApple #apple-music-video-player{z-index:999999999 !important}body.ssTakeScreenshot.ssApple .video-player-scrim{display:none}body.ssTakeScreenshot.ssApple video::cue{visibility:hidden}body.ssTakeScreenshot.ssApple.showSubs video::cue{visibility:visible}body.ssTakeScreenshot.ssPeacock video{z-index:999999999 !important;position:relative}body.ssTakeScreenshot.ssPeacock.showSubs [data-t=subtitles]{z-index:9999999999 !important}body.ssTakeScreenshot.ssPeacock.showSubs [data-t=subtitles]>*{bottom:15% !important;margin-top:auto !important}body .ssWrapper{overflow:hidden}
+/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly8uL3Njc3MvU2NyZWVuc2hvdENvbnRyb2wvX2J1dHRvbnMuc2NzcyIsIndlYnBhY2s6Ly8uL3Njc3MvU2NyZWVuc2hvdENvbnRyb2wvX25vdGlmaWNhdGlvbnMuc2NzcyIsIndlYnBhY2s6Ly8uL3Njc3MvU2NyZWVuc2hvdENvbnRyb2wvX21vZGFsLnNjc3MiLCJ3ZWJwYWNrOi8vLi9zY3NzL1NjcmVlbnNob3RDb250cm9sLnNjc3MiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQUEsY0FFQyxpQkFBQSxDQUNBLGtCQUFBLENBQ0EsZUFBQSxDQUNBLFdBQUEsQ0FDQSxZQUFBLENBQ0EsT0FBQSxDQUNBLGNBQUEsQ0FFQSxVQUFBLENBQ0EsV0FBQSxDQUNBLFFBQUEsQ0FDQSxTQUFBLENBQ0EsT0FBQSxDQUNBLFNBQUEsQ0FFQSxVQUFBLENBQ0Esa0JBQUEsQ0FFRyx3QkFBQSxDQUVBLG9CQUNJLG9CQUFBLENBQ0Esd0JBQUEsQ0FHSixvQkFDSSxzQkFBQSxDQUNBLFNBQUEsQ0FRUixjQUVDLGVBQUEsQ0FDQSxXQUFBLENBUUEsMkRBQ0MsZUFBQSxDQUNBLFVBQUEsQ0FDQSxXQUFBLENBR0QsNkNBQ0MscUJBQUEsQ0FDQSw0QkFBQSxDQUdELG9FQUNDLG1CQUFBLENBQ0EsVUFBQSxDQUNHLFlBQUEsQ0FDSCxpQkFBQSxDQUVBLGlGQUNDLFVBQUEsQ0FDQSxhQUFBLENBQ0EsaUJBQUEsQ0FDQSxrQkFBQSxDQUNBLG1DQUFBLENBQ0EsU0FBQSxDQUlGLDBEQUNDLGVBQUEsQ0FDQSxZQUFBLENBQ0EsY0FBQSxDQUVBLDhEQUNDLFVBQUEsQ0FPSCxZQUVDLHNCQUFBLENBQ0cscUJBQUEsQ0FFQSx5QkFBQSxDQUNILHFCQUFBLENBRUEsbUJBRUMscUJBQUEsQ0FDQSxzQkFBQSxDQUVBLHVCQUNDLFVBQUEsQ0FNSCxjQUNDLGVBQUEsQ0FDQSxXQUFBLENBQ0EsY0FBQSxDQUVBLFVBQUEsQ0FFQSxjQUFBLENBR0Esb0JBQUEsQ0FDQSxhQUFBLENBVUEsa0JBRUMsNkJBQUEsQ0FJRSxvQkFDSSxvQkFBQSxDQUNILHdCQUFBLENBSUwsV0FFQyxVQUFBLENBQ0EsY0FBQSxDQUNBLGlCQUFBLENBQ0EsVUFBQSxDQUNBLGNBQUEsQ0FFQSxpQkFDQyxTQUFBLENBSUYsYUFHQyxZQUFBLENBRUcsY0FBQSxDQUNBLFVBQUEsQ0FFSCxTQUFBLENBR0EsY0FBQSxDQUVBLG1CQUFBLENBRUEsaUJBQUEsQ0FDQSxTQUFBLENBRUEsbUJBQUEsQ0FFRyxtQkFDSSxTQUFBLENBQ04sbUNBQUEsQ0FLRCxpQkFDQyxjQUFBLENBSUYsMEJBQ0MsYUFDQyxvQkFBQSxDQUFBLHFCQUFBLENBRUEsaUJBQ0MsWUFBQSxDQUFBLENBTUgsMEJBQ0MsYUFDQyxVQUFBLENBQ0EsV0FBQSxDQUVBLGlCQUNDLFdBQUEsQ0FDQSxVQUFBLENBQUEsQ0FNSCxVQUVJLFVBQUEsQ0FDQSxXQUFBLENBQ0gsVUFBQSxDQUNBLFlBQUEsQ0FDQSxzQkFBQSxDQUVHLGlCQUFBLENBQ0EsVUFBQSxDQUNBLGNBQUEsQ0FDQSxZQUFBLENBQ0Esc0JBQUEsQ0FDQSxrQkFBQSxDQUVILGdCQUNDLFNBQUEsQ0FDQSxvQkFBQSxDQUdELGNBQ0MsVUFBQSxDQUNBLFdBQUEsQ0FJRixhQUdJLFVBQUEsQ0FFSCxtQkFDQyxTQUFBLENBR0QsaUJBQ0MscUJBQUEsQ0FDQSxzQkFBQSxDQUNBLGVBQUEsQ0FDQSxnQkFBQSxDQUlGLFlBSUMsY0FBQSxDQUdHLFVBQUEsQ0FFSCxrQkFDQyxTQUFBLENBR0QsZ0JBQ0MscUJBQUEsQ0FDQSxzQkFBQSxDQUNBLDJCQUFBLENBSUYsY0FFQyxZQUFBLENBQ0EsYUFBQSxDQUNBLFlBQUEsQ0FDQSxVQUFBLENBQ0EsY0FBQSxDQUVBLG9CQUNDLFNBQUEsQ0FJRixjQUlDLFlBQUEsQ0FDQSxrQkFBQSxDQUNBLHNCQUFBLENBRUEsY0FBQSxDQUdHLFVBQUEsQ0FFSCxVQUFBLENBQ0EsV0FBQSxDQUVBLGlCQUFBLENBRUEsb0JBQ0Msd0JBQUEsQ0FJRCxrQkFDQyxxQkFBQSxDQUNBLHNCQUFBLENDdlRGLHFCQUVJLFlBQUEsQ0FJQSxrQkFBQSxDQUVBLGtCQUFBLENBRUEsWUFBQSxDQUVBLHFCQUFBLENBQ0EsOEJBQUEsQ0FDQSxtQkFBQSxDQUNBLGNBQUEsQ0FFQSxtQkFBQSxDQUdBLDJCQUFBLENBQ0EsMkJBQUEsQ0FDQSxxQkFBQSxDQUVBLHdCQUNJLEdBQUEsU0FBQSxDQUNBLElBQUEsUUFBQSxDQUNBLElBQUEsUUFBQSxDQUNBLEtBQUEsU0FBQSxDQUFBLENBR0osNkJBR0ksUUFBQSxDQUVBLG1DQUFBLENBQ0EsMkJBQUEsQ0FDQSxxQkFBQSxDQUVBLGdDQUNJLEdBQUEsU0FBQSxDQUNBLEtBQUEsUUFBQSxDQUFBLENBS1IsNkJBQ0ksd0JBQUEsQ0FDQSxvQkFBQSxDQUNBLGFBQUEsQ0FHSiwwQkFDSSx3QkFBQSxDQUNBLG9CQUFBLENBQ0EsYUFBQSxDQUdKLDBDQUNJLGFBQUEsQ0FDQSxXQUFBLENBQ0EsOEJBQUEsQ0FDQSxTQUFBLENBQ0EsYUFBQSxDQUNBLGlCQUFBLENBQ0EsVUFBQSxDQUNBLGNBQUEsQ0FHSixpQ0FFSSxpQkFBQSxDQUNBLGtCQUFBLENBQ0EsaUJBQUEsQ0FDQSxxQkFBQSxDQUNBLDhCQUFBLENBQ0EsbUJBQUEsQ0FDQSxjQUFBLENBQ0Esa0JBQUEsQ0FDQSxLQUFBLENBR0osdUJBQ0ksYUFBQSxDQUNBLHlCQUFBLENDckZSLFNBRUksWUFBQSxDQUVBLGlCQUNJLGFBQUEsQ0FMUixTQVFJLGNBQUEsQ0FDQSxpQkFBQSxDQUVBLFVBQUEsQ0FFQSxTQUFBLENBRUEsd0JBQUEsQ0FDQSxpQkFBQSxDQUVBLFlBQUEsQ0FFQSxhQUFBLENBQ0EsMkJBQUEsQ0FFQSwwQ0FBQSxDQUVBLHdCQUFBLENBQ0Esc0JBQUEsQ0FDQSw0QkFBQSxDQUVBLFdBQ0kscUJBQUEsQ0FDQSxrQkFBQSxDQUNBLGtCQUFBLENBR0oscUJBQ0ksS0FDSSxTQUFBLENBQ0EsT0FBQSxDQUVKLEdBQ0ksU0FBQSxDQUNBLFFBQUEsQ0FBQSxDQUlSLGdCQUNJLGlCQUFBLENBQ0EsVUFBQSxDQUNBLFFBQUEsQ0FDQSxjQUFBLENBQ0EsVUFBQSxDQUVBLHdEQUFBLENBRUEsVUFBQSxDQUNBLFdBQUEsQ0FJSixvQkFFSSxlQUFBLENBQ0EsZ0JBQUEsQ0FFQSw4REFDSSxvQkFBQSxDQUVBLFdBQUEsQ0FFQSxvQkFBQSxDQUNBLGdCQUFBLENBRUEsaUJBQUEsQ0FDQSwwQ0FBQSxDQUNBLHFCQUFBLENBRUEsY0FBQSxDQUNBLGFBQUEsQ0FDQSxnQkFBQSxDQUNBLGtCQUFBLENBRUEsY0FBQSxDQUVBLG9CQUFBLENBRUEsNEVBQ0ksY0FBQSxDQUNBLHFCQUFBLENBR0osd0VBQ0ksd0JBQUEsQ0FDQSxVQUFBLENBS1osZUFDSSx3REFBQSxDQUNBLDJCQUFBLENBRUEsVUFBQSxDQUNBLFdBQUEsQ0FFQSxrQkFBQSxDQUNBLGlCQUFBLENBQ0EsY0FBQSxDQUVBLG9CQUFBLENBR0osZUFFSSxvQkFBQSxDQUNBLFdBQUEsQ0FFQSxzQkFDSSxjQUFBLENBQ0EsZUFBQSxDQUNBLGlCQUFBLENBRUosNEJBQ0ksY0FBQSxDQUNBLG1CQUFBLENDckhYLG1CQUNDLGNBQUEsQ0FDQSxxQkFBQSxDQUNBLFVBQUEsQ0FDQSxXQUFBLENBQ0EsS0FBQSxDQUNBLG1CQUFBLENBRUEseUJBQ0MscUJBQUEsQ0FDQSxzQkFBQSxDQUNBLHlCQUFBLENBQ0EsMEJBQUEsQ0FDQSxnQkFBQSxDQUNBLGlCQUFBLENBQ0EseUJBQUEsQ0FNRCxpQ0FDQyw4QkFBQSxDQUtBLHdEQUNDLGdCQUFBLENBR0Qsc0NBQ0MscUJBQUEsQ0FJRCxrREFFQyx1QkFBQSxDQUtBLDJEQUVDLHdCQUFBLENBUUYsMkRBQ0MsMkJBQUEsQ0FJQSwwRUFDQyw0QkFBQSxDQUNBLGlCQUFBLENBQ0Esb0JBQUEsQ0FPRiw2REFDQyxZQUFBLENBR0QsaURBQ0MsWUFBQSxDQUtBLDBEQUNDLGFBQUEsQ0FNRix5REFDQyxtQkFBQSxDQUNHLGlCQUFBLENBR0osNENBQ0MsWUFBQSxDQUlBLHFEQUNDLGFBQUEsQ0FPRixrQ0FDQyxnQkFBQSxDQUNBLGlCQUFBLENBS0EsNEVBQ0MsaUJBQUEsQ0FDQSxpQkFBQSxDQUNBLFVBQUEsQ0FDQSxXQUFBLENBQ0Esd0JBQUEsQ0FlRixxSEFDQyw0QkFBQSxDQUtELHdEQUNDLDRCQUFBLENBR0Qsa0RBQ0MsWUFBQSxDQUdELHlDQUNDLGlCQUFBLENBS0Esa0RBQ0Msa0JBQUEsQ0FRRixzQ0FDQyw0QkFBQSxDQUNHLGlCQUFBLENBSUgsNERBQ0MsNkJBQUEsQ0FJQSw4REFDQyxxQkFBQSxDQUVBLDBCQUFBLENBT0wsZ0JBQ0MsZUFBQSIsInNvdXJjZXNDb250ZW50IjpbIi5zc0J0bkRlZmF1bHQge1xuXHRcblx0cG9zaXRpb246IGFic29sdXRlO1xuXHR6LWluZGV4OiAxMDAwMDAwMDAwO1xuXHRiYWNrZ3JvdW5kOm5vbmU7XG5cdGJvcmRlcjogbm9uZTtcblx0b3V0bGluZTogbm9uZTtcblx0cmlnaHQ6MDtcblx0Y3Vyc29yOiBwb2ludGVyO1xuXHRcblx0d2lkdGg6IDI2cHg7XG5cdGhlaWdodDogMjZweDtcblx0bWFyZ2luOiAwOy8vNSUgOHB4IDA7XG5cdHBhZGRpbmc6MDtcblx0dG9wOjhweDtcblx0cmlnaHQ6OHB4O1xuXHRcblx0b3BhY2l0eTogLjY7XG5cdHBvaW50ZXItZXZlbnRzOiBhbGw7XG5cdC8qdHJhbnNpdGlvbi1maWxsLW1vZGU6IGZvcndhcmRzOyovXG4gICAgdHJhbnNpdGlvbi1kdXJhdGlvbjogLjI1cztcblxuICAgICY6aG92ZXIge1xuICAgICAgICBvcGFjaXR5OiAxICFpbXBvcnRhbnQ7IFxuICAgICAgICB0cmFuc2l0aW9uLWR1cmF0aW9uOiAuMjVzO1xuICAgIH1cblxuICAgIC5mYWRlIHtcbiAgICAgICAgdHJhbnNpdGlvbi1kdXJhdGlvbjogNXM7XG4gICAgICAgIG9wYWNpdHk6IDA7XG4gICAgfVxuICAgIFxuICAgIC8qc3ZnIHtcbiAgICAgICAgYmFja2dyb3VuZC1jb2xvcjpyZWQ7XG4gICAgfSovXG59XG5cbi5zc0J0bllvdVR1YmUge1xuXG5cdGJhY2tncm91bmQ6bm9uZTtcblx0Ym9yZGVyOiBub25lO1xuXHRcblx0Ly9tYXJnaW4tcmlnaHQ6IDIwcHggIWltcG9ydGFudDtcbiAgICAvL3BhZGRpbmctdG9wOiAwcHggIWltcG9ydGFudDtcbiAgICAvL3dpZHRoOiAyNXB4ICFpbXBvcnRhbnQ7XG5cdC8vbWFyZ2luOiAwO1xuXHQvL3dpZHRoOiAwO1xuXG5cdHl0ZC13YXRjaC1mbGV4eSAueXRwLXJpZ2h0LWNvbnRyb2xzLWxlZnQgJiBzdmcge1xuXHRcdG1hcmdpbjogMXB4IGF1dG87XG5cdFx0d2lkdGg6IDIycHg7XG5cdFx0aGVpZ2h0OiBhdXRvO1xuXHR9XG5cblx0Lnl0cC1lbWJlZCAueXRwLXJpZ2h0LWNvbnRyb2xzICYge1xuXHRcdHdpZHRoOiAyMHB4ICFpbXBvcnRhbnQ7XG5cdFx0bWFyZ2luLXJpZ2h0OiAxNXB4ICFpbXBvcnRhbnQ7XG5cdH1cblxuXHR5dGQtc2hvcnRzIHl0ZC1zaG9ydHMtcGxheWVyLWNvbnRyb2xzICNyaWdodC1jb250cm9scyAmIHtcblx0XHRwb2ludGVyLWV2ZW50czogYXV0bztcblx0XHR3aWR0aDogNDhweDtcbiAgICBcdHBhZGRpbmc6IDEycHg7XG5cdFx0cG9zaXRpb246IHJlbGF0aXZlO1xuXG5cdFx0Jjpob3Zlcjo6YWZ0ZXIge1xuXHRcdFx0Y29udGVudDogJyc7XG5cdFx0XHRkaXNwbGF5OiBibG9jaztcblx0XHRcdHBvc2l0aW9uOiBhYnNvbHV0ZTtcblx0XHRcdGJvcmRlci1yYWRpdXM6IDI4cHg7XG5cdFx0XHRiYWNrZ3JvdW5kLWNvbG9yOiByZ2JhKDI1NSwyNTUsMjU1LDAuMSk7XG5cdFx0XHRpbnNldDogNHB4O1xuXHRcdH1cblx0fVxuXG5cdC55dHdQbGF5ZXJUb3BDb250cm9sc1BsYXllckNvbnRyb2xzVG9wUmlnaHQgJiB7XG5cdFx0bWF4LWhlaWdodDogNDhweDtcblx0XHRwYWRkaW5nOiAxMnB4O1xuXHRcdG1pbi13aWR0aDogNDhweDtcblxuXHRcdHN2ZyB7XG5cdFx0XHR3aWR0aDogYXV0bztcblx0XHR9XG5cdH1cblxuXHRcbn1cblxuLnNzQnRuVmltZW8ge1xuXG5cdGhlaWdodDogMnJlbSAhaW1wb3J0YW50O1xuICAgIHdpZHRoOiAycmVtICFpbXBvcnRhbnQ7XG4gICAgLy9wYWRkaW5nOiA2cHggIWltcG9ydGFudDtcbiAgICBtYXJnaW4tdG9wOiA4cHggIWltcG9ydGFudDtcblx0anVzdGlmeS1zZWxmOiBmbGV4LWVuZDtcblxuXHRidXR0b24ge1xuXG5cdFx0d2lkdGg6IDEwMCUgIWltcG9ydGFudDtcblx0XHRoZWlnaHQ6IDEwMCUgIWltcG9ydGFudDtcblx0XHRcblx0XHRzdmcge1xuXHRcdFx0d2lkdGg6IDE5cHg7XG5cdFx0fVxuXHR9XG5cbn1cblxuLnNzQnRuTmV0ZmxpeCB7XG5cdGJhY2tncm91bmQ6bm9uZTtcblx0Ym9yZGVyOiBub25lO1xuXHRjdXJzb3I6IHBvaW50ZXI7XG5cblx0d2lkdGg6NHJlbTtcblx0XG5cdG1hcmdpbjogMCAwLjVyZW07XG5cdC8vbWFyZ2luOiAwIDJyZW0gMCA0cmVtO1xuXG5cdGRpc3BsYXk6aW5saW5lLWJsb2NrO1xuXHRmbGV4LXNocmluazogMDtcblx0XG5cdC8vbWFyZ2luLXRvcDotMXJlbTtcblx0Ly9oZWlnaHQ6Mi40cmVtO1xuXHQvL3dpZHRoOiA1MHB4O1xuXHQvL2hlaWdodDogMzVweCAhaW1wb3J0YW50O1xuXHQvL3dpZHRoOiAxMDAlOy8vMy42ZW0gIWltcG9ydGFudDtcbiAgICAvL2hlaWdodDogMTAwJTsvLzEuNmVtICFpbXBvcnRhbnQ7XG5cdC8vcGFkZGluZzowIDAgLjZlbSAwO1xuXG5cdCYgPiBzdmcge1xuXHRcdC8vbWFyZ2luLXRvcDotLjNyZW07XG5cdFx0dHJhbnNmb3JtOnRyYW5zbGF0ZVkoLS41cmVtKTtcblx0XHQvL3RyYW5zZm9ybTogc2NhbGUoLjUpO1xuXHR9XG4gICAgXG4gICAgJjpob3ZlciB7XG4gICAgICAgIHRyYW5zZm9ybTpzY2FsZSgxLjIpO1xuXHQgICAgdHJhbnNpdGlvbi1kdXJhdGlvbjogLjI1cztcbiAgICB9XG59XG5cbi5zc0J0bkh1bHUge1xuXHRcblx0d2lkdGg6IDI3cHg7XG5cdG1hcmdpbi10b3A6IDRweDtcblx0bWFyZ2luLXJpZ2h0OjEwcHg7XG5cdG9wYWNpdHk6IC43O1xuXHRjdXJzb3I6IHBvaW50ZXI7XG5cdFxuXHQmOmhvdmVyIHtcblx0XHRvcGFjaXR5OiAxO1xuXHR9XG59XG5cbi5zc0J0bkFtYXpvbiB7XG5cdC8vbWFyZ2luLWxlZnQ6IDEuNXZ3O1xuICAgIFxuXHRvdXRsaW5lOiBub25lO1xuXHRcbiAgIFx0Y3Vyc29yOiBwb2ludGVyO1xuICAgXHRvcGFjaXR5OiAuODtcblxuXHRwYWRkaW5nOiAwO1xuXG4gICBcdC8vei1pbmRleDogOTk5OTk5OTk5OTtcblx0Y3Vyc29yOiBwb2ludGVyO1xuXG5cdGJvcmRlci1yYWRpdXM6IDEwMHB4O1xuXG5cdHBvc2l0aW9uOiByZWxhdGl2ZTtcblx0ei1pbmRleDogMTtcblxuXHR0cmFuc2l0aW9uOiBhbGwgLjI1cztcblxuICAgICY6aG92ZXIge1xuICAgICAgICBvcGFjaXR5OiAxO1xuXHRcdGJhY2tncm91bmQtY29sb3I6cmdiYSgyNTUsIDI1NSwgMjU1LCAwLjEpO1xuXHRcdC8vdHJhbnNpdGlvbi1kdXJhdGlvbjogLjI1cztcblx0XHRcbiAgICB9XG5cblx0c3ZnIHtcblx0XHRtYXJnaW4tdG9wOiAzcHg7XG5cdH1cbn1cblxuQG1lZGlhIChtaW4td2lkdGg6IDEyMDBweCkgeyBcblx0LnNzQnRuQW1hem9uIHsgXG5cdFx0d2lkdGg6IDMuMTY2NjY2NjY2NjY2NjY2NXZ3OyBoZWlnaHQ6IDMuMTY2NjY2NjY2NjY2NjY2NXZ3O1xuXG5cdFx0c3ZnIHtcblx0XHRcdGhlaWdodDogMS41dnc7XG5cdFx0fVxuXHRcdFxuXHR9IFxuXG59XG5AbWVkaWEgKG1heC13aWR0aDogMTE5OXB4KSB7IFxuXHQuc3NCdG5BbWF6b24geyBcblx0XHR3aWR0aDogMzhweDtcblx0XHRoZWlnaHQ6IDM4cHg7IFxuXG5cdFx0c3ZnIHtcblx0XHRcdGhlaWdodDogMThweDtcblx0XHRcdHdpZHRoOiAxOHB4O1xuXHRcdH1cblx0fSBcbn1cblxuXG4uc3NCdG5NYXgge1xuXG4gICAgd2lkdGg6IDI0cHg7XG4gICAgaGVpZ2h0OiAyNHB4O1xuXHRtYXJnaW46IDRweDtcblx0cGFkZGluZzoxMnB4O1xuXHRib3gtc2l6aW5nOiBjb250ZW50LWJveDtcblxuICAgIHBvc2l0aW9uOiByZWxhdGl2ZTtcbiAgICBvcGFjaXR5OiAwLjc7XG4gICAgY3Vyc29yOiBwb2ludGVyO1xuICAgIGRpc3BsYXk6IGZsZXg7XG4gICAganVzdGlmeS1jb250ZW50OiBjZW50ZXI7XG4gICAgYWxpZ24taXRlbXM6IGNlbnRlcjtcblxuXHQmOmhvdmVyIHtcblx0XHRvcGFjaXR5OiAxO1xuXHRcdHRyYW5zZm9ybTogc2NhbGUoMS4yKTtcblx0fVxuXG5cdHN2ZyB7XG5cdFx0d2lkdGg6IDI0cHg7XG5cdFx0aGVpZ2h0OiAyNHB4O1xuXHR9XG59XG5cbi5zc0J0bkRpc25leSB7XG5cdC8vd2lkdGg6IDI2cHg7XG4gICAgLy9tYXJnaW4tcmlnaHQ6IDEzcHg7XG4gICAgb3BhY2l0eTogLjc7XG5cblx0Jjpob3ZlciB7XG5cdFx0b3BhY2l0eTogMTtcblx0fVxuXG5cdHN2ZyB7XG5cdFx0d2lkdGg6IDI1cHggIWltcG9ydGFudDtcblx0XHRoZWlnaHQ6IDMxcHggIWltcG9ydGFudDtcblx0XHRwYWRkaW5nLXRvcDogNHB4O1xuXHRcdG1hcmdpbi1yaWdodDogN3B4O1xuXHR9XG59XG5cbi5zc0J0bkFwcGxlIHtcblx0Ly93aWR0aDogMjZweDtcbiAgICAvL21hcmdpbi1yaWdodDogMTNweDtcblxuXHRjdXJzb3I6IHBvaW50ZXI7XG5cblxuICAgIG9wYWNpdHk6IC43O1xuXG5cdCY6aG92ZXIge1xuXHRcdG9wYWNpdHk6IDE7XG5cdH1cblxuXHRzdmcge1xuXHRcdHdpZHRoOiAyMnB4ICFpbXBvcnRhbnQ7XG5cdFx0aGVpZ2h0OiAyMnB4ICFpbXBvcnRhbnQ7XG5cdFx0bWFyZ2luLXJpZ2h0OiAycHggIWltcG9ydGFudDtcblx0fVxufVxuXG4uc3NCdG5QZWFjb2NrIHtcblx0XG5cdHdpZHRoOiAzLjVyZW07XG5cdGhlaWdodDogMy41cmVtO1xuXHRwYWRkaW5nOiAxcmVtO1xuXHRvcGFjaXR5OiAuNztcblx0Y3Vyc29yOiBwb2ludGVyO1xuXHRcblx0Jjpob3ZlciB7XG5cdFx0b3BhY2l0eTogMTtcblx0fVxufVxuXG4uc3NCdG5GcmFtZWlvIHtcblx0Ly93aWR0aDogMjZweDtcbiAgICAvL21hcmdpbi1yaWdodDogMTNweDtcblxuXHRkaXNwbGF5OiBmbGV4O1xuXHRhbGlnbi1pdGVtczogY2VudGVyO1xuXHRqdXN0aWZ5LWNvbnRlbnQ6IGNlbnRlcjtcblxuXHRjdXJzb3I6IHBvaW50ZXI7XG5cblxuICAgIG9wYWNpdHk6IC43O1xuXG5cdHdpZHRoOiAzMnB4O1xuXHRoZWlnaHQ6MzJweDtcblx0Ly9tYXJnaW4tdG9wOjNweDtcblx0Ym9yZGVyLXJhZGl1czogNnB4O1xuXG5cdCY6aG92ZXIge1xuXHRcdGJhY2tncm91bmQtY29sb3I6ICMxZjFmMWY7XG5cdFx0Ly9vcGFjaXR5OiAxO1xuXHR9XG5cblx0c3ZnIHtcblx0XHR3aWR0aDogMThweCAhaW1wb3J0YW50O1xuXHRcdGhlaWdodDogMThweCAhaW1wb3J0YW50O1xuXHR9XG59IiwiYm9keSAudnNOb3RpZmljYXRpb24ge1xuXG4gICAgZGlzcGxheTogZmxleDtcbiAgICAvL3dpZHRoOiAxMDAlO1xuICAgIC8vaGVpZ2h0OiA0cmVtO1xuICAgIC8vanVzdGlmeS1jb250ZW50OiBjZW50ZXI7XG4gICAgYWxpZ24taXRlbXM6IGNlbnRlcjtcbiAgICAvL3Bvc2l0aW9uOiBmaXhlZDtcbiAgICB6LWluZGV4OiAxMDAwMDAwMDAwO1xuICAgIC8vdG9wOi00cmVtO1xuICAgIG1hcmdpbi10b3A6MDtcblxuICAgIHBhZGRpbmc6IC43NXJlbSAxLjI1ZW07XG4gICAgYm9yZGVyOiAxcHggc29saWQgdHJhbnNwYXJlbnQ7XG4gICAgYm9yZGVyLXJhZGl1czogLjI1ZW07XG4gICAgZm9udC1zaXplOiAxMnB4O1xuICAgIC8vaGVpZ2h0OiBmaXQtY29udGVudDtcbiAgICBqdXN0aWZ5LXNlbGY6IGNlbnRlcjtcbiAgICAvL3dpZHRoOiBhdXRvO1xuXG4gICAgYW5pbWF0aW9uLW5hbWU6IG5vdGlmaWNhdGlvbjtcbiAgICBhbmltYXRpb24taXRlcmF0aW9uLWNvdW50OiAxO1xuICAgIGFuaW1hdGlvbi1kdXJhdGlvbjogMnM7XG5cbiAgICBAa2V5ZnJhbWVzIG5vdGlmaWNhdGlvbiB7XG4gICAgICAgIDAlIHt0b3A6IC00cmVtO31cbiAgICAgICAgMjUlIHt0b3A6IDNyZW07fVxuICAgICAgICA4NSUge3RvcDogM3JlbTt9XG4gICAgICAgIDEwMCUge3RvcDogLTRyZW07fVxuICAgIH1cblxuICAgICYucGVyc2lzdCB7XG4gICAgICAgIC8vZG9uJ3QgcmVzZXQgYW5pbWF0aW9uIG9yIGdvIGJhY2sgdG8gYmVnaW5uaW5nXG5cbiAgICAgICAgdG9wOiAzcmVtO1xuXG4gICAgICAgIGFuaW1hdGlvbi1uYW1lOiBub3RpZmljYXRpb24tcGVyc2lzdDtcbiAgICAgICAgYW5pbWF0aW9uLWl0ZXJhdGlvbi1jb3VudDogMTtcbiAgICAgICAgYW5pbWF0aW9uLWR1cmF0aW9uOiAxcztcblxuICAgICAgICBAa2V5ZnJhbWVzIG5vdGlmaWNhdGlvbi1wZXJzaXN0IHtcbiAgICAgICAgICAgIDAlIHt0b3A6IC00cmVtO31cbiAgICAgICAgICAgIDEwMCUge3RvcDogM3JlbTt9XG4gICAgICAgIH1cbiAgICB9XG5cblxuICAgICYuc3VjY2VzcyB7XG4gICAgICAgIGJhY2tncm91bmQtY29sb3I6ICNkNGVkZGE7XG4gICAgICAgIGJvcmRlci1jb2xvcjogI2MzZTZjYjtcbiAgICAgICAgY29sb3I6ICMxNTU3MjQ7XG4gICAgfVxuXG4gICAgJi5mYWlsIHtcbiAgICAgICAgYmFja2dyb3VuZC1jb2xvcjogI2VkZDRkNDtcbiAgICAgICAgYm9yZGVyLWNvbG9yOiAjZTZjM2MzO1xuICAgICAgICBjb2xvcjogI2I2MjQyNDtcbiAgICB9XG5cbiAgICAudnNOb3RpZmljYXRpb25DbG9zZSB7XG4gICAgICAgIGNvbG9yOiAjYjYyNDI0O1xuICAgICAgICBib3JkZXI6IG5vbmU7XG4gICAgICAgIGJhY2tncm91bmQtY29sb3I6IHRyYW5zcGFyZW50O1xuICAgICAgICBwYWRkaW5nOiAwO1xuICAgICAgICBsaW5lLWhlaWdodDogMDtcbiAgICAgICAgcG9zaXRpb246IHJlbGF0aXZlO1xuICAgICAgICBsZWZ0OiAuNXJlbTtcbiAgICAgICAgY3Vyc29yOiBwb2ludGVyO1xuICAgIH1cblxuICAgIC52c05Db250ZW50IHtcbiAgICAgICAgLy9jb250ZW50OiAnU2NyZWVuc2hvdCBjb3BpZWQgdG8gY2xpcGJvYXJkISc7XG4gICAgICAgIHBvc2l0aW9uOiBhYnNvbHV0ZTtcbiAgICAgICAgei1pbmRleDogMTAwMDAwMDAwMDtcbiAgICAgICAgbWFyZ2luLWJvdHRvbTogMWVtO1xuICAgICAgICBwYWRkaW5nOiAuNzVyZW0gMS4yNWVtO1xuICAgICAgICBib3JkZXI6IDFweCBzb2xpZCB0cmFuc3BhcmVudDtcbiAgICAgICAgYm9yZGVyLXJhZGl1czogLjI1ZW07XG4gICAgICAgIGZvbnQtc2l6ZTogMTJweDtcbiAgICAgICAgaGVpZ2h0OiBmaXQtY29udGVudDtcbiAgICAgICAgdG9wOjA7XG4gICAgfVxuXG4gICAgYSB7XG4gICAgICAgIGNvbG9yOiNiNjI0MjQ7XG4gICAgICAgIHRleHQtZGVjb3JhdGlvbjogdW5kZXJsaW5lO1xuICAgIH1cblxufSIsIi5zc01vZGFsIHtcblxuICAgIGRpc3BsYXk6IG5vbmU7XG5cbiAgICAmLnZpc2libGUge1xuICAgICAgICBkaXNwbGF5OmJsb2NrO1xuICAgIH1cblxuICAgIHBvc2l0aW9uOiBmaXhlZDtcbiAgICB6LWluZGV4OiAxMDAwMDAwMDA7XG5cbiAgICByaWdodDoyMHB4O1xuICAgIFxuICAgIG9wYWNpdHk6IDA7XG5cbiAgICBiYWNrZ3JvdW5kLWNvbG9yOiNmZmZlZmE7XG4gICAgYm9yZGVyLXJhZGl1czogM3B4O1xuXG4gICAgcGFkZGluZzogMjVweDtcblxuICAgIGNvbG9yOiAjNTI1MjUyO1xuICAgIGZvbnQtZmFtaWx5OiBtdWxpLCBzYW5zLXNlcmlmO1xuXG4gICAgYm94LXNoYWRvdzogMHB4IDRweCA4cHggMHB4IHJnYmEoMCwgMCwgMCwgMC4xNSk7XG5cbiAgICBhbmltYXRpb24tbmFtZTogYW5pbWF0ZU9uO1xuICAgIGFuaW1hdGlvbi1kdXJhdGlvbjogLjJzO1xuICAgIGFuaW1hdGlvbi1maWxsLW1vZGU6IGZvcndhcmRzO1xuICAgIFxuICAgICoge1xuICAgICAgICB2ZXJ0aWNhbC1hbGlnbjogbWlkZGxlO1xuICAgICAgICBsaW5lLWhlaWdodDogbm9ybWFsO1xuICAgICAgICBmb250LXdlaWdodDogbm9ybWFsO1xuICAgIH1cblxuICAgIEBrZXlmcmFtZXMgYW5pbWF0ZU9uIHtcbiAgICAgICAgZnJvbSB7XG4gICAgICAgICAgICBvcGFjaXR5OiAwO1xuICAgICAgICAgICAgdG9wOiAwcHg7XG4gICAgICAgIH1cbiAgICAgICAgdG8ge1xuICAgICAgICAgICAgb3BhY2l0eTogMTtcbiAgICAgICAgICAgIHRvcDogMjBweDtcbiAgICAgICAgfVxuICAgIH1cblxuICAgIC5jbG9zZSB7XG4gICAgICAgIHBvc2l0aW9uOiBhYnNvbHV0ZTtcbiAgICAgICAgcmlnaHQ6IDEwcHg7XG4gICAgICAgIHRvcDogMTBweDtcbiAgICAgICAgY3Vyc29yOiBwb2ludGVyO1xuICAgICAgICBvcGFjaXR5OiAuNTtcblxuICAgICAgICBiYWNrZ3JvdW5kLWltYWdlOiB1cmwoJy4uL2ltYWdlcy9jbG9zZS5zdmcnKTtcblxuICAgICAgICB3aWR0aDoxMHB4O1xuICAgICAgICBoZWlnaHQ6MTBweDtcblxuICAgIH1cblxuICAgIC5zc0J1dHRvbnMge1xuXG4gICAgICAgIG1hcmdpbi10b3A6IDI1cHg7XG4gICAgICAgIHRleHQtYWxpZ246IHJpZ2h0O1xuXG4gICAgICAgIC5zc0J1dHRvbiwgYSAuc3NCdXR0b24ge1xuICAgICAgICAgICAgZGlzcGxheTppbmxpbmUtYmxvY2s7XG5cbiAgICAgICAgICAgIGhlaWdodDoyMHB4O1xuICAgICAgICAgICAgXG4gICAgICAgICAgICBwYWRkaW5nOjNweCAxMnB4IDNweDtcbiAgICAgICAgICAgIG1hcmdpbi1sZWZ0OiAxNHB4O1xuICAgICAgICAgICAgXG4gICAgICAgICAgICBib3JkZXItcmFkaXVzOiA0cHg7XG4gICAgICAgICAgICBib3gtc2hhZG93OiAwcHggNHB4IDhweCAwcHggcmdiYSgwLCAwLCAwLCAwLjE1KTtcbiAgICAgICAgICAgIGJhY2tncm91bmQtY29sb3I6ICNGRkZGRkY7XG4gICAgICAgICAgICBcbiAgICAgICAgICAgIGZvbnQtc2l6ZTogMTJweDtcbiAgICAgICAgICAgIGNvbG9yOiAjNTI1MjUyO1xuICAgICAgICAgICAgbGluZS1oZWlnaHQ6IDIwcHg7XG4gICAgICAgICAgICBmb250LXdlaWdodDogbm9ybWFsO1xuICAgIFxuICAgICAgICAgICAgY3Vyc29yOiBwb2ludGVyO1xuXG4gICAgICAgICAgICB0ZXh0LWRlY29yYXRpb246IG5vbmU7XG5cbiAgICAgICAgICAgIC5lbW9qaSB7XG4gICAgICAgICAgICAgICAgZm9udC1zaXplOiAxNXB4O1xuICAgICAgICAgICAgICAgIHZlcnRpY2FsLWFsaWduOiBib3R0b207XG4gICAgICAgICAgICB9XG4gICAgXG4gICAgICAgICAgICAmLmJsdWUge1xuICAgICAgICAgICAgICAgIGJhY2tncm91bmQtY29sb3I6ICMxOWFjZWY7XG4gICAgICAgICAgICAgICAgY29sb3I6ICNGRkZGRkY7XG4gICAgICAgICAgICB9XG4gICAgICAgIH1cbiAgICB9XG5cbiAgICAuaWNvbiB7XG4gICAgICAgIGJhY2tncm91bmQtaW1hZ2U6IHVybCgnLi4vaW1hZ2VzL2ljb25CbHVlLnN2ZycpO1xuICAgICAgICBiYWNrZ3JvdW5kLXJlcGVhdDogbm8tcmVwZWF0O1xuXG4gICAgICAgIHdpZHRoOjMwcHg7XG4gICAgICAgIGhlaWdodDozMHB4O1xuXG4gICAgICAgIHZlcnRpY2FsLWFsaWduOiB0b3A7XG4gICAgICAgIG1hcmdpbi1yaWdodDogMjJweDtcbiAgICAgICAgbWFyZ2luLXRvcDoycHg7XG5cbiAgICAgICAgZGlzcGxheTppbmxpbmUtYmxvY2s7XG4gICAgfVxuXG4gICAgLmJvZHkge1xuXG4gICAgICAgIGRpc3BsYXk6aW5saW5lLWJsb2NrO1xuICAgICAgICB3aWR0aDozMTVweDtcblxuICAgICAgICAudGl0bGUge1xuICAgICAgICAgICAgZm9udC1zaXplOiAxNXB4O1xuICAgICAgICAgICAgZm9udC13ZWlnaHQ6IDYwMDtcbiAgICAgICAgICAgIG1hcmdpbi1ib3R0b206IDdweDtcbiAgICAgICAgfVxuICAgICAgICAuZGVzY3JpcHRpb24ge1xuICAgICAgICAgICAgZm9udC1zaXplOiAxM3B4O1xuICAgICAgICAgICAgZm9udC13ZWlnaHQ6IGxpZ2h0ZXI7XG4gICAgICAgIH1cbiAgICB9XG5cbn0iLCJAdXNlIFwiU2NyZWVuc2hvdENvbnRyb2wvYnV0dG9uc1wiO1xuXG5AdXNlIFwiU2NyZWVuc2hvdENvbnRyb2wvbm90aWZpY2F0aW9uc1wiO1xuQHVzZSBcIlNjcmVlbnNob3RDb250cm9sL21vZGFsXCI7XG5cbmJvZHkge1xuXG5cdCNzc1RlbXBIb2xkZXIge1xuXHRcdHBvc2l0aW9uOmZpeGVkO1xuXHRcdHotaW5kZXg6MTAwMDAwMDAwMDAwMDtcblx0XHR3aWR0aDoxMDAlO1xuXHRcdGhlaWdodDoxMDAlO1xuXHRcdHRvcDowO1xuXHRcdHBvaW50ZXItZXZlbnRzOiBub25lO1xuXG5cdFx0dmlkZW8ge1xuXHRcdFx0d2lkdGg6YXV0byAhaW1wb3J0YW50O1xuXHRcdFx0aGVpZ2h0OmF1dG8gIWltcG9ydGFudDtcblx0XHRcdG1heC13aWR0aDoxMDAlICFpbXBvcnRhbnQ7XG5cdFx0XHRtYXgtaGVpZ2h0OiAxMDAlICFpbXBvcnRhbnQ7XG5cdFx0XHR0b3A6IDAgIWltcG9ydGFudDtcblx0XHRcdGxlZnQ6IDAgIWltcG9ydGFudDtcblx0XHRcdHRyYW5zZm9ybTogbm9uZSAhaW1wb3J0YW50O1xuXHRcdH1cblx0fVxuXG5cdCYuc3NUYWtlU2NyZWVuc2hvdCB7XG5cdFx0XG5cdFx0LnNzRWxlbWVudCB7XG5cdFx0XHR6LWluZGV4OiAxMDAwMDAwMDAwMCAhaW1wb3J0YW50O1xuXHRcdH1cblx0XHRcblx0XHQmLnNzTmV0ZmxpeCB7XG5cdFxuXHRcdFx0W2RhdGEtdWlhPXZpZGVvLWNhbnZhc10ge1xuXHRcdFx0XHR6LWluZGV4OiAxMDAwMDAwMDtcblx0XHRcdH1cblx0XHRcdFxuXHRcdFx0dmlkZW8ge1xuXHRcdFx0XHRiYWNrZ3JvdW5kLWNvbG9yOiAjMDAwMDAwO1xuXHRcdFx0XHQvL2hlaWdodDogYXV0byAhaW1wb3J0YW50O1xuXHRcdFx0fVxuXG5cdFx0XHQucGxheWVyLXRpbWVkdGV4dCB7XG5cblx0XHRcdFx0ZGlzcGxheTpub25lICFpbXBvcnRhbnQ7XG5cdFx0XHR9XHRcdFx0XG5cblx0XHRcdCYuc2hvd1N1YnMge1xuXHRcdFx0XHRcblx0XHRcdFx0LnBsYXllci10aW1lZHRleHQge1xuXG5cdFx0XHRcdFx0ZGlzcGxheTogYmxvY2sgIWltcG9ydGFudDtcblx0XHRcdFx0XHQvL2JvdHRvbTogMTAlICFpbXBvcnRhbnQ7XG5cdFx0XHRcdH1cblx0XHRcdH1cblx0XHR9XG5cblx0XHQmLnNzQW1hem9uIHtcblxuXHRcdFx0LmR2LXBsYXllci1mdWxsc2NyZWVuIHZpZGVvIHtcblx0XHRcdFx0ei1pbmRleDogOTk5OTk5OTkgIWltcG9ydGFudDtcblx0XHRcdH1cblxuXHRcdFx0Ji5zaG93U3VicyB7XG5cdFx0XHRcdC5hdHZ3ZWJwbGF5ZXJzZGstY2FwdGlvbnMtb3ZlcmxheSB7XG5cdFx0XHRcdFx0ei1pbmRleDogOTk5OTk5OTk5ICFpbXBvcnRhbnQ7XG5cdFx0XHRcdFx0cG9zaXRpb246IHJlbGF0aXZlO1xuXHRcdFx0XHRcdG9wYWNpdHk6IDEgIWltcG9ydGFudDtcblx0XHRcdFx0fVxuXHRcdFx0fVxuXHRcdH1cblxuXHRcdCYuc3NEaXNuZXkge1xuXG5cdFx0XHQuYnRtLW1lZGlhLW92ZXJsYXlzLWNvbnRhaW5lciB7XG5cdFx0XHRcdGRpc3BsYXk6bm9uZTtcblx0XHRcdH1cblxuXHRcdFx0LlRpbWVkVGV4dE92ZXJsYXkge1xuXHRcdFx0XHRkaXNwbGF5OiBub25lO1xuXHRcdFx0fVxuXG5cdFx0XHQmLnNob3dTdWJzIHtcblx0XHRcdFx0XG5cdFx0XHRcdC5UaW1lZFRleHRPdmVybGF5IHtcblx0XHRcdFx0XHRkaXNwbGF5OiBibG9jaztcblx0XHRcdFx0fVxuXHRcdFx0fVxuXHRcdH1cblxuXHRcdCYuc3NIdWx1IHtcblx0XHRcdC5Db250ZW50UGxheWVyX19jb250ZW50QXJlYSB7XG5cdFx0XHRcdHotaW5kZXg6IDEwMDAwMDAwMDAwO1xuICAgIFx0XHRcdHBvc2l0aW9uOiByZWxhdGl2ZTtcblx0XHRcdH1cblxuXHRcdFx0LkNsb3NlZENhcHRpb24ge1xuXHRcdFx0XHRkaXNwbGF5Om5vbmU7XG5cdFx0XHR9XG5cblx0XHRcdCYuc2hvd1N1YnMge1xuXHRcdFx0XHQuQ2xvc2VkQ2FwdGlvbiB7XG5cdFx0XHRcdFx0ZGlzcGxheTpibG9jaztcblx0XHRcdFx0fVxuXHRcdFx0fVxuXHRcdH1cblxuXHRcdCYuc3NNYXgge1xuXG5cdFx0XHR2aWRlbyB7XG5cdFx0XHRcdHotaW5kZXg6IDk5OTk5OTk5O1xuXHRcdFx0XHRwb3NpdGlvbjogcmVsYXRpdmU7XG5cdFx0XHR9XG5cblx0XHRcdCYuc2hvd1N1YnMge1xuXHRcdFx0XHQvL3R1cm4gdGhpcyBpbnRvIGNzczogZGF0YS10ZXN0aWQ9XCJjYXB0aW9uX3JlbmRlcmVyX292ZXJsYXlcIlxuXHRcdFx0XHRbZGF0YS10ZXN0aWQ9Y2FwdGlvbl9yZW5kZXJlcl9vdmVybGF5XSB7XG5cdFx0XHRcdFx0ei1pbmRleDogOTk5OTk5OTk5O1xuXHRcdFx0XHRcdHBvc2l0aW9uOiByZWxhdGl2ZTtcblx0XHRcdFx0XHR3aWR0aDogMTAwJTtcblx0XHRcdFx0XHRoZWlnaHQ6IDEwMCU7XG5cdFx0XHRcdFx0ZGlzcGxheTogYmxvY2sgIWltcG9ydGFudDtcblx0XHRcdFx0fVxuXHRcdFx0fVxuXG5cdFx0XHQvKlxuXHRcdFx0Ly9kb24ndCBrbm93IHdoYXQgdGhpcyBpcyBmb3Jcblx0XHRcdCo6aGFzKHZpZGVvKSB7XG5cdFx0XHRcdHotaW5kZXg6IDk5OTk5OTk5O1xuXHRcdFx0XHRwb3NpdGlvbjogcmVsYXRpdmU7XG5cdFx0XHR9Ki9cblxuXHRcdH1cblxuXHRcdCYuc3NZb3V0dWJlIHtcblxuXHRcdFx0Lmh0bWw1LXZpZGVvLWNvbnRhaW5lciwgLnl0cC1jYXB0aW9uLXdpbmRvdy1jb250YWluZXIge1xuXHRcdFx0XHR6LWluZGV4OiA5OTk5OTk5OTkgIWltcG9ydGFudDtcblx0XHRcdH1cblx0XHR9XG5cblx0XHQmLnNzQXBwbGUge1xuXHRcdFx0I2FwcGxlLW11c2ljLXZpZGVvLXBsYXllciB7XG5cdFx0XHRcdHotaW5kZXg6IDk5OTk5OTk5OSAhaW1wb3J0YW50O1xuXHRcdFx0fVxuXG5cdFx0XHQudmlkZW8tcGxheWVyLXNjcmltIHtcblx0XHRcdFx0ZGlzcGxheTpub25lO1xuXHRcdFx0fVxuXG5cdFx0XHR2aWRlbzo6Y3VlIHtcblx0XHRcdFx0dmlzaWJpbGl0eTogaGlkZGVuO1xuXHRcdFx0fVxuXG5cdFx0XHQmLnNob3dTdWJzIHtcblxuXHRcdFx0XHR2aWRlbzo6Y3VlIHtcblx0XHRcdFx0XHR2aXNpYmlsaXR5OiB2aXNpYmxlO1xuXHRcdFx0XHR9XG5cdFx0XHRcdFxuXHRcdFx0fVxuXHRcdH1cblxuXHRcdCYuc3NQZWFjb2NrIHtcblxuXHRcdFx0dmlkZW8ge1xuXHRcdFx0XHR6LWluZGV4OiA5OTk5OTk5OTkgIWltcG9ydGFudDtcbiAgICBcdFx0XHRwb3NpdGlvbjogcmVsYXRpdmU7XG5cdFx0XHR9XG5cblx0XHRcdCYuc2hvd1N1YnMge1xuXHRcdFx0XHRbZGF0YS10PXN1YnRpdGxlc10ge1xuXHRcdFx0XHRcdHotaW5kZXg6IDk5OTk5OTk5OTkgIWltcG9ydGFudDtcblx0XHRcdFx0XHQvL3Bvc2l0aW9uOiByZWxhdGl2ZTtcblx0XHRcdFx0XHQvL2Rpc3BsYXk6IGJsb2NrICFpbXBvcnRhbnQ7XG5cblx0XHRcdFx0XHQmID4gKiB7XG5cdFx0XHRcdFx0XHRib3R0b206IDE1JSAhaW1wb3J0YW50O1xuXHRcdFx0XHRcdFx0Ly9wb3NpdGlvbjogYWJzb2x1dGUgIWltcG9ydGFudDtcblx0XHRcdFx0XHRcdG1hcmdpbi10b3A6IGF1dG8gIWltcG9ydGFudDtcblx0XHRcdFx0XHR9XG5cdFx0XHRcdH1cblx0XHRcdH1cblx0XHR9XG5cdH1cblxuXHQuc3NXcmFwcGVyIHtcblx0XHRvdmVyZmxvdzogaGlkZGVuO1xuXHR9XG5cblxufSJdLCJzb3VyY2VSb290IjoiIn0= */</style><link rel="stylesheet" href="chrome-extension://ppkojackhibeogijphhfnamhemklmial/css/ScreenshotControl.css"></head>
+<body>
+
+<!-- Web header (hidden in Electron via .is-electron class) -->
+<div id="app-header">
+  <div class="logo">
+    <svg viewBox="0 0 36 36" fill="none">
+      <rect x="2" y="3" width="32" height="22" rx="2" fill="#444" stroke="#f5a623" stroke-width="1.5"></rect>
+      <rect x="4" y="5" width="28" height="18" rx="1" fill="#1a2a1a"></rect>
+      <line x1="7" y1="10" x2="24" y2="10" stroke="#6aff6a" stroke-width="1.2" stroke-linecap="round"></line>
+      <line x1="7" y1="13.5" x2="22" y2="13.5" stroke="#6aff6a" stroke-width="1.2" stroke-linecap="round"></line>
+      <line x1="7" y1="17" x2="19" y2="17" stroke="#6aff6a" stroke-width="1.2" stroke-linecap="round"></line>
+      <rect x="19.5" y="15.5" width="1.2" height="3" fill="#f5a623"></rect>
+      <rect x="15" y="25" width="6" height="4" fill="#555"></rect>
+      <rect x="11" y="29" width="14" height="2.5" rx="1" fill="#555"></rect>
+    </svg>
+    Quick <em>Web Notepad</em>
   </div>
-  <div class="sr"><span id="slk" style="display:none">🔒 LOCKED</span><span id="sln" style="margin-left:4px;opacity:.85"></span></div>
+  <div id="lang-wrap">
+    <select id="ui-lang" onchange="applyLang(this.value)" title="UI Language">
+      <option value="en">🇬🇧 English</option>
+      <option value="zh">🇨🇳 中文</option>
+      <option value="es">🇪🇸 Español</option>
+      <option value="hi">🇮🇳 हिन्दी</option>
+      <option value="ar">🇸🇦 العربية</option>
+      <option value="fr">🇫🇷 Français</option>
+      <option value="pt">🇧🇷 Português</option>
+      <option value="ru">🇷🇺 Русский</option>
+      <option value="de">🇩🇪 Deutsch</option>
+      <option value="ja">🇯🇵 日本語</option>
+      <option value="ko">🇰🇷 한국어</option>
+      <option value="tr">🇹🇷 Türkçe</option>
+      <option value="it">🇮🇹 Italiano</option>
+      <option value="nl">🇳🇱 Nederlands</option>
+      <option value="he">🇮🇱 עברית</option>
+      <option value="ga">🇮🇪 Gaeilge</option>
+    </select>
+  </div>
 </div>
-<div id="toast"><div id="ticon">✓</div><div id="tmsg"></div></div>
-<input type="file" id="fi" style="display:none">
+
+<!-- Main app -->
+<div id="app">
+
+  <!-- Toolbar -->
+  <div id="toolbar">
+    <button onclick="filePrompt()" data-i18n="btnFile" title="Open file (Ctrl+O)">📂 File</button>
+    <button onclick="filePromptNew()" data-i18n="btnFileNew" title="Open in new window (Ctrl+Shift+O)">⧉ File</button>
+    <button id="paste-btn" onclick="pasteText()" data-i18n="btnPaste" title="Paste (Ctrl+V)" class="glow">📋 Paste</button>
+    <button onclick="selectAndCopy()" data-i18n="btnCopy" title="Select all &amp; copy (Ctrl+Enter)">📄 Copy All</button>
+    <button id="copy-sel-btn" onclick="copySelection()" data-i18n="btnCopySel" title="Copy selection" disabled="">📋 Copy Sel</button>
+    <button onclick="clearText()" data-i18n="btnClear" title="Clear (Esc)">🗑 Clear</button>
+    <div class="tb-sep"></div>
+    <button id="wrap-btn" onclick="toggleWrap()" data-i18n="btnWrap" title="Toggle word wrap">↵ Wrap</button>
+    <button id="lines-btn" onclick="toggleLineNumbers()" data-i18n="btnLines" title="Toggle line numbers">¶ Lines</button>
+    <div class="tb-sep"></div>
+    <button onclick="toggleFind()" data-i18n="btnFind" title="Find (Ctrl+F)">🔎 Find</button>
+    <button onclick="openReplace()" data-i18n="btnReplace" title="Find &amp; Replace (Ctrl+H)">⇄ Replace</button>
+    <div class="tb-sep"></div>
+    <input id="filename" class="fname-input" value="Untitled.txt" onfocus="selectFilename(this)" title="Filename for save">
+    <button id="save-btn" onclick="triggerSave()" data-i18n="btnSave" title="Save (Ctrl+S)">💾 Save</button>
+    <button onclick="triggerSaveAs()" data-i18n="btnSaveAs" title="Save As (Ctrl+Shift+S)">⬆ Save As</button>
+    <div class="tb-sep"></div>
+    <button id="protect-btn" onclick="toggleProtect()" data-i18n="btnProtect" title="Protect / lock from editing">🔓 Protect</button>
+    <button id="syntax-btn" onclick="toggleSyntax()" data-i18n="btnSyntax" title="Syntax highlighting (enables Read Only)">✨ Syntax</button>
+    <select id="syntax-lang-select" onchange="onSyntaxLangChange()" title="Syntax language">
+      <option value="auto">Auto</option>
+      <option value="js">JavaScript</option>
+      <option value="ts">TypeScript</option>
+      <option value="py">Python</option>
+      <option value="html">HTML</option>
+      <option value="css">CSS</option>
+      <option value="json">JSON</option>
+      <option value="xml">XML</option>
+      <option value="sql">SQL</option>
+      <option value="sh">Shell</option>
+      <option value="c">C/C++</option>
+      <option value="java">Java</option>
+      <option value="rb">Ruby</option>
+      <option value="md">Markdown</option>
+    </select>
+    <div class="tb-sep"></div>
+    <button onclick="toggleDark()" data-i18n="btnDark" title="Toggle dark mode">🌙 Dark</button>
+    <button onclick="zoomOut()" title="Zoom out">−</button>
+    <button onclick="zoomReset()" title="Reset zoom">↺</button>
+    <button onclick="zoomIn()" title="Zoom in">+</button>
+  </div>
+
+  <!-- Find/Replace bar -->
+  <div id="findbar">
+    <label data-i18n="findLabel">Find:</label>
+    <input id="find-input" data-i18n-ph="findPh" placeholder="Search…" oninput="onFindInput()" onkeydown="findBarKey(event)">
+    <button onclick="findNext()" data-i18n="btnNext">▼ Next</button>
+    <button onclick="findPrev()" data-i18n="btnPrev">▲ Prev</button>
+    <span class="match-info" id="match-info"></span>
+    <div id="replace-row">
+      <label data-i18n="replaceLabel">Replace:</label>
+      <input id="replace-input" data-i18n-ph="replacePh" placeholder="Replace with…" onkeydown="replaceBarKey(event)">
+      <button onclick="doReplace()" data-i18n="btnReplaceOne">Replace</button>
+      <button onclick="doReplaceAll()" data-i18n="btnReplaceAll">All</button>
+    </div>
+    <button class="close-btn" onclick="closeFindBar()" title="Close (Esc)">✕</button>
+  </div>
+
+  <!-- Clear confirm prompt (edition 4) -->
+  <div id="clear-confirm">
+    <span data-i18n="clearConfirmMsg">Unprotect and clear?</span>
+    <button class="cc-do" onclick="forceUnprotectAndClear()" data-i18n="clearConfirmDo">Unprotect &amp; Clear (Esc)</button>
+    <button class="cc-keep" onclick="dismissClearConfirm()" data-i18n="clearConfirmKeep">Keep</button>
+  </div>
+
+  <!-- Editor -->
+  <div id="editor-wrap">
+    <div id="linenums" style="display:none"></div>
+    <pre id="hl-view"></pre>
+    <textarea id="text" spellcheck="false" autofocus=""></textarea>
+  </div>
+
+  <!-- Status bar -->
+  <div id="statusbar">
+    <span id="sb-left">Ln 1/1, Col 1 │ 0 words │ 0 chars │ 100%</span>
+    <span id="sb-msg"></span>
+  </div>
+
+</div><!-- #app -->
+
 <script>
-var G=function(i){return document.getElementById(i)};
-var ed=G('ed'),hl=G('hl'),nb=G('nb');
-var lk=false,sy=false,wp=false,zm=100,dk=true,lg='';
-var mt=[],mi=-1,dT=null,eC=0,eT=null,e1=false,e1T=null;
-
-function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
-
-function toast(msg){
-  var el=G('toast');
-  el.classList.remove('out');void el.offsetWidth;
-  G('tmsg').textContent=msg;el.classList.add('show');
-  clearTimeout(el._t);
-  el._t=setTimeout(function(){el.classList.remove('show');el.classList.add('out');},1900);
-}
-
-function updGlow(){G('bPs').classList.toggle('pg',!ed.value&&!lk);}
-
-function flash(){
-  var b=G('bLk');b.classList.remove('fl');void b.offsetWidth;b.classList.add('fl');
-}
-function guard(){if(lk){flash();return true;}return false;}
-
-function updSt(){
-  var txt=ed.value,s=ed.selectionStart,e=ed.selectionEnd;
-  var pre=txt.slice(0,s),ls=txt.split('\n');
-  G('sps').textContent='Ln '+pre.split('\n').length+'/'+ls.length+' · Col '+(pre.split('\n').pop().length+1);
-  G('swd').textContent=(txt.trim()?txt.trim().split(/\s+/).length:0)+' words';
-  G('sch').textContent=txt.length+' chars';
-  G('szm').textContent=zm+'%';
-  if(s!==e){
-    var st=txt.slice(s,e);
-    G('ssel').textContent='Sel '+st.length+' ch · '+(st.trim()?st.trim().split(/\s+/).length:0)+' w';
-    G('s1').style.display=G('ssel').style.display='inline';
-  }else G('s1').style.display=G('ssel').style.display='none';
-  G('slk').style.display=lk?'inline':'none';
-}
-
-// lang detect
-function dLng(n,t){
-  var e=(n.split('.').pop()||'').toLowerCase(),s=t.slice(0,400);
-  var m={js:'js',jsx:'js',ts:'js',tsx:'js',html:'html',htm:'html',css:'css',json:'json',py:'py',sh:'sh',bash:'sh',sql:'sql',c:'c',cpp:'c',h:'c',md:'md'};
-  if(m[e])return m[e];
-  if(/^\s*<(!DOCTYPE|html)/i.test(s))return 'html';
-  if(/^\s*\{[\s\S]{0,40}"\w+":/m.test(s))return 'json';
-  if(/\bdef\s+\w+\s*\(/.test(s))return 'py';
-  if(/\b(const|let|var)\s+\w+/.test(s))return 'js';
-  if(/\bSELECT\b.{1,40}\bFROM\b/i.test(s))return 'sql';
-  return '';
-}
-
-// tokenizer — gm flags only (no s flag for Safari compat)
-var RLS={
-  js:[['cm',/\/\/[^\n]*|\/\*[\s\S]*?\*\//],['st',/`[\s\S]*?`|"(?:[^"\\\n]|\\.)*"|'(?:[^'\\\n]|\\.)*'/],
-      ['kw',/\b(const|let|var|function|return|if|else|for|while|do|switch|case|break|continue|new|this|typeof|class|extends|import|export|default|async|await|try|catch|finally|throw|null|undefined|true|false)\b/],
-      ['tp',/\b(Promise|Array|Object|Map|Set|Error|Date|Math|JSON|console|window|document|Number|String|Boolean)\b/],
-      ['nm',/\b\d+\.?\d*\b/],['fn',/\b[A-Za-z_$][\w$]*(?=\s*\()/]],
-  py:[['cm',/#[^\n]*/],['st',/"""[\s\S]*?"""|"(?:[^"\\\n]|\\.)*"|'(?:[^'\\\n]|\\.)*'/],
-      ['kw',/\b(def|class|return|if|elif|else|for|while|try|except|finally|with|as|import|from|pass|break|continue|lambda|yield|raise|True|False|None|async|await)\b/],
-      ['nm',/\b\d+\.?\d*\b/],['fn',/\b[A-Za-z_]\w*(?=\s*\()/]],
-  html:[['cm',/<!--[\s\S]*?-->/],['st',/"[^"]*"|'[^']*'/],['tp',/<\/?\w[\w-]*/],['at',/\b[\w-]+(?=\s*=)/]],
-  css:[['cm',/\/\*[\s\S]*?\*\//],['st',/"[^"]*"|'[^']*'/],
-       ['nm',/#[0-9a-fA-F]{3,8}|\b\d+\.?\d*(px|em|rem|%|vh|vw|s|ms)?\b/],
-       ['tp',/[\w-]+(?=\s*\{)/],['kw',/\b(color|background|border|margin|padding|font|display|position|width|height|flex|grid|overflow|opacity|transition|transform|content|cursor)\b/]],
-  json:[['at',/"(?:[^"\\]|\\.)*"(?=\s*:)/],['st',/"(?:[^"\\]|\\.)*"/],['nm',/-?\d+\.?\d*\b/],['kw',/\b(true|false|null)\b/]],
-  sql:[['cm',/--[^\n]*/],['st',/'(?:[^'\\]|\\.)*'/],['nm',/\b\d+\.?\d*\b/],
-       ['kw',/\b(SELECT|FROM|WHERE|JOIN|LEFT|RIGHT|INNER|ON|GROUP|BY|ORDER|HAVING|INSERT|INTO|VALUES|UPDATE|SET|DELETE|CREATE|TABLE|DROP|AS|AND|OR|NOT|IN|NULL|IS|LIMIT|CASE|WHEN|THEN|ELSE|END)\b/i]],
-  sh:[['cm',/#[^\n]*/],['st',/"(?:[^"\\\n]|\\.)*"|'[^'\n]*'/],
-      ['kw',/\b(if|then|else|elif|fi|for|do|done|while|function|return|exit|export|local|source|case|esac)\b/],['at',/\$[\w{][^}]*}?|\$\d+/]],
-  md:[['kw',/^#{1,6} .+$/m],['st',/`{1,3}[\s\S]*?`{1,3}/],['cm',/\*\*[\s\S]*?\*\*|__[\s\S]*?__/],['fn',/\[[^\]\n]*\]\([^)\n]*\)/]],
-  c:[['cm',/\/\/[^\n]*|\/\*[\s\S]*?\*\//],['st',/"(?:[^"\\\n]|\\.)*"|'(?:[^'\\\n]|\\.)*'/],
-     ['kw',/\b(auto|bool|break|case|char|const|continue|default|do|double|else|enum|extern|float|for|goto|if|int|long|return|short|sizeof|static|struct|switch|typedef|void|volatile|while)\b/],
-     ['nm',/\b\d+\.?\d*\b/],['fn',/\b[A-Za-z_]\w*(?=\s*\()/]]
+// ═══════════════════════════════════════════════════════════════
+// TRANSLATIONS
+// ═══════════════════════════════════════════════════════════════
+const LANGS = {
+  en: {
+    btnFile:"📂 File", btnFileNew:"⧉ File", btnPaste:"📋 Paste", btnCopy:"📄 Copy All", btnClear:"🗑 Clear",
+    btnWrap:"↵ Wrap", btnLines:"¶ Lines", btnFind:"🔎 Find", btnReplace:"⇄ Replace",
+    btnSave:"💾 Save", btnSaveAs:"⬆ Save As", btnProtect:"🔓 Protect", btnSyntax:"✨ Syntax",
+    btnDark:"🌙 Dark", btnLight:"☀️ Light",
+    findLabel:"Find:", findPh:"Search…", replaceLabel:"Replace:", replacePh:"Replace with…",
+    btnNext:"▼ Next", btnPrev:"▲ Prev", btnReplaceOne:"Replace", btnReplaceAll:"All",
+    words:"words", chars:"chars", selected:"selected",
+    readOnly:"👁 Read Only", protectedLabel:"🔒 Protected",
+    btnCopySel:"📋 Copy Sel",
+    clearConfirmMsg:"Unprotect and clear?",
+    clearConfirmDo:"Unprotect & Clear (Esc)",
+    clearConfirmKeep:"Keep",
+    protectFirst:"Disable protection first",
+    escUnlock3:"Triple-ESC to unprotect & clear — 2 more",
+    escUnlock2:"2nd ESC — 1 more to unprotect & clear",
+    escUnlock1:"ESC again — unprotecting and clearing",
+    copied:"✔ Copied", saved:"✔ Saved", allReplaced:"✔ Replaced all", replaced:"✔ Replaced",
+    noMatch:"No matches", disableWrapFirst:"Disable Wrap first",
+    linesHidden:"Lines hidden (Wrap on)", copyFailed:"Copy failed", longPress:"Long-press to paste",
+    matches:"matches", match:"match", binary:"Binary file — display may be incomplete",
+  },
+  es: {
+    btnFile:"📂 Archivo", btnFileNew:"⧉ Archivo", btnPaste:"📋 Pegar", btnCopy:"📄 Copiar Todo", btnClear:"🗑 Borrar",
+    btnWrap:"↵ Ajuste", btnLines:"¶ Líneas", btnFind:"🔎 Buscar", btnReplace:"⇄ Reemplazar",
+    btnSave:"💾 Guardar", btnSaveAs:"⬆ Guardar como", btnProtect:"🔓 Proteger", btnSyntax:"✨ Sintaxis",
+    btnDark:"🌙 Oscuro", btnLight:"☀️ Claro",
+    findLabel:"Buscar:", findPh:"Buscar…", replaceLabel:"Reemplazar:", replacePh:"Reemplazar con…",
+    btnNext:"▼ Siguiente", btnPrev:"▲ Anterior", btnReplaceOne:"Reemplazar", btnReplaceAll:"Todo",
+    words:"palabras", chars:"caracteres", selected:"seleccionado",
+    readOnly:"👁 Solo lectura", protectedLabel:"🔒 Protegido",
+    copied:"✔ Copiado", saved:"✔ Guardado", allReplaced:"✔ Todo reemplazado", replaced:"✔ Reemplazado",
+    noMatch:"Sin coincidencias", disableWrapFirst:"Desactiva Ajuste primero",
+    linesHidden:"Líneas ocultas", copyFailed:"Error al copiar", longPress:"Mantén para pegar",
+    matches:"coincidencias", match:"coincidencia", binary:"Archivo binario — vista parcial",
+  },
+  zh: {
+    btnFile:"📂 文件", btnFileNew:"⧉ 文件", btnPaste:"📋 粘贴", btnCopy:"📄 复制全部", btnClear:"🗑 清空",
+    btnWrap:"↵ 换行", btnLines:"¶ 行号", btnFind:"🔎 查找", btnReplace:"⇄ 替换",
+    btnSave:"💾 保存", btnSaveAs:"⬆ 另存为", btnProtect:"🔓 保护", btnSyntax:"✨ 语法",
+    btnDark:"🌙 深色", btnLight:"☀️ 浅色",
+    findLabel:"查找：", findPh:"搜索…", replaceLabel:"替换：", replacePh:"替换为…",
+    btnNext:"▼ 下一个", btnPrev:"▲ 上一个", btnReplaceOne:"替换", btnReplaceAll:"全部",
+    words:"字词", chars:"字符", selected:"已选",
+    readOnly:"👁 只读", protectedLabel:"🔒 已保护",
+    copied:"✔ 已复制", saved:"✔ 已保存", allReplaced:"✔ 全部替换", replaced:"✔ 已替换",
+    noMatch:"无匹配", disableWrapFirst:"请先关闭换行",
+    linesHidden:"行号已隐藏", copyFailed:"复制失败", longPress:"长按粘贴",
+    matches:"个匹配", match:"个匹配", binary:"二进制文件 — 显示可能不完整",
+  },
+  ja: {
+    btnFile:"📂 ファイル", btnFileNew:"⧉ ファイル", btnPaste:"📋 貼付け", btnCopy:"📄 全コピー", btnClear:"🗑 クリア",
+    btnWrap:"↵ 折返し", btnLines:"¶ 行番号", btnFind:"🔎 検索", btnReplace:"⇄ 置換",
+    btnSave:"💾 保存", btnSaveAs:"⬆ 名前を付けて保存", btnProtect:"🔓 保護", btnSyntax:"✨ 構文",
+    btnDark:"🌙 ダーク", btnLight:"☀️ ライト",
+    findLabel:"検索：", findPh:"検索…", replaceLabel:"置換：", replacePh:"置換後…",
+    btnNext:"▼ 次へ", btnPrev:"▲ 前へ", btnReplaceOne:"置換", btnReplaceAll:"すべて",
+    words:"単語", chars:"文字", selected:"選択中",
+    readOnly:"👁 読み取り専用", protectedLabel:"🔒 保護済み",
+    copied:"✔ コピー完了", saved:"✔ 保存完了", allReplaced:"✔ すべて置換", replaced:"✔ 置換完了",
+    noMatch:"一致なし", disableWrapFirst:"折返しをオフに",
+    linesHidden:"行番号非表示", copyFailed:"コピー失敗", longPress:"長押しで貼り付け",
+    matches:"件一致", match:"件一致", binary:"バイナリファイル — 表示が不完全な場合あり",
+  },
+  it: {
+    btnFile:"📂 File", btnFileNew:"⧉ File", btnPaste:"📋 Incolla", btnCopy:"📄 Copia tutto", btnClear:"🗑 Cancella",
+    btnWrap:"↵ A capo", btnLines:"¶ Righe", btnFind:"🔎 Trova", btnReplace:"⇄ Sostituisci",
+    btnSave:"💾 Salva", btnSaveAs:"⬆ Salva come", btnProtect:"🔓 Proteggi", btnSyntax:"✨ Sintassi",
+    btnDark:"🌙 Scuro", btnLight:"☀️ Chiaro",
+    findLabel:"Trova:", findPh:"Cerca…", replaceLabel:"Sostituisci:", replacePh:"Sostituisci con…",
+    btnNext:"▼ Avanti", btnPrev:"▲ Indietro", btnReplaceOne:"Sostituisci", btnReplaceAll:"Tutto",
+    words:"parole", chars:"caratteri", selected:"selezionato",
+    readOnly:"👁 Sola lettura", protectedLabel:"🔒 Protetto",
+    copied:"✔ Copiato", saved:"✔ Salvato", allReplaced:"✔ Tutto sostituito", replaced:"✔ Sostituito",
+    noMatch:"Nessuna corrispondenza", disableWrapFirst:"Disattiva prima A capo",
+    linesHidden:"Righe nascoste", copyFailed:"Copia fallita", longPress:"Tieni premuto per incollare",
+    matches:"corrispondenze", match:"corrispondenza", binary:"File binario — visualizzazione parziale",
+  },
+  ar: {
+    btnFile:"📂 ملف", btnFileNew:"⧉ ملف", btnPaste:"📋 لصق", btnCopy:"📄 نسخ الكل", btnClear:"🗑 مسح",
+    btnWrap:"↵ التفاف", btnLines:"¶ أرقام", btnFind:"🔎 بحث", btnReplace:"⇄ استبدال",
+    btnSave:"💾 حفظ", btnSaveAs:"⬆ حفظ باسم", btnProtect:"🔓 حماية", btnSyntax:"✨ بناء الجملة",
+    btnDark:"🌙 داكن", btnLight:"☀️ فاتح",
+    findLabel:"بحث:", findPh:"ابحث…", replaceLabel:"استبدال:", replacePh:"استبدل بـ…",
+    btnNext:"▼ التالي", btnPrev:"▲ السابق", btnReplaceOne:"استبدال", btnReplaceAll:"الكل",
+    words:"كلمات", chars:"أحرف", selected:"محدد",
+    readOnly:"👁 للقراءة فقط", protectedLabel:"🔒 محمي",
+    copied:"✔ تم النسخ", saved:"✔ تم الحفظ", allReplaced:"✔ تم استبدال الكل", replaced:"✔ تم الاستبدال",
+    noMatch:"لا توجد نتائج", disableWrapFirst:"أوقف الالتفاف أولاً",
+    linesHidden:"الأرقام مخفية", copyFailed:"فشل النسخ", longPress:"اضغط مطولاً للصق",
+    matches:"نتيجة", match:"نتيجة", binary:"ملف ثنائي — العرض قد يكون ناقصاً",
+    rtl: true,
+  },
+  de: {
+    btnFile:"📂 Datei", btnFileNew:"⧉ Datei", btnPaste:"📋 Einfügen", btnCopy:"📄 Alles kopieren", btnClear:"🗑 Leeren",
+    btnWrap:"↵ Umbruch", btnLines:"¶ Zeilen", btnFind:"🔎 Suchen", btnReplace:"⇄ Ersetzen",
+    btnSave:"💾 Speichern", btnSaveAs:"⬆ Speichern unter", btnProtect:"🔓 Schützen", btnSyntax:"✨ Syntax",
+    btnDark:"🌙 Dunkel", btnLight:"☀️ Hell",
+    findLabel:"Suchen:", findPh:"Suche…", replaceLabel:"Ersetzen:", replacePh:"Ersetzen durch…",
+    btnNext:"▼ Weiter", btnPrev:"▲ Zurück", btnReplaceOne:"Ersetzen", btnReplaceAll:"Alle",
+    words:"Wörter", chars:"Zeichen", selected:"ausgewählt",
+    readOnly:"👁 Schreibgeschützt", protectedLabel:"🔒 Geschützt",
+    copied:"✔ Kopiert", saved:"✔ Gespeichert", allReplaced:"✔ Alles ersetzt", replaced:"✔ Ersetzt",
+    noMatch:"Keine Treffer", disableWrapFirst:"Zuerst Umbruch deaktivieren",
+    linesHidden:"Zeilen ausgeblendet", copyFailed:"Kopieren fehlgeschlagen", longPress:"Gedrückt halten",
+    matches:"Treffer", match:"Treffer", binary:"Binärdatei — Anzeige unvollständig",
+  },
+  nl: {
+    btnFile:"📂 Bestand", btnFileNew:"⧉ Bestand", btnPaste:"📋 Plakken", btnCopy:"📄 Alles kopiëren", btnClear:"🗑 Wissen",
+    btnWrap:"↵ Terugloop", btnLines:"¶ Regels", btnFind:"🔎 Zoeken", btnReplace:"⇄ Vervangen",
+    btnSave:"💾 Opslaan", btnSaveAs:"⬆ Opslaan als", btnProtect:"🔓 Beveiligen", btnSyntax:"✨ Syntaxis",
+    btnDark:"🌙 Donker", btnLight:"☀️ Licht",
+    findLabel:"Zoeken:", findPh:"Zoek…", replaceLabel:"Vervangen:", replacePh:"Vervangen door…",
+    btnNext:"▼ Volgende", btnPrev:"▲ Vorige", btnReplaceOne:"Vervangen", btnReplaceAll:"Alles",
+    words:"woorden", chars:"tekens", selected:"geselecteerd",
+    readOnly:"👁 Alleen-lezen", protectedLabel:"🔒 Beveiligd",
+    copied:"✔ Gekopieerd", saved:"✔ Opgeslagen", allReplaced:"✔ Alles vervangen", replaced:"✔ Vervangen",
+    noMatch:"Geen overeenkomsten", disableWrapFirst:"Schakel Terugloop eerst uit",
+    linesHidden:"Regels verborgen", copyFailed:"Kopiëren mislukt", longPress:"Ingedrukt houden",
+    matches:"overeenkomsten", match:"overeenkomst", binary:"Binair bestand — weergave onvolledig",
+  },
+  hi: {
+    btnFile:"📂 फ़ाइल", btnFileNew:"⧉ फ़ाइल", btnPaste:"📋 चिपकाएँ", btnCopy:"📄 सब कॉपी करें", btnClear:"🗑 साफ़ करें",
+    btnWrap:"↵ लपेटें", btnLines:"¶ पंक्तियाँ", btnFind:"🔎 खोजें", btnReplace:"⇄ बदलें",
+    btnSave:"💾 सहेजें", btnSaveAs:"⬆ इस रूप में सहेजें", btnProtect:"🔓 सुरक्षित करें", btnSyntax:"✨ सिंटैक्स",
+    btnDark:"🌙 डार्क", btnLight:"☀️ लाइट",
+    findLabel:"खोजें:", findPh:"खोजें…", replaceLabel:"बदलें:", replacePh:"इससे बदलें…",
+    btnNext:"▼ अगला", btnPrev:"▲ पिछला", btnReplaceOne:"बदलें", btnReplaceAll:"सभी",
+    words:"शब्द", chars:"अक्षर", selected:"चुना गया",
+    readOnly:"👁 केवल-पढ़ें", protectedLabel:"🔒 सुरक्षित",
+    copied:"✔ कॉपी हो गया", saved:"✔ सहेज लिया", allReplaced:"✔ सब बदल गया", replaced:"✔ बदल गया",
+    noMatch:"कोई मिलान नहीं", disableWrapFirst:"पहले लपेटें बंद करें",
+    linesHidden:"पंक्तियाँ छुपी हैं", copyFailed:"कॉपी विफल", longPress:"लंबे दबाएँ",
+    matches:"मिलान", match:"मिलान", binary:"बाइनरी फ़ाइल — प्रदर्शन अधूरा हो सकता है",
+  },
+  fr: {
+    btnFile:"📂 Fichier", btnFileNew:"⧉ Fichier", btnPaste:"📋 Coller", btnCopy:"📄 Tout copier", btnClear:"🗑 Effacer",
+    btnWrap:"↵ Retour ligne", btnLines:"¶ Lignes", btnFind:"🔎 Chercher", btnReplace:"⇄ Remplacer",
+    btnSave:"💾 Enregistrer", btnSaveAs:"⬆ Enregistrer sous", btnProtect:"🔓 Protéger", btnSyntax:"✨ Syntaxe",
+    btnDark:"🌙 Sombre", btnLight:"☀️ Clair",
+    findLabel:"Chercher :", findPh:"Recherche…", replaceLabel:"Remplacer :", replacePh:"Remplacer par…",
+    btnNext:"▼ Suivant", btnPrev:"▲ Précédent", btnReplaceOne:"Remplacer", btnReplaceAll:"Tout",
+    words:"mots", chars:"caractères", selected:"sélectionné",
+    readOnly:"👁 Lecture seule", protectedLabel:"🔒 Protégé",
+    copied:"✔ Copié", saved:"✔ Enregistré", allReplaced:"✔ Tout remplacé", replaced:"✔ Remplacé",
+    noMatch:"Aucun résultat", disableWrapFirst:"Désactivez d'abord Retour ligne",
+    linesHidden:"Lignes masquées", copyFailed:"Échec de la copie", longPress:"Appui long pour coller",
+    matches:"résultats", match:"résultat", binary:"Fichier binaire — affichage incomplet",
+  },
+  pt: {
+    btnFile:"📂 Arquivo", btnFileNew:"⧉ Arquivo", btnPaste:"📋 Colar", btnCopy:"📄 Copiar tudo", btnClear:"🗑 Limpar",
+    btnWrap:"↵ Quebra linha", btnLines:"¶ Linhas", btnFind:"🔎 Localizar", btnReplace:"⇄ Substituir",
+    btnSave:"💾 Salvar", btnSaveAs:"⬆ Salvar como", btnProtect:"🔓 Proteger", btnSyntax:"✨ Sintaxe",
+    btnDark:"🌙 Escuro", btnLight:"☀️ Claro",
+    findLabel:"Localizar:", findPh:"Buscar…", replaceLabel:"Substituir:", replacePh:"Substituir por…",
+    btnNext:"▼ Próximo", btnPrev:"▲ Anterior", btnReplaceOne:"Substituir", btnReplaceAll:"Tudo",
+    words:"palavras", chars:"caracteres", selected:"selecionado",
+    readOnly:"👁 Somente leitura", protectedLabel:"🔒 Protegido",
+    copied:"✔ Copiado", saved:"✔ Salvo", allReplaced:"✔ Tudo substituído", replaced:"✔ Substituído",
+    noMatch:"Sem correspondências", disableWrapFirst:"Desative Quebra linha primeiro",
+    linesHidden:"Linhas ocultas", copyFailed:"Falha ao copiar", longPress:"Pressione para colar",
+    matches:"correspondências", match:"correspondência", binary:"Arquivo binário — exibição incompleta",
+  },
+  ru: {
+    btnFile:"📂 Файл", btnFileNew:"⧉ Файл", btnPaste:"📋 Вставить", btnCopy:"📄 Копировать всё", btnClear:"🗑 Очистить",
+    btnWrap:"↵ Перенос", btnLines:"¶ Строки", btnFind:"🔎 Найти", btnReplace:"⇄ Заменить",
+    btnSave:"💾 Сохранить", btnSaveAs:"⬆ Сохранить как", btnProtect:"🔓 Защитить", btnSyntax:"✨ Синтаксис",
+    btnDark:"🌙 Тёмный", btnLight:"☀️ Светлый",
+    findLabel:"Найти:", findPh:"Поиск…", replaceLabel:"Заменить:", replacePh:"Заменить на…",
+    btnNext:"▼ Дальше", btnPrev:"▲ Назад", btnReplaceOne:"Заменить", btnReplaceAll:"Все",
+    words:"слова", chars:"символы", selected:"выделено",
+    readOnly:"👁 Только чтение", protectedLabel:"🔒 Защищено",
+    copied:"✔ Скопировано", saved:"✔ Сохранено", allReplaced:"✔ Все заменены", replaced:"✔ Заменено",
+    noMatch:"Нет совпадений", disableWrapFirst:"Сначала отключите перенос",
+    linesHidden:"Строки скрыты", copyFailed:"Ошибка копирования", longPress:"Удерживайте для вставки",
+    matches:"совпадения", match:"совпадение", binary:"Двоичный файл — отображение неполное",
+  },
+  tr: {
+    btnFile:"📂 Dosya", btnFileNew:"⧉ Dosya", btnPaste:"📋 Yapıştır", btnCopy:"📄 Tümünü Kopyala", btnClear:"🗑 Temizle",
+    btnWrap:"↵ Kaydır", btnLines:"¶ Satırlar", btnFind:"🔎 Bul", btnReplace:"⇄ Değiştir",
+    btnSave:"💾 Kaydet", btnSaveAs:"⬆ Farklı Kaydet", btnProtect:"🔓 Kilitle", btnSyntax:"✨ Sözdizimi",
+    btnDark:"🌙 Koyu", btnLight:"☀️ Açık",
+    findLabel:"Bul:", findPh:"Ara…", replaceLabel:"Değiştir:", replacePh:"Şununla değiştir…",
+    btnNext:"▼ İleri", btnPrev:"▲ Geri", btnReplaceOne:"Değiştir", btnReplaceAll:"Tümü",
+    words:"kelime", chars:"karakter", selected:"seçili",
+    readOnly:"👁 Salt okunur", protectedLabel:"🔒 Korumalı",
+    copied:"✔ Kopyalandı", saved:"✔ Kaydedildi", allReplaced:"✔ Tümü değiştirildi", replaced:"✔ Değiştirildi",
+    noMatch:"Eşleşme yok", disableWrapFirst:"Önce Kaydır'ı kapat",
+    linesHidden:"Satırlar gizlendi", copyFailed:"Kopyalama başarısız", longPress:"Basılı tut",
+    matches:"eşleşme", match:"eşleşme", binary:"İkili dosya — görüntü eksik olabilir",
+  },
+  ko: {
+    btnFile:"📂 파일", btnFileNew:"⧉ 파일", btnPaste:"📋 붙여넣기", btnCopy:"📄 전체 복사", btnClear:"🗑 지우기",
+    btnWrap:"↵ 줄바꿈", btnLines:"¶ 줄 번호", btnFind:"🔎 찾기", btnReplace:"⇄ 바꾸기",
+    btnSave:"💾 저장", btnSaveAs:"⬆ 다른 이름으로", btnProtect:"🔓 보호", btnSyntax:"✨ 구문",
+    btnDark:"🌙 어둡게", btnLight:"☀️ 밝게",
+    findLabel:"찾기:", findPh:"검색…", replaceLabel:"바꾸기:", replacePh:"바꿀 내용…",
+    btnNext:"▼ 다음", btnPrev:"▲ 이전", btnReplaceOne:"바꾸기", btnReplaceAll:"모두",
+    words:"단어", chars:"글자", selected:"선택됨",
+    readOnly:"👁 읽기 전용", protectedLabel:"🔒 보호됨",
+    copied:"✔ 복사됨", saved:"✔ 저장됨", allReplaced:"✔ 모두 바뀜", replaced:"✔ 바뀜",
+    noMatch:"일치 없음", disableWrapFirst:"먼저 줄바꿈을 끄세요",
+    linesHidden:"줄 번호 숨김", copyFailed:"복사 실패", longPress:"길게 눌러 붙여넣기",
+    matches:"개 일치", match:"개 일치", binary:"바이너리 파일 — 표시 불완전",
+  },
+  he: {
+    btnFile:"📂 קובץ", btnFileNew:"⧉ קובץ", btnPaste:"📋 הדבק", btnCopy:"📄 העתק הכל", btnClear:"🗑 נקה",
+    btnWrap:"↵ גלישה", btnLines:"¶ שורות", btnFind:"🔎 חפש", btnReplace:"⇄ החלף",
+    btnSave:"💾 שמור", btnSaveAs:"⬆ שמור בשם", btnProtect:"🔓 הגן", btnSyntax:"✨ תחביר",
+    btnDark:"🌙 כהה", btnLight:"☀️ בהיר",
+    findLabel:"חפש:", findPh:"חיפוש…", replaceLabel:"החלף:", replacePh:"החלף ב…",
+    btnNext:"▼ הבא", btnPrev:"▲ הקודם", btnReplaceOne:"החלף", btnReplaceAll:"הכל",
+    words:"מילים", chars:"תווים", selected:"נבחר",
+    readOnly:"👁 קריאה בלבד", protectedLabel:"🔒 מוגן",
+    copied:"✔ הועתק", saved:"✔ נשמר", allReplaced:"✔ הכל הוחלף", replaced:"✔ הוחלף",
+    noMatch:"אין תוצאות", disableWrapFirst:"כבה תחילה את הגלישה",
+    linesHidden:"שורות מוסתרות", copyFailed:"ההעתקה נכשלה", longPress:"לחץ לחיצה ארוכה",
+    matches:"תוצאות", match:"תוצאה", binary:"קובץ בינארי — תצוגה חלקית",
+    rtl: true,
+  },
+  ga: {
+    btnFile:"📂 Comhad", btnFileNew:"⧉ Comhad", btnPaste:"📋 Greamaigh", btnCopy:"📄 Cóipeáil Uile", btnClear:"🗑 Glan",
+    btnWrap:"↵ Fillte", btnLines:"¶ Línte", btnFind:"🔎 Cuardaigh", btnReplace:"⇄ Ionadaigh",
+    btnSave:"💾 Sábháil", btnSaveAs:"⬆ Sábháil mar", btnProtect:"🔓 Cosain", btnSyntax:"✨ Comhréir",
+    btnDark:"🌙 Dorcha", btnLight:"☀️ Geal",
+    findLabel:"Cuardaigh:", findPh:"Cuardaigh…", replaceLabel:"Ionadaigh:", replacePh:"Ionadaigh le…",
+    btnNext:"▼ Ar Aghaidh", btnPrev:"▲ Ar Gcúl", btnReplaceOne:"Ionadaigh", btnReplaceAll:"Uile",
+    words:"focal", chars:"carachtar", selected:"roghnaithe",
+    readOnly:"👁 Inléite amháin", protectedLabel:"🔒 Cosanta",
+    copied:"✔ Cóipeáilte", saved:"✔ Sábháilte", allReplaced:"✔ Uile ionadaithe", replaced:"✔ Ionadaithe",
+    noMatch:"Gan mheaitseáil", disableWrapFirst:"Múch Fillte ar dtús",
+    linesHidden:"Línte i bhfolach", copyFailed:"Theip ar chóipeáil", longPress:"Brúigh fada",
+    matches:"meaitseálacha", match:"meaitseáil", binary:"Comhad dénártha — taispeáint neamhiomlán",
+  },
 };
 
-function tok(txt,lng){
-  if(!txt||!lng)return esc(txt);
-  var rs=RLS[lng];if(!rs)return esc(txt);
-  var rx=new RegExp(rs.map(function(r){return'('+r[1].source+')'}).join('|'),'gm');
-  var out='',pos=0,m;
-  while((m=rx.exec(txt))!==null){
-    if(m.index>pos)out+=esc(txt.slice(pos,m.index));
-    for(var i=0;i<rs.length;i++){if(m[i+1]!==undefined){out+='<span class="'+rs[i][0]+'">'+esc(m[i+1])+'</span>';break;}}
-    pos=rx.lastIndex;if(pos===m.index)rx.lastIndex++;
+let T = LANGS.en;
+
+function applyLang(code) {
+  T = LANGS[code] || LANGS.en;
+  document.documentElement.lang = code;
+  document.body.classList.toggle("rtl", !!T.rtl);
+  document.querySelectorAll("[data-i18n]").forEach(el => {
+    const k = el.getAttribute("data-i18n");
+    if (T[k] !== undefined) el.innerHTML = T[k];
+  });
+  document.querySelectorAll("[data-i18n-ph]").forEach(el => {
+    const k = el.getAttribute("data-i18n-ph");
+    if (T[k] !== undefined) el.placeholder = T[k];
+  });
+  // Update dark button label
+  const db = document.querySelector('[data-i18n="btnDark"]');
+  if (db) db.innerHTML = document.body.classList.contains("dark") ? T.btnLight : T.btnDark;
+  // Update protect button label
+  updateProtectBtn();
+  updateStatusBar();
+  if (findbar.classList.contains("visible")) buildMatches();
+  if (isElectron && window.electronAPI) window.electronAPI.langChanged(code);
+}
+
+// ═══════════════════════════════════════════════════════════════
+// ELEMENTS
+// ═══════════════════════════════════════════════════════════════
+const textarea    = document.getElementById("text");
+const hlView      = document.getElementById("hl-view");
+const linenums    = document.getElementById("linenums");
+const findbar     = document.getElementById("findbar");
+const findInputEl = document.getElementById("find-input");
+const replaceInputEl = document.getElementById("replace-input");
+const replaceRow  = document.getElementById("replace-row");
+const matchInfoEl = document.getElementById("match-info");
+const saveBtn     = document.getElementById("save-btn");
+const wrapBtn     = document.getElementById("wrap-btn");
+const linesBtn    = document.getElementById("lines-btn");
+const protectBtn  = document.getElementById("protect-btn");
+const syntaxBtn   = document.getElementById("syntax-btn");
+const syntaxLangSel = document.getElementById("syntax-lang-select");
+const sbLeft      = document.getElementById("sb-left");
+const sbMsg       = document.getElementById("sb-msg");
+const pasteBtn    = document.getElementById("paste-btn");
+const copySelBtn  = document.getElementById("copy-sel-btn");
+const clearConfirmBar = document.getElementById("clear-confirm");
+
+// ═══════════════════════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════════════════════
+let isProtected    = false;
+let syntaxOn       = false;
+let syntaxLang     = "auto";
+let wrap           = false;
+let showLines      = false;
+let fontSize       = 14;
+let allMatches     = [];
+let matchCursor    = -1;
+let msgTimer       = null;
+let escCount       = 0;   // triple-ESC unlock counter
+let escTimer       = null;
+const isElectron   = typeof window.electronAPI !== "undefined";
+
+// ═══════════════════════════════════════════════════════════════
+// SYNTAX HIGHLIGHTING
+// ═══════════════════════════════════════════════════════════════
+const EXT_LANG = {
+  js:"js",mjs:"js",cjs:"js",jsx:"js",
+  ts:"ts",tsx:"ts",
+  html:"html",htm:"html",
+  css:"css",scss:"css",less:"css",
+  py:"py",python:"py",
+  json:"json",
+  xml:"xml",svg:"xml",
+  sh:"sh",bash:"sh",
+  c:"c",cpp:"c",h:"c",hpp:"c",
+  java:"java",
+  rb:"rb",
+  php:"php",
+  sql:"sql",
+  md:"md",markdown:"md",
+};
+
+function detectSyntaxLang(fname, content) {
+  const ext = (fname.split(".").pop()||"").toLowerCase();
+  if (EXT_LANG[ext]) return EXT_LANG[ext];
+  if (/^\s*<(!DOCTYPE\s+html|html[\s>])/i.test(content)) return "html";
+  if (/^\s*<\?xml/i.test(content)) return "xml";
+  if (/^\s*[\[{]/.test(content) && /"[^"]+"\s*:/.test(content)) return "json";
+  if (/\bdef |import |print\(|elif /.test(content)) return "py";
+  if (/\b(function |const |let |var |=>)/.test(content)) return "js";
+  if (/\bSELECT\b.*\bFROM\b/i.test(content)) return "sql";
+  return "plain";
+}
+
+function esc(s) {
+  return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+}
+
+function tokenize(code, rules) {
+  if (!rules || !rules.length) return esc(code);
+  const rx = new RegExp(rules.map(r=>"("+r.re.source+")").join("|"), "gms");
+  let out = "", pos = 0, m;
+  while ((m = rx.exec(code)) !== null) {
+    if (m.index > pos) out += esc(code.slice(pos, m.index));
+    for (let i = 0; i < rules.length; i++) {
+      if (m[i+1] !== undefined) {
+        out += `<span class="t-${rules[i].c}">${esc(m[i+1])}</span>`;
+        break;
+      }
+    }
+    pos = rx.lastIndex;
+    if (pos === m.index) rx.lastIndex++;
   }
-  if(pos<txt.length)out+=esc(txt.slice(pos));
+  if (pos < code.length) out += esc(code.slice(pos));
   return out;
 }
 
-function renderSy(){
-  lg=dLng(nb.value,ed.value);
-  hl.innerHTML=tok(ed.value,lg);
-  hl.scrollTop=ed.scrollTop;hl.scrollLeft=ed.scrollLeft;
-  G('sln').textContent=lg?lg.toUpperCase():'';
-}
-
-// Lock — single authority
-function setLock(val){
-  lk=val;ed.readOnly=val;
-  G('bLk').textContent=val?'\uD83D\uDD12 Lock':'\uD83D\uDD13 Lock';
-  G('bLk').classList.toggle('on',val);
-  G('slk').style.display=val?'inline':'none';
-  updGlow();
-}
-
-// Syntax — delegates lock to setLock
-G('bSy').onclick=function(){
-  sy=!sy;
-  if(sy){renderSy();hl.classList.add('show');ed.style.display='none';setLock(true);}
-  else{hl.classList.remove('show');hl.innerHTML='';ed.style.display='';G('sln').textContent='';if(!lk)ed.focus();}
-  G('bSy').classList.toggle('on',sy);updSt();
+const RULES = {
+  js: [
+    {c:"cm", re:/\/\/[^\n]*|\/\*[\s\S]*?\*\//},
+    {c:"st", re:/`[\s\S]*?`|"(?:[^"\\\n]|\\.)*"|'(?:[^'\\\n]|\\.)*'/},
+    {c:"kw", re:/(?<![.\w])(?:async|await|break|case|catch|class|const|continue|debugger|default|delete|do|else|export|extends|finally|for|function|if|import|in|instanceof|let|new|of|return|static|super|switch|this|throw|try|typeof|var|void|while|with|yield)(?![\w$])/},
+    {c:"bi", re:/(?<![.\w])(?:Array|Boolean|console|Date|Error|false|Infinity|JSON|Map|Math|NaN|null|Number|Object|Promise|RegExp|Set|String|Symbol|true|undefined|window|document)(?![\w$])/},
+    {c:"nm", re:/\b(?:0x[\da-fA-F]+|\d+\.?\d*(?:[eE][+-]?\d+)?)\b/},
+    {c:"fn", re:/\b[A-Za-z_$][\w$]*(?=\s*\()/},
+  ],
+  py: [
+    {c:"cm", re:/#[^\n]*/},
+    {c:"st", re:/"""[\s\S]*?"""|'''[\s\S]*?'''|"(?:[^"\\\n]|\\.)*"|'(?:[^'\\\n]|\\.)*'/},
+    {c:"kw", re:/(?<!\w)(?:False|None|True|and|as|assert|async|await|break|class|continue|def|del|elif|else|except|finally|for|from|global|if|import|in|is|lambda|nonlocal|not|or|pass|raise|return|try|while|with|yield)(?!\w)/},
+    {c:"bi", re:/(?<!\w)(?:abs|all|any|bool|dict|enumerate|filter|float|format|frozenset|int|isinstance|len|list|map|max|min|next|object|open|print|range|repr|reversed|round|set|sorted|str|sum|super|tuple|type|vars|zip)(?!\w)/},
+    {c:"nm", re:/\b\d+\.?\d*(?:[eE][+-]?\d+)?j?\b/},
+    {c:"fn", re:/\b[A-Za-z_]\w*(?=\s*\()/},
+  ],
+  html: [
+    {c:"cm", re:/<!--[\s\S]*?-->/},
+    {c:"st", re:/"[^"]*"|'[^']*'/},
+    {c:"tg", re:/<\/?[A-Za-z][A-Za-z0-9-]*/},
+    {c:"at", re:/\b[a-zA-Z_:][a-zA-Z0-9_:\-.]*(?=\s*=)/},
+  ],
+  css: [
+    {c:"cm", re:/\/\*[\s\S]*?\*\//},
+    {c:"st", re:/"[^"]*"|'[^']*'/},
+    {c:"kw", re:/@[a-zA-Z-]+/},
+    {c:"sl", re:/[.#:*]?[a-zA-Z][\w-]*(?=\s*\{)/},
+    {c:"pr", re:/[a-zA-Z-]+(?=\s*:)/},
+    {c:"nm", re:/-?\d+\.?\d*(?:px|em|rem|%|vh|vw|s|ms|deg|fr)?/},
+  ],
+  json: [
+    {c:"at", re:/"(?:[^"\\]|\\.)*"(?=\s*:)/},
+    {c:"st", re:/"(?:[^"\\]|\\.)*"/},
+    {c:"nm", re:/-?\d+\.?\d*(?:[eE][+-]?\d+)?/},
+    {c:"kw", re:/\b(?:true|false|null)\b/},
+  ],
+  xml: [
+    {c:"cm", re:/<!--[\s\S]*?-->/},
+    {c:"st", re:/"[^"]*"|'[^']*'/},
+    {c:"tg", re:/<\/?[A-Za-z][\w:.]+/},
+    {c:"at", re:/\b[a-zA-Z_][\w:.]*(?=\s*=)/},
+  ],
+  sql: [
+    {c:"cm", re:/--[^\n]*|\/\*[\s\S]*?\*\//},
+    {c:"st", re:/'(?:[^'\\]|\\.)*'/},
+    {c:"kw", re:/\b(?:ALL|ALTER|AND|AS|ASC|BETWEEN|BY|CASE|CREATE|DELETE|DESC|DISTINCT|DROP|ELSE|END|EXISTS|FROM|FULL|GROUP|HAVING|IN|INNER|INSERT|INTO|IS|JOIN|LEFT|LIKE|LIMIT|NOT|NULL|OFFSET|ON|OR|ORDER|OUTER|RIGHT|SELECT|SET|TABLE|THEN|UNION|UPDATE|VALUES|WHEN|WHERE)\b/i},
+    {c:"fn", re:/\b(?:AVG|COALESCE|CONCAT|COUNT|DATE|IFNULL|LENGTH|LOWER|MAX|MIN|NOW|ROUND|SUBSTRING|SUM|TRIM|UPPER)\b/i},
+    {c:"nm", re:/\b\d+\.?\d*\b/},
+  ],
+  sh: [
+    {c:"cm", re:/#[^\n]*/},
+    {c:"st", re:/"(?:[^"\\\n]|\\.)*"|'[^'\n]*'/},
+    {c:"kw", re:/(?<!\w)(?:case|do|done|elif|else|esac|fi|for|function|if|in|return|then|until|while)(?!\w)/},
+    {c:"bi", re:/(?<!\w)(?:awk|cat|cd|chmod|cp|curl|echo|export|find|git|grep|ls|mkdir|mv|npm|pip|rm|sed|source|sudo|wget)(?!\w)/},
+    {c:"nm", re:/\$[\w{][\w}]*|\$\d/},
+  ],
+  c: [
+    {c:"cm", re:/\/\/[^\n]*|\/\*[\s\S]*?\*\//},
+    {c:"st", re:/"(?:[^"\\\n]|\\.)*"|'(?:[^'\\\n]|\\.)*'/},
+    {c:"kw", re:/(?<!\w)(?:auto|bool|break|case|catch|char|class|const|continue|default|delete|do|double|else|enum|extern|false|float|for|goto|if|inline|int|long|namespace|new|nullptr|operator|override|private|protected|public|register|return|short|signed|sizeof|static|struct|switch|template|this|throw|true|try|typedef|typename|union|unsigned|using|virtual|void|volatile|while)(?!\w)/},
+    {c:"nm", re:/\b(?:0x[\da-fA-F]+[uUlL]*|\d+\.?\d*(?:[eE][+-]?\d+)?[fFlLuU]*)\b/},
+    {c:"fn", re:/\b[A-Za-z_]\w*(?=\s*\()/},
+  ],
+  java: [
+    {c:"cm", re:/\/\/[^\n]*|\/\*[\s\S]*?\*\//},
+    {c:"st", re:/"(?:[^"\\\n]|\\.)*"|'(?:[^'\\\n]|\\.)*'/},
+    {c:"kw", re:/(?<!\w)(?:abstract|assert|boolean|break|byte|case|catch|char|class|const|continue|default|do|double|else|enum|extends|false|final|finally|float|for|if|implements|import|instanceof|int|interface|long|native|new|null|package|private|protected|public|return|short|static|super|switch|synchronized|this|throw|throws|true|try|var|void|volatile|while)(?!\w)/},
+    {c:"nm", re:/\b(?:0x[\da-fA-F]+[lL]?|\d+\.?\d*(?:[eE][+-]?\d+)?[fFdDlL]?)\b/},
+    {c:"fn", re:/\b[A-Za-z_]\w*(?=\s*\()/},
+  ],
+  rb: [
+    {c:"cm", re:/#[^\n]*/},
+    {c:"st", re:/"(?:[^"\\\n]|\\.)*"|'(?:[^'\\\n]|\\.)*'/},
+    {c:"kw", re:/(?<!\w)(?:BEGIN|END|alias|and|begin|break|case|class|def|do|else|elsif|end|ensure|false|for|if|in|module|next|nil|not|or|redo|rescue|retry|return|self|super|then|true|undef|unless|until|when|while|yield)(?!\w)/},
+    {c:"nm", re:/\b\d+\.?\d*\b/},
+    {c:"fn", re:/\b[A-Za-z_]\w*[?!]?(?=\s*\()/},
+  ],
+  md: [
+    {c:"kw", re:/^#{1,6} .+$/m},
+    {c:"st", re:/`[^`\n]+`/},
+    {c:"cm", re:/\*\*[^*\n]+\*\*|__[^_\n]+__/},
+    {c:"fn", re:/\[[^\]\n]*\]\([^)\n]*\)/},
+    {c:"bi", re:/^[ \t]*[-*+] /m},
+  ],
+  plain: [],
 };
+RULES.ts  = RULES.js;
+RULES.php = RULES.js;
 
-// Lock button — if turning off while syntax on, turn syntax off too
-G('bLk').onclick=function(){
-  if(!lk){setLock(true);toast('Locked');}
-  else{
-    if(sy){sy=false;hl.classList.remove('show');hl.innerHTML='';ed.style.display='';G('bSy').classList.remove('on');G('sln').textContent='';}
-    setLock(false);toast('Unlocked');ed.focus();
+function renderSyntax() {
+  const lang = syntaxLang === "auto"
+    ? detectSyntaxLang(document.getElementById("filename").value, textarea.value)
+    : syntaxLang;
+  const rules = RULES[lang] || [];
+  hlView.innerHTML = tokenize(textarea.value, rules);
+  hlView.scrollTop  = textarea.scrollTop;
+  hlView.scrollLeft = textarea.scrollLeft;
+}
+
+function toggleSyntax() {
+  syntaxOn = !syntaxOn;
+  syntaxBtn.classList.toggle("active", syntaxOn);
+  syntaxLangSel.classList.toggle("show", syntaxOn);
+
+  if (syntaxOn) {
+    // Auto-detect lang and set dropdown
+    const detected = detectSyntaxLang(document.getElementById("filename").value, textarea.value);
+    if (syntaxLang === "auto") syntaxLangSel.value = "auto";
+    renderSyntax();
+    hlView.classList.add("show");
+    textarea.style.display = "none";
+    // Syntax ON always activates Protect
+    setProtected(true);
+  } else {
+    hlView.classList.remove("show");
+    hlView.innerHTML = "";
+    textarea.style.display = "";
+    textarea.focus();
+    // Protect stays ON — user must manually unlock
   }
-  eC=0;
-};
+  updateStatusBar();
+}
 
-// Esc logic
-function doEsc(){
-  if(G('fb').classList.contains('open')){G('fb').classList.remove('open');mt=[];mi=-1;ed.focus();e1=false;eC=0;return;}
-  if(lk){
-    eC++;clearTimeout(eT);
-    eT=setTimeout(function(){eC=0;G('sln').textContent=sy?lg.toUpperCase():'';},4000);
-    if(eC===1)G('sln').textContent='🔒 Esc ×2 more to unlock & clear';
-    else if(eC===2)G('sln').textContent='🔒 Esc ×1 more — last chance';
-    else if(eC>=3){
-      if(sy){sy=false;hl.classList.remove('show');hl.innerHTML='';ed.style.display='';G('bSy').classList.remove('on');}
-      setLock(false);ed.value='';eC=0;G('sln').textContent='';updSt();updGlow();toast('Unlocked & Cleared');ed.focus();
-    }
+function onSyntaxLangChange() {
+  syntaxLang = syntaxLangSel.value;
+  if (syntaxOn) renderSyntax();
+}
+
+// ═══════════════════════════════════════════════════════════════
+// PROTECT
+// ═══════════════════════════════════════════════════════════════
+function pulseProtect() {
+  protectBtn.classList.remove("pulse");
+  // Force reflow to restart animation
+  void protectBtn.offsetWidth;
+  protectBtn.classList.add("pulse");
+  protectBtn.addEventListener("animationend", () => protectBtn.classList.remove("pulse"), { once: true });
+}
+
+function setProtected(val) {
+  isProtected = val;
+  textarea.readOnly = val;
+  wrapBtn.disabled  = val;
+  escCount = 0;
+  updateProtectBtn();
+  updateStatusBar();
+  updatePasteGlow();
+}
+
+function toggleProtect() {
+  if (syntaxOn) {
+    // Syntax is driving protect — turn off both together
+    syntaxOn = false;
+    syntaxBtn.classList.remove("active");
+    syntaxLangSel.classList.remove("show");
+    hlView.classList.remove("show");
+    hlView.innerHTML = "";
+    textarea.style.display = "";
+    setProtected(false);
+    textarea.focus();
+  } else {
+    setProtected(!isProtected);
+  }
+}
+
+function updateProtectBtn() {
+  if (isProtected) {
+    protectBtn.classList.add("active");
+    protectBtn.innerHTML = T.btnProtect.replace("🔓","🔒");
+  } else {
+    protectBtn.classList.remove("active");
+    protectBtn.innerHTML = T.btnProtect;
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// FIND & REPLACE (fixed off-by-one)
+// ═══════════════════════════════════════════════════════════════
+// Edition 2: Find button toggles the bar open/closed
+function toggleFind() {
+  if (findbar.classList.contains("visible")) { closeFindBar(); return; }
+  openFind();
+}
+function openFind() {
+  findbar.classList.add("visible");
+  replaceRow.classList.remove("visible");
+  // Edition 5: pre-fill with current selection
+  const sel = textarea.value.substring(textarea.selectionStart, textarea.selectionEnd).trim();
+  if (sel) findInputEl.value = sel;
+  findInputEl.focus(); findInputEl.select();
+  if (findInputEl.value) { buildMatches(); if (allMatches.length) { matchCursor = 0; jumpToMatch(allMatches[0]); } }
+}
+function openReplace() {
+  findbar.classList.add("visible");
+  replaceRow.classList.add("visible");
+  const sel = textarea.value.substring(textarea.selectionStart, textarea.selectionEnd).trim();
+  if (sel) findInputEl.value = sel;
+  findInputEl.focus(); findInputEl.select();
+  if (findInputEl.value) { buildMatches(); if (allMatches.length) { matchCursor = 0; jumpToMatch(allMatches[0]); } }
+}
+function closeFindBar() {
+  findbar.classList.remove("visible");
+  allMatches = []; matchCursor = -1; matchInfoEl.textContent = "";
+  textarea.focus();
+}
+// Edition 6: typing in find box immediately jumps to first match
+function onFindInput() {
+  matchCursor = -1;
+  buildMatches();
+  if (allMatches.length) { matchCursor = 0; jumpToMatch(allMatches[0]); }
+}
+
+function buildMatches() {
+  const q = findInputEl.value;
+  allMatches = []; matchInfoEl.textContent = "";
+  if (!q) return;
+
+  // FIX: use the raw textarea.value directly, case-insensitive via toUpperCase
+  // toUpperCase avoids locale-specific toLowerCase issues (e.g. Turkish İ)
+  const text  = textarea.value;
+  const textU = text.toUpperCase();
+  const qU    = q.toUpperCase();
+  const qLen  = q.length;
+
+  let start = 0;
+  while (start <= text.length - qLen) {
+    const idx = textU.indexOf(qU, start);
+    if (idx === -1) break;
+    allMatches.push(idx);  // store exact start index from original string
+    start = idx + 1;
+  }
+
+  if (allMatches.length) {
+    const word = allMatches.length === 1 ? T.match : T.matches;
+    matchInfoEl.textContent = `${allMatches.length} ${word}`;
+  } else {
+    matchInfoEl.textContent = T.noMatch;
+  }
+}
+
+function findNext() {
+  if (!allMatches.length) { buildMatches(); if (!allMatches.length) return; }
+  matchCursor = (matchCursor + 1) % allMatches.length;
+  jumpToMatch(allMatches[matchCursor]);
+}
+function findPrev() {
+  if (!allMatches.length) { buildMatches(); if (!allMatches.length) return; }
+  matchCursor = (matchCursor - 1 + allMatches.length) % allMatches.length;
+  jumpToMatch(allMatches[matchCursor]);
+}
+
+function jumpToMatch(idx) {
+  const q = findInputEl.value;
+  // Select exactly from idx to idx + q.length in the original string
+  textarea.focus();
+  textarea.setSelectionRange(idx, idx + q.length);
+  // Scroll to show the match
+  const before  = textarea.value.substring(0, idx);
+  const lineNum = (before.match(/\n/g) || []).length;
+  const lineH   = parseFloat(getComputedStyle(textarea).lineHeight) || 22.4;
+  textarea.scrollTop = Math.max(0, lineNum * lineH - textarea.clientHeight / 2 + lineH);
+  // Update match counter
+  matchInfoEl.textContent = `${matchCursor + 1} / ${allMatches.length} ${allMatches.length === 1 ? T.match : T.matches}`;
+}
+
+function doReplace() {
+  if (!allMatches.length || matchCursor < 0) { findNext(); return; }
+  const q = findInputEl.value;
+  const r = replaceInputEl.value;
+  const idx = allMatches[matchCursor];
+  textarea.value = textarea.value.substring(0, idx) + r + textarea.value.substring(idx + q.length);
+  buildMatches();
+  matchCursor = Math.min(matchCursor, allMatches.length - 1);
+  updateCount(); updateLineNumbers();
+  if (allMatches.length) jumpToMatch(allMatches[matchCursor]);
+  else showMsg(T.replaced);
+}
+
+function doReplaceAll() {
+  const q = findInputEl.value; if (!q) return;
+  const r = replaceInputEl.value;
+  const textU = textarea.value.toUpperCase();
+  const qU = q.toUpperCase();
+  let result = "", pos = 0;
+  while (true) {
+    const idx = textU.indexOf(qU, pos);
+    if (idx === -1) { result += textarea.value.substring(pos); break; }
+    result += textarea.value.substring(pos, idx) + r;
+    pos = idx + q.length;
+  }
+  textarea.value = result;
+  buildMatches(); updateCount(); updateLineNumbers();
+  showMsg(T.allReplaced);
+}
+
+function findBarKey(e) {
+  if (e.key === "Enter") { e.shiftKey ? findPrev() : findNext(); e.preventDefault(); }
+  if (e.key === "Escape") closeFindBar();
+}
+function replaceBarKey(e) {
+  if (e.key === "Enter") { doReplace(); e.preventDefault(); }
+  if (e.key === "Escape") closeFindBar();
+}
+
+// ═══════════════════════════════════════════════════════════════
+// STATUS BAR (Edition 8 — full format)
+// ═══════════════════════════════════════════════════════════════
+function updateStatusBar() {
+  const val  = textarea.value;
+  const sel  = textarea.selectionEnd - textarea.selectionStart;
+  const before = val.substring(0, textarea.selectionStart);
+  const lines  = before.split("\n");
+  const ln     = lines.length;
+  const col    = lines[lines.length - 1].length + 1;
+  const totalLn = (val.match(/\n/g) || []).length + 1;
+  const totalW  = val.trim() ? val.trim().split(/\s+/).length : 0;
+  const totalC  = val.length;
+  const zoom    = Math.round(fontSize / 14 * 100) + "%";
+
+  const parts = [`Ln ${ln}/${totalLn}, Col ${col}`];
+
+  // Selection info (only when something is selected)
+  if (sel > 0) {
+    const selText  = val.substring(textarea.selectionStart, textarea.selectionEnd);
+    const selWords = selText.trim() ? selText.trim().split(/\s+/).length : 0;
+    parts.push(`${selWords} ${T.words}, ${sel} ${T.chars} ${T.selected}`);
+  }
+
+  parts.push(`${totalW} ${T.words}`);
+  parts.push(`${totalC} ${T.chars}`);
+  parts.push(zoom);
+
+  // Mode indicators
+  if (syntaxOn)         parts.push(T.readOnly);
+  else if (isProtected) parts.push(T.protectedLabel);
+
+  sbLeft.textContent = parts.join(" │ ");
+}
+
+function showMsg(msg) {
+  clearTimeout(msgTimer);
+  sbMsg.textContent = msg;
+  sbMsg.classList.add("show");
+  msgTimer = setTimeout(() => { sbMsg.classList.remove("show"); }, 2200);
+}
+
+// ═══════════════════════════════════════════════════════════════
+// LINE NUMBERS
+// ═══════════════════════════════════════════════════════════════
+function updateLineNumbers() {
+  if (!showLines) return;
+  const n = textarea.value.split("\n").length;
+  linenums.textContent = Array.from({length: n}, (_, i) => i + 1).join("\n");
+  linenums.scrollTop = textarea.scrollTop;
+}
+function toggleLineNumbers() {
+  if (isProtected && !showLines) { pulseProtect(); showMsg(T.protectFirst); return; }
+  // Edition 1: enabling Lines disables Wrap
+  if (!showLines && wrap) {
+    wrap = false;
+    wrapBtn.classList.remove("active");
+    textarea.classList.remove("wrap-mode");
+    hlView.classList.remove("wrap-mode");
+  }
+  showLines = !showLines;
+  linesBtn.classList.toggle("active", showLines);
+  linenums.style.display = showLines ? "block" : "none";
+  if (showLines) updateLineNumbers();
+}
+textarea.addEventListener("scroll", () => {
+  if (showLines)  linenums.scrollTop  = textarea.scrollTop;
+  if (syntaxOn)   { hlView.scrollTop  = textarea.scrollTop; hlView.scrollLeft = textarea.scrollLeft; }
+});
+
+// ═══════════════════════════════════════════════════════════════
+// WRAP
+// ═══════════════════════════════════════════════════════════════
+function toggleWrap() {
+  if (isProtected) return;
+  wrap = !wrap;
+  wrapBtn.classList.toggle("active", wrap);
+  textarea.classList.toggle("wrap-mode", wrap);
+  hlView.classList.toggle("wrap-mode", wrap);
+  if (wrap && showLines) {
+    showLines = false; linesBtn.classList.remove("active");
+    linenums.style.display = "none"; showMsg(T.linesHidden);
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// COPY / PASTE
+// ═══════════════════════════════════════════════════════════════
+function selectAndCopy() {
+  const content = textarea.value;
+  if (navigator.clipboard && navigator.clipboard.writeText)
+    navigator.clipboard.writeText(content).then(() => showMsg(T.copied)).catch(() => fallbackCopy());
+  else fallbackCopy();
+}
+function fallbackCopy() {
+  const wasHidden = textarea.style.display === "none";
+  if (wasHidden) textarea.style.display = "";
+  textarea.select();
+  try { document.execCommand("copy"); showMsg(T.copied); }
+  catch(e) { showMsg(T.copyFailed); }
+  if (wasHidden) textarea.style.display = "none";
+}
+
+// Edition 7: copy only the selected text
+function copySelection() {
+  const sel = textarea.value.substring(textarea.selectionStart, textarea.selectionEnd);
+  if (!sel) return;
+  if (navigator.clipboard && navigator.clipboard.writeText)
+    navigator.clipboard.writeText(sel).then(() => showMsg(T.copied)).catch(() => {
+      try { document.execCommand("copy"); showMsg(T.copied); } catch(e) { showMsg(T.copyFailed); }
+    });
+  else {
+    try { document.execCommand("copy"); showMsg(T.copied); } catch(e) { showMsg(T.copyFailed); }
+  }
+}
+
+// Update copy-sel button enabled state
+function updateCopySelBtn() {
+  const hasSel = textarea.selectionStart !== textarea.selectionEnd;
+  copySelBtn.disabled = !hasSel;
+}
+
+// Edition 8: paste glow when textarea is empty
+function updatePasteGlow() {
+  const empty = textarea.value.length === 0;
+  pasteBtn.classList.toggle("glow", empty && !isProtected);
+}
+
+function pasteText() {
+  // Edition 3: if protected AND textarea is empty, allow one paste then re-lock
+  if (isProtected && textarea.value.length === 0) {
+    const doInsert = (t) => {
+      textarea.readOnly = false;
+      const s = textarea.selectionStart;
+      textarea.value = t;
+      textarea.selectionStart = textarea.selectionEnd = t.length;
+      textarea.readOnly = true;
+      updateCount(); updateLineNumbers();
+      if (syntaxOn) renderSyntax();
+      updatePasteGlow();
+    };
+    if (navigator.clipboard && navigator.clipboard.readText)
+      navigator.clipboard.readText().then(doInsert).catch(() => showMsg(T.longPress));
+    else showMsg(T.longPress);
     return;
   }
-  // unlocked: double-Esc within 500ms to clear
-  if(!ed.value)return;
-  if(!e1){
-    e1=true;G('sln').textContent='Press Esc again to clear';
-    clearTimeout(e1T);e1T=setTimeout(function(){e1=false;G('sln').textContent='';},500);
-  }else{
-    e1=false;clearTimeout(e1T);G('sln').textContent='';
-    ed.value='';if(sy)hl.innerHTML='';updSt();updGlow();toast('Cleared');ed.focus();
-  }
+  if (isProtected) { pulseProtect(); showMsg(T.protectFirst); return; }
+  if (navigator.clipboard && navigator.clipboard.readText)
+    navigator.clipboard.readText().then(insertAtCursor).catch(() => showMsg(T.longPress));
+  else { textarea.focus(); if (!document.execCommand("paste")) showMsg(T.longPress); }
+}
+function insertAtCursor(t) {
+  if (isProtected) return;
+  const s = textarea.selectionStart;
+  textarea.value = textarea.value.substring(0,s) + t + textarea.value.substring(textarea.selectionEnd);
+  textarea.selectionStart = textarea.selectionEnd = s + t.length;
+  updateCount(); updateLineNumbers();
+  if (syntaxOn) renderSyntax();
+  updatePasteGlow();
 }
 
-// paste
-function insText(t){
-  if(!t)return;
-  var ro=ed.readOnly;if(ro)ed.readOnly=false;
-  var s=ed.selectionStart,e2=ed.selectionEnd,v=ed.value;
-  ed.value=v.slice(0,s)+t+v.slice(e2);
-  ed.selectionStart=ed.selectionEnd=s+t.length;
-  if(ro)ed.readOnly=true;
-  if(sy)renderSy();updSt();updGlow();
+// ═══════════════════════════════════════════════════════════════
+// WORD / CHAR COUNT
+// ═══════════════════════════════════════════════════════════════
+function updateCount() {
+  updateStatusBar();
+  updatePasteGlow();
 }
-ed.addEventListener('paste',function(e){
-  var empty=!ed.value;
-  if(lk&&!empty){e.preventDefault();flash();return;}
-  var t=(e.clipboardData||window.clipboardData).getData('text');
-  e.preventDefault();insText(t);
-  if(empty)toast('Pasted');
-});
-G('bPs').onclick=function(){
-  if(lk&&ed.value){flash();return;}
-  ed.focus();
-  if(navigator.clipboard&&navigator.clipboard.readText){
-    navigator.clipboard.readText().then(function(t){
-      insText(t);toast('Pasted');
-    }).catch(function(){
-      toast('Press Ctrl+V to paste');
+
+// ═══════════════════════════════════════════════════════════════
+// FILE OPERATIONS
+// ═══════════════════════════════════════════════════════════════
+// Binary detection: too many replacement chars = likely binary
+function isBinary(content) {
+  return (content.match(/\uFFFD/g) || []).length > 8 ||
+         (content.match(/\x00/g)   || []).length > 8;
+}
+
+function loadContent(content, fname) {
+  // Strip BOM
+  if (content.charCodeAt(0) === 0xFEFF) content = content.slice(1);
+  textarea.value = content;
+  if (fname) document.getElementById("filename").value = fname;
+  updateCount(); updateLineNumbers();
+  if (syntaxOn) renderSyntax();
+  if (isBinary(content)) showMsg(T.binary);
+  textarea.focus();
+}
+
+function filePrompt() {
+  if (isElectron) { window.electronAPI.triggerOpen(); return; }
+  const inp = document.createElement("input");
+  inp.type = "file";
+  inp.accept = "*/*";   // Web: accept ALL file types
+  inp.onchange = e => {
+    const file = e.target.files[0]; if (!file) return;
+    document.getElementById("filename").value = file.name;
+    const reader = new FileReader();
+    reader.onload = ev => loadContent(ev.target.result, file.name);
+    reader.readAsText(file, "utf-8");
+  };
+  inp.click();
+}
+
+function filePromptNew() {
+  if (isElectron) { window.electronAPI.triggerOpenNew(); return; }
+  window.open(location.href, "_blank");
+}
+
+function triggerSave() {
+  if (isElectron) { window.electronAPI.triggerSave(); return; }
+  downloadFile();
+}
+function triggerSaveAs() {
+  if (isElectron) { window.electronAPI.triggerSaveAs(); return; }
+  downloadFile();
+}
+function downloadFile() {
+  const blob = new Blob([textarea.value], {type:"text/plain"});
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = document.getElementById("filename").value || "Untitled.txt";
+  a.click();
+  showMsg(T.saved);
+}
+
+// ═══════════════════════════════════════════════════════════════
+// MISC
+// ═══════════════════════════════════════════════════════════════
+function toggleDark() {
+  const dark = document.body.classList.toggle("dark");
+  const btn = document.querySelector('[data-i18n="btnDark"]');
+  if (btn) btn.innerHTML = dark ? T.btnLight : T.btnDark;
+}
+
+function clearText() {
+  if (isProtected) {
+    // Edition 4: show inline confirm prompt instead of blocking
+    clearConfirmBar.classList.add("show");
+    return;
+  }
+  _doClear();
+}
+function _doClear() {
+  clearConfirmBar.classList.remove("show");
+  textarea.value = "";
+  document.getElementById("filename").value = "Untitled.txt";
+  saveBtn.classList.remove("has-file");
+  closeFindBar();
+  if (syntaxOn) { syntaxOn = false; syntaxBtn.classList.remove("active"); syntaxLangSel.classList.remove("show"); hlView.classList.remove("show"); hlView.innerHTML = ""; textarea.style.display = ""; }
+  updateCount(); updateLineNumbers();
+  if (isElectron) window.electronAPI.fileCleared();
+  updatePasteGlow();
+  textarea.focus();
+}
+function forceUnprotectAndClear() {
+  setProtected(false);
+  if (syntaxOn) { syntaxOn = false; syntaxBtn.classList.remove("active"); syntaxLangSel.classList.remove("show"); hlView.classList.remove("show"); hlView.innerHTML = ""; textarea.style.display = ""; }
+  _doClear();
+}
+function dismissClearConfirm() {
+  clearConfirmBar.classList.remove("show");
+  escCount = 0;
+  textarea.focus();
+}
+
+function setZoom(n) {
+  fontSize = n;
+  [textarea, linenums, hlView].forEach(el => el.style.fontSize = fontSize + "px");
+  updateStatusBar();
+}
+function zoomIn()    { setZoom(Math.min(40, fontSize + 1)); }
+function zoomOut()   { setZoom(Math.max(6,  fontSize - 1)); }
+function zoomReset() { setZoom(14); }
+
+function selectFilename(el) {
+  const dot = el.value.lastIndexOf(".");
+  setTimeout(() => el.setSelectionRange(0, dot > 0 ? dot : el.value.length), 0);
+}
+
+// ═══════════════════════════════════════════════════════════════
+// ELECTRON BRIDGE
+// ═══════════════════════════════════════════════════════════════
+if (isElectron) {
+  document.body.classList.add("is-electron");
+
+  window.electronAPI.onFileOpened(({content, name}) => {
+    loadContent(content, name);
+    saveBtn.classList.add("has-file");
+  });
+  window.electronAPI.onRequestContentForSave(({mode}) => {
+    window.electronAPI.saveContent({
+      content: textarea.value,
+      mode,
+      suggestedName: document.getElementById("filename").value || "Untitled.txt",
     });
-  }else{
-    toast('Press Ctrl+V to paste');
-  }
-};
-
-// copy
-function doCopy(t,msg){
-  if(navigator.clipboard)navigator.clipboard.writeText(t).then(function(){toast(msg);}).catch(function(){fbCopy(t,msg);});
-  else fbCopy(t,msg);
+  });
+  window.electronAPI.onSaveSuccess(({filePath}) => {
+    const name = filePath.split(/[\\/]/).pop();
+    document.getElementById("filename").value = name;
+    saveBtn.classList.add("has-file");
+    showMsg(T.saved);
+  });
+  window.electronAPI.onApplyLang(code => {
+    const sel = document.getElementById("ui-lang");
+    if (sel) sel.value = code;
+    applyLang(code);
+  });
 }
-function fbCopy(t,msg){var x=document.createElement('textarea');x.value=t;x.style.cssText='position:fixed;opacity:0';document.body.appendChild(x);x.select();try{document.execCommand('copy');toast(msg);}catch(x2){toast('Copy failed');}document.body.removeChild(x);}
-G('bCp').onclick=function(){var s=ed.selectionStart,e=ed.selectionEnd,h=s!==e;doCopy(h?ed.value.slice(s,e):ed.value,h?'Selection Copied':'Copied');};
 
-// file
-G('bFi').onclick=function(){G('fi').value='';G('fi').click();};
-G('fi').onchange=function(){
-  var f=G('fi').files[0];if(!f)return;
-  var r=new FileReader();
-  r.onload=function(ev){
-    ed.value=ev.target.result;nb.value=f.name;
-    document.title=f.name+' \u2014 Quick Web Notepad';
-    if(sy)renderSy();updSt();updGlow();ed.focus();toast(f.name+' opened');
-  };r.readAsText(f);
-};
+// ═══════════════════════════════════════════════════════════════
+// EVENTS
+// ═══════════════════════════════════════════════════════════════
+textarea.addEventListener("input", () => {
+  updateCount(); updateLineNumbers();
+  if (syntaxOn) renderSyntax();
+  if (findbar.classList.contains("visible")) buildMatches();
+});
+textarea.addEventListener("click",   () => { updateStatusBar(); updateCopySelBtn(); });
+textarea.addEventListener("keyup",   () => { updateStatusBar(); updateCopySelBtn(); });
+textarea.addEventListener("select",  () => { updateStatusBar(); updateCopySelBtn(); });
+textarea.addEventListener("selectionchange", () => { updateStatusBar(); updateCopySelBtn(); });
 
-// save
-function doSave(){var name=nb.value||'Untitled.txt';var a=document.createElement('a');a.href=URL.createObjectURL(new Blob([ed.value],{type:'text/plain'}));a.download=name;a.click();setTimeout(function(){URL.revokeObjectURL(a.href);},1000);toast('Saved: '+name);}
-G('bSv').onclick=doSave;
-
-// clear
-G('bCl').onclick=function(){if(guard())return;if(!ed.value)return;ed.value='';if(sy)hl.innerHTML='';updSt();updGlow();toast('Cleared');ed.focus();};
-
-// wrap
-G('bWp').onclick=function(){if(lk)return;wp=!wp;[ed,hl].forEach(function(x){x.classList.toggle('wp',wp);});G('bWp').classList.toggle('on',wp);};
-
-// find & replace
-function getR(){var q=G('fq').value;if(!q)return null;var fl='g'+(G('chkC').checked?'':'i');try{return G('chkX').checked?new RegExp(q,fl):new RegExp(q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'),fl);}catch(x){return null;}}
-function doFind(){mt=[];mi=-1;var re=getR();if(re){var txt=ed.value,m;re.lastIndex=0;while((m=re.exec(txt))!==null){mt.push([m.index,m.index+m[0].length]);if(!m[0].length)re.lastIndex++;}if(mt.length)mi=0;}G('fc').textContent=mt.length?mt.length+' match'+(mt.length>1?'es':''):'No match';}
-function goM(i){if(!mt.length){doFind();if(!mt.length)return;}mi=((i%mt.length)+mt.length)%mt.length;var m=mt[mi];ed.focus();ed.setSelectionRange(m[0],m[1]);var lh=parseFloat(getComputedStyle(ed).lineHeight)||22;ed.scrollTop=Math.max(0,(ed.value.slice(0,m[0]).split('\n').length-3)*lh);G('fc').textContent=(mi+1)+'/'+mt.length+' match'+(mt.length>1?'es':'');updSt();}
-function openF(){G('fb').classList.add('open');var s=ed.value.slice(ed.selectionStart,ed.selectionEnd).trim();if(s)G('fq').value=s;G('fq').focus();G('fq').select();}
-function closeF(){G('fb').classList.remove('open');mt=[];mi=-1;ed.focus();}
-G('bFb').onclick=openF;G('bFc').onclick=closeF;
-G('bFp').onclick=function(){goM(mi<=0?mt.length-1:mi-1);};
-G('bFn').onclick=function(){goM(mi+1);};
-G('fq').oninput=function(){clearTimeout(dT);dT=setTimeout(doFind,380);};
-G('fq').onkeydown=function(e){if(e.key==='Enter'){e.preventDefault();clearTimeout(dT);doFind();e.shiftKey?goM(mi<=0?mt.length-1:mi-1):goM(mi+1);}if(e.key==='Escape'){e.stopPropagation();closeF();}};
-G('chkC').onchange=G('chkX').onchange=function(){clearTimeout(dT);dT=setTimeout(doFind,100);};
-G('bRp').onclick=function(){if(guard())return;if(!mt.length){doFind();if(!mt.length)return;}var m=mt[mi],v=ed.value;ed.value=v.slice(0,m[0])+G('rq').value+v.slice(m[1]);doFind();if(mt.length)goM(mi);toast('Replaced');updSt();if(sy)renderSy();};
-G('bRa').onclick=function(){if(guard())return;var re=getR();if(!re)return;var cnt=0;ed.value=ed.value.replace(re,function(){cnt++;return G('rq').value;});doFind();toast('Replaced '+cnt);updSt();if(sy)renderSy();};
-
-// zoom
-function setZm(z){zm=Math.max(50,Math.min(300,z));var px=Math.round(13*zm/100)+'px';ed.style.fontSize=hl.style.fontSize=px;G('bZr').textContent=zm+'%';G('szm').textContent=zm+'%';}
-G('bZo').onclick=function(){setZm(zm-10);};G('bZr').onclick=function(){setZm(100);};G('bZi').onclick=function(){setZm(zm+10);};
-
-// theme
-G('bTh').onclick=function(){dk=!dk;document.body.classList.toggle('L',!dk);G('bTh').textContent=dk?'\u2600 Light':'\uD83C\uDF19 Dark';};
-
-// new tab
-G('bNt').onclick=function(){window.open(location.href,'_blank');};
-
-// name box
-nb.onclick=function(){var v=nb.value,d=v.lastIndexOf('.');setTimeout(function(){nb.setSelectionRange(0,d>0?d:v.length);},0);};
-nb.oninput=function(){var v=nb.value.trim();if(v)document.title=(v.includes('.')?v:v+'.txt')+' \u2014 Quick Web Notepad';};
-nb.onblur=function(){var v=nb.value.trim()||'Untitled';if(!v.includes('.'))v+='.txt';nb.value=v;document.title=v+' \u2014 Quick Web Notepad';if(sy)renderSy();};
-
-// editor events
-ed.oninput=function(){if(sy)renderSy();updSt();updGlow();if(G('fb').classList.contains('open')){clearTimeout(dT);dT=setTimeout(doFind,380);}};
-ed.onscroll=function(){if(sy){hl.scrollTop=ed.scrollTop;hl.scrollLeft=ed.scrollLeft;}};
-G('hl').onscroll=function(){ed.scrollTop=hl.scrollTop;ed.scrollLeft=hl.scrollLeft;};
-ed.addEventListener('keyup',updSt);ed.addEventListener('click',updSt);ed.addEventListener('select',updSt);
-ed.onkeydown=function(e){if(e.key==='Tab'){e.preventDefault();if(guard())return;var s=ed.selectionStart,v=ed.value;ed.value=v.slice(0,s)+'  '+v.slice(ed.selectionEnd);ed.selectionStart=ed.selectionEnd=s+2;updSt();}if(lk&&!e.ctrlKey&&!e.metaKey&&!e.altKey&&e.key.length===1)flash();};
-
-// global shortcuts
-document.addEventListener('keydown',function(e){
-  if(e.target===G('fq')||e.target===G('rq'))return;
-  if(e.key==='Escape'){e.preventDefault();doEsc();return;}
-  var c=e.ctrlKey||e.metaKey,k=e.key.toLowerCase();
-  if(!c)return;
-  if(k==='s'){e.preventDefault();doSave();}
-  else if(k==='o'){e.preventDefault();G('bFi').click();}
-  else if(k==='t'){e.preventDefault();window.open(location.href,'_blank');}
-  else if(k==='f'){e.preventDefault();openF();}
-  else if(k==='0'){e.preventDefault();setZm(100);}
-  else if(e.key==='-'){e.preventDefault();setZm(zm-10);}
-  else if(e.key==='='||e.key==='+'){e.preventDefault();setZm(zm+10);}
-  else if(e.shiftKey&&k==='w'){e.preventDefault();G('bWp').click();}
-  else if(e.shiftKey&&k==='h'){e.preventDefault();G('bSy').click();}
-  else if(e.shiftKey&&k==='l'){e.preventDefault();G('bLk').click();}
-  else if(e.shiftKey&&k==='c'){e.preventDefault();var s=ed.selectionStart,en=ed.selectionEnd,h=s!==en;doCopy(h?ed.value.slice(s,en):ed.value,h?'Selection Copied':'Copied');}
+textarea.addEventListener("keydown", e => {
+  if (e.key === "Tab") {
+    e.preventDefault();
+    if (isProtected) { pulseProtect(); showMsg(T.protectFirst); return; }
+    const s = textarea.selectionStart;
+    textarea.value = textarea.value.substring(0,s) + "  " + textarea.value.substring(textarea.selectionEnd);
+    textarea.selectionStart = textarea.selectionEnd = s + 2;
+    updateLineNumbers();
+    if (syntaxOn) renderSyntax();
+    return;
+  }
+  // Pulse protect on any printable key attempt while protected
+  if (isProtected && !e.ctrlKey && !e.metaKey && !e.altKey && e.key.length === 1) {
+    pulseProtect(); showMsg(T.protectFirst);
+  }
 });
 
-document.title='Untitled.txt \u2014 Quick Web Notepad';
-updSt();updGlow();ed.focus();
+document.addEventListener("keydown", e => {
+  if (e.target === findInputEl || e.target === replaceInputEl) return;
+  const ctrl = e.ctrlKey || e.metaKey;
+
+  // Edition 4: triple-ESC unlock sequence
+  if (e.key === "Escape") {
+    e.preventDefault();
+    if (clearConfirmBar.classList.contains("show")) { dismissClearConfirm(); return; }
+    if (findbar.classList.contains("visible")) { closeFindBar(); escCount = 0; return; }
+    if (isProtected) {
+      escCount++;
+      clearTimeout(escTimer);
+      escTimer = setTimeout(() => { escCount = 0; }, 4000);
+      if (escCount === 1) showMsg(T.escUnlock3);
+      else if (escCount === 2) showMsg(T.escUnlock2);
+      else if (escCount >= 3) { showMsg(T.escUnlock1); forceUnprotectAndClear(); escCount = 0; }
+      return;
+    }
+    escCount = 0;
+    clearText();
+    return;
+  }
+
+  if (ctrl && e.key === "Enter")                          { e.preventDefault(); selectAndCopy(); }
+  if (ctrl && e.key === "f")                              { e.preventDefault(); toggleFind(); }
+  if (ctrl && e.key.toLowerCase() === "h")               { e.preventDefault(); openReplace(); }
+  if (ctrl && e.key.toLowerCase() === "o" && !e.shiftKey){ e.preventDefault(); filePrompt(); }
+  if (ctrl && e.key.toLowerCase() === "o" && e.shiftKey) { e.preventDefault(); filePromptNew(); }
+  if (ctrl && e.shiftKey && e.key.toLowerCase() === "s") { e.preventDefault(); triggerSaveAs(); }
+  if (ctrl && !e.shiftKey && e.key.toLowerCase() === "s"){ e.preventDefault(); triggerSave(); }
+  if (ctrl && e.key.toLowerCase() === "n") { e.preventDefault(); if (isElectron) window.electronAPI.triggerNewWin(); }
+  // Edition 10: Ctrl+W closes current window (Electron only)
+  if (ctrl && e.key.toLowerCase() === "w") { e.preventDefault(); if (isElectron) window.electronAPI.closeWin(); }
+});
+
+// ═══════════════════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════════════════
+updateStatusBar();
+updatePasteGlow();
+updateCopySelBtn();
+
+// Ensure textarea is focused on every new window/tab load (edition 1)
+window.addEventListener("load", () => textarea.focus());
+
+// Auto-detect browser language
+(function() {
+  const bl = (navigator.language || "en").toLowerCase();
+  const MAP = {
+    en:"en","en-us":"en","en-gb":"en",
+    es:"es","es-es":"es","es-mx":"es",
+    zh:"zh","zh-cn":"zh","zh-tw":"zh","zh-hk":"zh",
+    ja:"ja", it:"it", ar:"ar","ar-sa":"ar",
+    de:"de", nl:"nl", hi:"hi",
+    fr:"fr","fr-fr":"fr",
+    pt:"pt","pt-br":"pt","pt-pt":"pt",
+    ru:"ru", tr:"tr", ko:"ko", he:"he", ga:"ga",
+  };
+  const d = MAP[bl] || MAP[bl.split("-")[0]];
+  if (d && d !== "en") {
+    const sel = document.getElementById("ui-lang");
+    if (sel) sel.value = d;
+    applyLang(d);
+  }
+})();
 </script>
+
+
 </body></html>
