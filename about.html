@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>About — Quick Web Notepad</title>
+  <style>
+    :root {
+      --bg: #1e1e1e;
+      --card: #252526;
+      --border: #3e3e42;
+      --text: #d4d4d4;
+      --muted: rgba(212,212,212,.68);
+      --accent: #0078d7;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+      line-height: 1.7;
+    }
+
+    main {
+      width: min(760px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 56px 0;
+    }
+
+    .back {
+      display: inline-block;
+      margin-bottom: 18px;
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 14px;
+    }
+
+    .back:hover {
+      color: var(--text);
+      text-decoration: underline;
+    }
+
+    section {
+      padding: 30px;
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      background: rgba(255,255,255,.025);
+    }
+
+    h1 {
+      margin: 0 0 18px;
+      font-size: 30px;
+      letter-spacing: -.04em;
+    }
+
+    p {
+      color: var(--muted);
+      margin: 0 0 16px;
+    }
+
+    a {
+      color: var(--text);
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <a class="back" href="./">← Back to app</a>
+
+    <section>
+      <h1>About Quick Web Notepad</h1>
+
+      <p>
+        Quick Web Notepad is a simple browser-based writing tool for quick notes,
+        drafts, and temporary text editing.
+      </p>
+
+      <p>
+        It runs directly in your browser and does not require an account, sign-in,
+        or backend service.
+      </p>
+
+      <p>
+        The project is built with HTML, CSS, and JavaScript, with a focus on a calm,
+        minimal, and distraction-free writing experience.
+      </p>
+
+      <p>
+        Created by OFCode-dev as a small independent web tool.
+      </p>
+    </section>
+  </main>
+</body>
+</html>
