@@ -1,47 +1,58 @@
 # Quick Web Notepad
 
-A lightweight browser-based notepad built with HTML, CSS, and JavaScript.
+A fast, private notepad that runs in the browser. No account, no backend, no build step.
 
-## Versions
-
-### `index.html` — Classic
-The original compact version of Quick Web Notepad with a lightweight layout and minimal editing interface.
-
-### `index_v2.html` — Enhanced
-A more polished version with broader UI improvements and a more app-like presentation.
-
-### `index_v2.1.html` — Localized / Refined
-A refined compact variant that adds multilingual UI support, automatic browser-language detection, visible version labels, and additional interface polish.
+**Live:** https://qwnotepad.ofcodedev.me/
 
 ## Features
 
-- Plain text editing in the browser
-- Open and save local text files
-- Paste and copy support
-- Word wrap
-- Find and replace
-- Syntax highlighting
-- Lock / protect mode
-- Theme toggle
-- Zoom controls
-- Multiple project variants for different UI styles
+- Plain text editing; open and save local files (saves in place where the browser supports the File System Access API, otherwise downloads)
+- Find and replace with match case and regex
+- Syntax view: read-only highlighting for JS, Python, HTML, CSS, JSON, SQL, shell, C, Markdown
+- Markdown view: read-only rendered preview (GFM tables, task lists, highlighted code blocks)
+- Lock mode to protect the text from accidental edits
+- Light and dark themes, zoom, word wrap
+- 15 interface languages, detected from the browser
+- Installable and usable offline (PWA)
+- The text of each tab survives a reload; a new tab always starts empty
 
-## Project status
+## Shortcuts
 
-This project is being actively improved through multiple parallel versions.
+| Action | Shortcut |
+| --- | --- |
+| Open / Save | Ctrl+O / Ctrl+S |
+| Find | Ctrl+F |
+| Copy all or selection | Ctrl+Shift+C |
+| Syntax view | Ctrl+Shift+H |
+| Markdown view | Alt+M |
+| Lock | Ctrl+Shift+L |
+| Word wrap | Alt+Z |
+| Zoom | Ctrl+= / Ctrl+− / Ctrl+0 |
+| Clear | Esc Esc (Esc ×3 when locked) |
 
-## File Guide
+## Project layout
 
-- `index.html` — classic version
-- `index_v1.html` — alias that redirects to `index.html`
-- `index_v2.html` — enhanced version
-- `index_v2.1.html` — localized / refined version
+```
+index.html              the app page
+assets/app.css          styles; the color palette is the token block at the top
+assets/app.js           app logic (ES module)
+assets/i18n.js          interface strings
+assets/page.css         styles for the static pages
+assets/vendor/          marked and DOMPurify, pinned and served locally
+sw.js                   service worker (offline support)
+manifest.webmanifest    PWA manifest
+about.html, privacy.html, contact.html, 404.html
+```
 
-## Live Demo
+## Development
 
-- [Classic](https://qwnotepad.ofcodedev.me/)
-- [Enhanced](https://qwnotepad.ofcodedev.me/index_v2.html)
-- [Localized / Refined](https://qwnotepad.ofcodedev.me/index_v2.1.html)
+Serve the folder with any static server, for example:
+
+```
+python3 -m http.server 8000
+```
+
+When a cached file list changes, bump `CACHE` in `sw.js`.
 
 ## Author
 

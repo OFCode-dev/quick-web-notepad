@@ -3,82 +3,9 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Privacy Policy — Quick Web Notepad</title>
-  <style>
-    :root {
-      --bg: #1e1e1e;
-      --card: #252526;
-      --border: #3e3e42;
-      --text: #d4d4d4;
-      --muted: rgba(212,212,212,.68);
-      --accent: #0078d7;
-    }
-
-    * {
-      box-sizing: border-box;
-    }
-
-    body {
-      margin: 0;
-      background: var(--bg);
-      color: var(--text);
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
-      line-height: 1.7;
-    }
-
-    main {
-      width: min(760px, calc(100% - 32px));
-      margin: 0 auto;
-      padding: 56px 0;
-    }
-
-    .back {
-      display: inline-block;
-      margin-bottom: 18px;
-      color: var(--muted);
-      text-decoration: none;
-      font-size: 14px;
-    }
-
-    .back:hover {
-      color: var(--text);
-      text-decoration: underline;
-    }
-
-    section {
-      padding: 30px;
-      border: 1px solid var(--border);
-      border-radius: 18px;
-      background: rgba(255,255,255,.025);
-    }
-
-    h1 {
-      margin: 0 0 18px;
-      font-size: 30px;
-      letter-spacing: -.04em;
-    }
-
-    h2 {
-      margin-top: 28px;
-      margin-bottom: 8px;
-      font-size: 18px;
-    }
-
-    p {
-      color: var(--muted);
-      margin: 0 0 16px;
-    }
-
-    a {
-      color: var(--text);
-    }
-
-    .date {
-      margin-top: 28px;
-      font-size: 13px;
-      opacity: .65;
-    }
-  </style>
+  <title>Privacy Policy | Quick Web Notepad</title>
+  <link rel="icon" type="image/svg+xml" href="icon.svg">
+  <link rel="stylesheet" href="assets/page.css">
 </head>
 <body>
   <main>
@@ -100,9 +27,20 @@
 
       <h2>Browser storage</h2>
       <p>
-        If the app includes auto-save, draft-saving, or similar features, your text
-        may be stored locally in your browser using localStorage or similar browser
-        storage. You can clear this data from your browser settings.
+        To survive an accidental reload, the text and file name of the current tab
+        are kept in your browser's sessionStorage. This copy belongs to that tab
+        only: a new tab starts empty, and the copy is discarded when the tab is
+        closed. Your theme, language, zoom and word-wrap preferences are kept in
+        localStorage. None of this leaves your device, and you can clear it from
+        your browser settings.
+      </p>
+
+      <h2>Offline use and Markdown</h2>
+      <p>
+        The app stores its own files in the browser cache so it can open without a
+        connection. The Markdown view is rendered on your device; if a note embeds
+        an image from another website, your browser requests that image from that
+        website.
       </p>
 
       <h2>Advertising</h2>
@@ -129,8 +67,13 @@
         <a href="mailto:farukbayrak13@gmail.com">farukbayrak13@gmail.com</a>
       </p>
 
-      <p class="date">Last updated: May 5, 2026</p>
+      <p class="date">Last updated: November 17, 2026</p>
     </section>
+    <nav>
+      <a href="about.html">About</a>
+      <a href="privacy.html">Privacy</a>
+      <a href="contact.html">Contact</a>
+    </nav>
   </main>
 </body>
 </html>
