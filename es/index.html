@@ -6,6 +6,7 @@
 <title>Bloc de notas online gratis, privado y sin conexión | Quick Web Notepad</title>
 <meta name="description" content="Bloc de notas online gratuito en tu navegador: abre y guarda archivos de texto, busca y reemplaza con regex y previsualiza Markdown. Sin registro, tus notas no se suben y funciona sin conexión.">
 <meta name="application-name" content="Quick Web Notepad">
+<meta name="google-adsense-account" content="ca-pub-6268520629380408">
 <meta name="theme-color" content="#14151b">
 <meta name="color-scheme" content="dark light">
 <link rel="canonical" href="https://qwnotepad.ofcodedev.me/es/">
@@ -125,13 +126,13 @@ document.documentElement.dataset.theme=t})();
   <input id="replaceInput" type="text" spellcheck="false" autocomplete="off" aria-label="Reemplazar" data-ka="replace">
   <button id="bReplace" class="txt" data-k="replace">Reemplazar</button>
   <button id="bReplaceAll" class="txt" data-k="all">Todo</button>
-  <label><input type="checkbox" id="chkCase"> <span id="lblCase" data-k="caseS">Mayúsculas</span></label>
+  <label><input type="checkbox" id="chkCase"> <span id="lblCase" data-k="caseS">Distinguir mayúsculas</span></label>
   <label><input type="checkbox" id="chkRegex"> <span id="lblRegex" data-k="regex">Regex</span></label>
   <button id="bFindClose" class="icon-only" aria-label="Cerrar" data-ka="close"><svg class="ic"><use href="#i-close"/></svg></button>
 </div>
 
 <main id="workspace">
-  <noscript><p id="noscript"><span data-ns>Quick Web Notepad necesita JavaScript. Es un bloc de notas gratuito que funciona por completo en tu navegador, sin cuenta y sin subir nada.</span> <a href="/about.html" data-k="about">Acerca de</a></p></noscript>
+  <noscript><p id="noscript"><span data-ns>Quick Web Notepad necesita JavaScript. Es un bloc de notas gratuito que funciona por completo en tu navegador: abre y guarda archivos de texto, busca y reemplaza, y previsualiza Markdown, sin cuenta y sin subir nada.</span> <a href="/about.html" data-k="about">Acerca de</a></p></noscript>
   <textarea id="editor" aria-label="Editor" data-ka="editor" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off"></textarea>
   <pre id="highlight" tabindex="0" hidden></pre>
   <article id="preview" class="md" tabindex="0" hidden></article>

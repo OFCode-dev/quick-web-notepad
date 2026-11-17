@@ -6,6 +6,7 @@
 <title>मुफ़्त ऑनलाइन नोटपैड, निजी और ऑफ़लाइन | Quick Web Notepad</title>
 <meta name="description" content="आपके ब्राउज़र में चलने वाला मुफ़्त ऑनलाइन नोटपैड: टेक्स्ट फ़ाइलें खोलें और सहेजें, regex के साथ खोजें और बदलें, Markdown प्रीव्यू देखें। साइन-अप नहीं, नोट्स अपलोड नहीं होते, ऑफ़लाइन भी चलता है।">
 <meta name="application-name" content="Quick Web Notepad">
+<meta name="google-adsense-account" content="ca-pub-6268520629380408">
 <meta name="theme-color" content="#14151b">
 <meta name="color-scheme" content="dark light">
 <link rel="canonical" href="https://qwnotepad.ofcodedev.me/hi/">
@@ -103,7 +104,7 @@ document.documentElement.dataset.theme=t})();
   <button id="bCopy"><svg class="ic"><use href="#i-copy"/></svg><span class="lbl" data-k="copy">कॉपी</span></button>
   <button id="bClear"><svg class="ic"><use href="#i-clear"/></svg><span class="lbl" data-k="clear">साफ़ करें</span></button>
   <span class="sep"></span>
-  <button id="bWrap" aria-pressed="false"><svg class="ic"><use href="#i-wrap"/></svg><span class="lbl" data-k="wrap">रैप</span></button>
+  <button id="bWrap" aria-pressed="false"><svg class="ic"><use href="#i-wrap"/></svg><span class="lbl" data-k="wrap">वर्ड रैप</span></button>
   <button id="bFind" aria-pressed="false"><svg class="ic"><use href="#i-find"/></svg><span class="lbl" data-k="find">खोजें</span></button>
   <span class="sep"></span>
   <button id="bSyntax" aria-pressed="false"><svg class="ic"><use href="#i-syntax"/></svg><span class="lbl" data-k="syntax">सिंटैक्स</span></button>
@@ -125,13 +126,13 @@ document.documentElement.dataset.theme=t})();
   <input id="replaceInput" type="text" spellcheck="false" autocomplete="off" aria-label="बदलें" data-ka="replace">
   <button id="bReplace" class="txt" data-k="replace">बदलें</button>
   <button id="bReplaceAll" class="txt" data-k="all">सभी</button>
-  <label><input type="checkbox" id="chkCase"> <span id="lblCase" data-k="caseS">केस मिलाएँ</span></label>
+  <label><input type="checkbox" id="chkCase"> <span id="lblCase" data-k="caseS">केस का मिलान करें</span></label>
   <label><input type="checkbox" id="chkRegex"> <span id="lblRegex" data-k="regex">Regex</span></label>
   <button id="bFindClose" class="icon-only" aria-label="बंद करें" data-ka="close"><svg class="ic"><use href="#i-close"/></svg></button>
 </div>
 
 <main id="workspace">
-  <noscript><p id="noscript"><span data-ns>Quick Web Notepad के लिए JavaScript ज़रूरी है। यह एक मुफ़्त नोटपैड है जो पूरी तरह आपके ब्राउज़र में चलता है, बिना खाते के और बिना कुछ अपलोड किए।</span> <a href="/about.html" data-k="about">परिचय</a></p></noscript>
+  <noscript><p id="noscript"><span data-ns>Quick Web Notepad के लिए JavaScript ज़रूरी है। यह एक मुफ़्त नोटपैड है जो पूरी तरह आपके ब्राउज़र में चलता है: टेक्स्ट फ़ाइलें खोलें और सहेजें, खोजें और बदलें, और Markdown का प्रीव्यू देखें, बिना खाते के और बिना कुछ अपलोड किए।</span> <a href="/about.html" data-k="about">परिचय</a></p></noscript>
   <textarea id="editor" aria-label="संपादक" data-ka="editor" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off"></textarea>
   <pre id="highlight" tabindex="0" hidden></pre>
   <article id="preview" class="md" tabindex="0" hidden></article>

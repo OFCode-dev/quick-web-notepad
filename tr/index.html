@@ -3,9 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Ücretsiz Online Not Defteri, Gizli ve Çevrimdışı | Quick Web Notepad</title>
+<title>Ücretsiz Online Not Defteri: Özel ve Çevrimdışı | Quick Web Notepad</title>
 <meta name="description" content="Tarayıcınızda çalışan ücretsiz online not defteri: metin dosyalarını açıp kaydedin, regex ile bulup değiştirin, Markdown önizleyin. Kayıt yok, notlarınız yüklenmez, çevrimdışı da çalışır.">
 <meta name="application-name" content="Quick Web Notepad">
+<meta name="google-adsense-account" content="ca-pub-6268520629380408">
 <meta name="theme-color" content="#14151b">
 <meta name="color-scheme" content="dark light">
 <link rel="canonical" href="https://qwnotepad.ofcodedev.me/tr/">
@@ -29,7 +30,7 @@
 <meta property="og:type" content="website">
 <meta property="og:locale" content="tr_TR">
 <meta property="og:url" content="https://qwnotepad.ofcodedev.me/tr/">
-<meta property="og:title" content="Ücretsiz Online Not Defteri, Gizli ve Çevrimdışı | Quick Web Notepad">
+<meta property="og:title" content="Ücretsiz Online Not Defteri: Özel ve Çevrimdışı | Quick Web Notepad">
 <meta property="og:description" content="Tarayıcınızda çalışan ücretsiz online not defteri: metin dosyalarını açıp kaydedin, regex ile bulup değiştirin, Markdown önizleyin. Kayıt yok, notlarınız yüklenmez, çevrimdışı da çalışır.">
 <meta property="og:image" content="https://qwnotepad.ofcodedev.me/og-image.png">
 <meta property="og:image:width" content="1200">
@@ -103,7 +104,7 @@ document.documentElement.dataset.theme=t})();
   <button id="bCopy"><svg class="ic"><use href="#i-copy"/></svg><span class="lbl" data-k="copy">Kopyala</span></button>
   <button id="bClear"><svg class="ic"><use href="#i-clear"/></svg><span class="lbl" data-k="clear">Temizle</span></button>
   <span class="sep"></span>
-  <button id="bWrap" aria-pressed="false"><svg class="ic"><use href="#i-wrap"/></svg><span class="lbl" data-k="wrap">Kaydır</span></button>
+  <button id="bWrap" aria-pressed="false"><svg class="ic"><use href="#i-wrap"/></svg><span class="lbl" data-k="wrap">Sözcük kaydır</span></button>
   <button id="bFind" aria-pressed="false"><svg class="ic"><use href="#i-find"/></svg><span class="lbl" data-k="find">Bul</span></button>
   <span class="sep"></span>
   <button id="bSyntax" aria-pressed="false"><svg class="ic"><use href="#i-syntax"/></svg><span class="lbl" data-k="syntax">Sözdizimi</span></button>
@@ -131,7 +132,7 @@ document.documentElement.dataset.theme=t})();
 </div>
 
 <main id="workspace">
-  <noscript><p id="noscript"><span data-ns>Quick Web Notepad için JavaScript gerekir. Tamamen tarayıcınızda çalışan, hesap gerektirmeyen ve hiçbir şey yüklemeyen ücretsiz bir not defteridir.</span> <a href="/about.html" data-k="about">Hakkında</a></p></noscript>
+  <noscript><p id="noscript"><span data-ns>Quick Web Notepad için JavaScript gerekir. Tamamen tarayıcınızda çalışan ücretsiz bir not defteridir: metin dosyalarını açıp kaydedebilir, bulup değiştirebilir ve Markdown önizleyebilirsiniz; hesap gerekmez ve hiçbir şey yüklenmez.</span> <a href="/about.html" data-k="about">Hakkında</a></p></noscript>
   <textarea id="editor" aria-label="Düzenleyici" data-ka="editor" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off"></textarea>
   <pre id="highlight" tabindex="0" hidden></pre>
   <article id="preview" class="md" tabindex="0" hidden></article>
@@ -139,7 +140,7 @@ document.documentElement.dataset.theme=t})();
 
 <footer id="statusbar">
   <div class="group">
-    <span id="stPos">Sat 1/1 · Süt 1</span>
+    <span id="stPos">Satır 1/1 · Sütun 1</span>
     <span id="stWords">0 kelime</span>
     <span id="stChars">0 karakter</span>
     <span id="stZoom">100%</span>
