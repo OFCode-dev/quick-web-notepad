@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="id" dir="ltr" data-page-lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Notepad Online Gratis, Privat &amp; Offline | Quick Web Notepad</title>
+<meta name="description" content="Notepad online gratis di browser Anda: buka dan simpan file teks, cari dan ganti dengan regex, pratinjau Markdown. Tanpa daftar, catatan tidak diunggah, dan bisa dipakai offline.">
+<meta name="application-name" content="Quick Web Notepad">
+<meta name="theme-color" content="#14151b">
+<meta name="color-scheme" content="dark light">
+<link rel="canonical" href="https://qwnotepad.ofcodedev.me/id/">
+<link rel="alternate" hreflang="x-default" href="https://qwnotepad.ofcodedev.me/">
+<link rel="alternate" hreflang="en" href="https://qwnotepad.ofcodedev.me/">
+<link rel="alternate" hreflang="es" href="https://qwnotepad.ofcodedev.me/es/">
+<link rel="alternate" hreflang="zh" href="https://qwnotepad.ofcodedev.me/zh/">
+<link rel="alternate" hreflang="hi" href="https://qwnotepad.ofcodedev.me/hi/">
+<link rel="alternate" hreflang="ar" href="https://qwnotepad.ofcodedev.me/ar/">
+<link rel="alternate" hreflang="fr" href="https://qwnotepad.ofcodedev.me/fr/">
+<link rel="alternate" hreflang="pt" href="https://qwnotepad.ofcodedev.me/pt/">
+<link rel="alternate" hreflang="id" href="https://qwnotepad.ofcodedev.me/id/">
+<link rel="alternate" hreflang="vi" href="https://qwnotepad.ofcodedev.me/vi/">
+<link rel="alternate" hreflang="tr" href="https://qwnotepad.ofcodedev.me/tr/">
+<link rel="alternate" hreflang="th" href="https://qwnotepad.ofcodedev.me/th/">
+<link rel="alternate" hreflang="de" href="https://qwnotepad.ofcodedev.me/de/">
+<link rel="alternate" hreflang="ja" href="https://qwnotepad.ofcodedev.me/ja/">
+<link rel="alternate" hreflang="ko" href="https://qwnotepad.ofcodedev.me/ko/">
+<link rel="alternate" hreflang="ru" href="https://qwnotepad.ofcodedev.me/ru/">
+<meta property="og:site_name" content="Quick Web Notepad">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="id_ID">
+<meta property="og:url" content="https://qwnotepad.ofcodedev.me/id/">
+<meta property="og:title" content="Notepad Online Gratis, Privat &amp; Offline | Quick Web Notepad">
+<meta property="og:description" content="Notepad online gratis di browser Anda: buka dan simpan file teks, cari dan ganti dengan regex, pratinjau Markdown. Tanpa daftar, catatan tidak diunggah, dan bisa dipakai offline.">
+<meta property="og:image" content="https://qwnotepad.ofcodedev.me/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Quick Web Notepad in the dark theme, showing a Markdown note">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="/icon.svg">
+<link rel="apple-touch-icon" href="/icon-192.png">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="modulepreload" href="/assets/app.js">
+<link rel="modulepreload" href="/assets/i18n.js">
+<script>
+/* Set the theme before first paint to avoid a flash. */
+(function(){var t;try{t=JSON.parse(localStorage.getItem('qwn:prefs')||'{}').theme}catch(e){}
+if(t!=='light'&&t!=='dark')t=matchMedia('(prefers-color-scheme: light)').matches?'light':'dark';
+document.documentElement.dataset.theme=t})();
+</script>
+<link rel="stylesheet" href="/assets/app.css">
+</head>
+<body>
+
+<svg xmlns="http://www.w3.org/2000/svg" hidden>
+  <symbol id="i-open" viewBox="0 0 16 16"><path d="M1.5 4.5v8a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-6a1 1 0 0 0-1-1H8L6.5 3.5h-4a1 1 0 0 0-1 1z"/></symbol>
+  <symbol id="i-newtab" viewBox="0 0 16 16"><rect x="2.5" y="2.5" width="11" height="11" rx="1.5"/><path d="M8 5.5v5M5.5 8h5"/></symbol>
+  <symbol id="i-save" viewBox="0 0 16 16"><path d="M2.5 2.5H11l2.5 2.5v8.5h-11zM5 2.5V6h5V2.5M5 13.5v-4h6v4"/></symbol>
+  <symbol id="i-paste" viewBox="0 0 16 16"><path d="M5.5 3h-2v10.5h9V3h-2"/><rect x="5.5" y="1.8" width="5" height="2.6" rx=".6"/></symbol>
+  <symbol id="i-copy" viewBox="0 0 16 16"><rect x="5.5" y="5.5" width="8" height="8" rx="1"/><path d="M10.5 5.5v-2a1 1 0 0 0-1-1h-6a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2"/></symbol>
+  <symbol id="i-clear" viewBox="0 0 16 16"><path d="M2.5 4.5h11M6 4.5v-2h4v2M4 4.5l.7 9h6.6l.7-9M6.7 7v4M9.3 7v4"/></symbol>
+  <symbol id="i-wrap" viewBox="0 0 16 16"><path d="M2 4h12M2 8h9.5a2 2 0 0 1 0 4H8M9.5 10.5 8 12l1.5 1.5M2 12h3"/></symbol>
+  <symbol id="i-find" viewBox="0 0 16 16"><circle cx="7" cy="7" r="4.5"/><path d="M10.5 10.5 14 14"/></symbol>
+  <symbol id="i-syntax" viewBox="0 0 16 16"><path d="M5.5 4 2 8l3.5 4M10.5 4 14 8l-3.5 4"/></symbol>
+  <symbol id="i-markdown" viewBox="0 0 16 16"><rect x="1.5" y="3.5" width="13" height="9" rx="1.5"/><path d="M4 10V6l2 2.2L8 6v4M11 6v4M9.6 8.6 11 10l1.4-1.4"/></symbol>
+  <symbol id="i-lock" viewBox="0 0 16 16"><rect x="3.5" y="7.5" width="9" height="6" rx="1"/><path d="M5.5 7.5v-2a2.5 2.5 0 0 1 5 0v2"/></symbol>
+  <symbol id="i-unlock" viewBox="0 0 16 16"><rect x="3.5" y="7.5" width="9" height="6" rx="1"/><path d="M5.5 7.5v-2a2.5 2.5 0 0 1 4.8-1"/></symbol>
+  <symbol id="i-sun" viewBox="0 0 16 16"><circle cx="8" cy="8" r="3"/><path d="M8 1.5V3M8 13v1.5M1.5 8H3M13 8h1.5M3.4 3.4l1 1M11.6 11.6l1 1M3.4 12.6l1-1M11.6 4.4l1-1"/></symbol>
+  <symbol id="i-moon" viewBox="0 0 16 16"><path d="M13.5 9.5a6 6 0 0 1-7-7 6 6 0 1 0 7 7z"/></symbol>
+  <symbol id="i-up" viewBox="0 0 16 16"><path d="M8 13V3M4 7l4-4 4 4"/></symbol>
+  <symbol id="i-down" viewBox="0 0 16 16"><path d="M8 3v10M4 9l4 4 4-4"/></symbol>
+  <symbol id="i-close" viewBox="0 0 16 16"><path d="M4 4l8 8M12 4l-8 8"/></symbol>
+</svg>
+
+<header id="titlebar">
+  <img src="/icon.svg" width="22" height="22" alt="">
+  <h1 class="brand"><b>Quick</b> Web Notepad</h1>
+  <input id="fileName" type="text" value="Untitled.txt" spellcheck="false" autocomplete="off" aria-label="Nama file" data-ka="fileName">
+  <select id="langSelect" aria-label="Bahasa" data-ka="language">
+    <option value="en" lang="en">English</option>
+    <option value="es" lang="es">Español</option>
+    <option value="zh" lang="zh-Hans">中文</option>
+    <option value="hi" lang="hi">हिन्दी</option>
+    <option value="ar" lang="ar">العربية</option>
+    <option value="fr" lang="fr">Français</option>
+    <option value="pt" lang="pt">Português</option>
+    <option value="id" selected lang="id">Indonesia</option>
+    <option value="vi" lang="vi">Tiếng Việt</option>
+    <option value="tr" lang="tr">Türkçe</option>
+    <option value="th" lang="th">ภาษาไทย</option>
+    <option value="de" lang="de">Deutsch</option>
+    <option value="ja" lang="ja">日本語</option>
+    <option value="ko" lang="ko">한국어</option>
+    <option value="ru" lang="ru">Русский</option>
+  </select>
+</header>
+
+<div id="toolbar" role="toolbar" aria-label="Bilah alat" data-ka="toolbar">
+  <button id="bOpen"><svg class="ic"><use href="#i-open"/></svg><span class="lbl" data-k="file">Buka</span></button>
+  <button id="bNewTab"><svg class="ic"><use href="#i-newtab"/></svg><span class="lbl" data-k="newTab">Tab baru</span></button>
+  <button id="bSave"><svg class="ic"><use href="#i-save"/></svg><span class="lbl" data-k="save">Simpan</span></button>
+  <span class="sep"></span>
+  <button id="bPaste"><svg class="ic"><use href="#i-paste"/></svg><span class="lbl" data-k="paste">Tempel</span></button>
+  <button id="bCopy"><svg class="ic"><use href="#i-copy"/></svg><span class="lbl" data-k="copy">Salin</span></button>
+  <button id="bClear"><svg class="ic"><use href="#i-clear"/></svg><span class="lbl" data-k="clear">Hapus</span></button>
+  <span class="sep"></span>
+  <button id="bWrap" aria-pressed="false"><svg class="ic"><use href="#i-wrap"/></svg><span class="lbl" data-k="wrap">Bungkus</span></button>
+  <button id="bFind" aria-pressed="false"><svg class="ic"><use href="#i-find"/></svg><span class="lbl" data-k="find">Cari</span></button>
+  <span class="sep"></span>
+  <button id="bSyntax" aria-pressed="false"><svg class="ic"><use href="#i-syntax"/></svg><span class="lbl" data-k="syntax">Sintaks</span></button>
+  <button id="bMarkdown" aria-pressed="false"><svg class="ic"><use href="#i-markdown"/></svg><span class="lbl" data-k="markdown">Markdown</span></button>
+  <button id="bLock" aria-pressed="false"><svg class="ic"><use href="#i-unlock"/></svg><span class="lbl" data-k="lock">Kunci</span></button>
+  <span class="sep"></span>
+  <button id="bZoomOut" class="txt" aria-label="Perkecil" data-ka="zoomOut">A−</button>
+  <button id="bZoomReset" class="txt" aria-label="Atur ulang zoom" data-ka="zoomReset">100%</button>
+  <button id="bZoomIn" class="txt" aria-label="Perbesar" data-ka="zoomIn">A+</button>
+  <span class="sep"></span>
+  <button id="bTheme"><svg class="ic"><use href="#i-sun"/></svg><span class="lbl" data-k="light">Terang</span></button>
+</div>
+
+<div id="findBar" hidden>
+  <input id="findInput" type="text" spellcheck="false" autocomplete="off" aria-label="Cari" data-ka="find">
+  <button id="bFindPrev" class="icon-only" aria-label="Sebelumnya" data-ka="prev"><svg class="ic"><use href="#i-up"/></svg></button>
+  <button id="bFindNext" class="icon-only" aria-label="Berikutnya" data-ka="next"><svg class="ic"><use href="#i-down"/></svg></button>
+  <span id="findCount" role="status"></span>
+  <input id="replaceInput" type="text" spellcheck="false" autocomplete="off" aria-label="Ganti" data-ka="replace">
+  <button id="bReplace" class="txt" data-k="replace">Ganti</button>
+  <button id="bReplaceAll" class="txt" data-k="all">Semua</button>
+  <label><input type="checkbox" id="chkCase"> <span id="lblCase" data-k="caseS">Cocokkan huruf besar/kecil</span></label>
+  <label><input type="checkbox" id="chkRegex"> <span id="lblRegex" data-k="regex">Regex</span></label>
+  <button id="bFindClose" class="icon-only" aria-label="Tutup" data-ka="close"><svg class="ic"><use href="#i-close"/></svg></button>
+</div>
+
+<main id="workspace">
+  <noscript><p id="noscript"><span data-ns>Quick Web Notepad memerlukan JavaScript. Ini adalah notepad gratis yang berjalan sepenuhnya di browser Anda, tanpa akun dan tanpa mengunggah apa pun.</span> <a href="/about.html" data-k="about">Tentang</a></p></noscript>
+  <textarea id="editor" aria-label="Editor" data-ka="editor" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off"></textarea>
+  <pre id="highlight" tabindex="0" hidden></pre>
+  <article id="preview" class="md" tabindex="0" hidden></article>
+</main>
+
+<footer id="statusbar">
+  <div class="group">
+    <span id="stPos">Brs 1/1 · Kol 1</span>
+    <span id="stWords">0 kata</span>
+    <span id="stChars">0 karakter</span>
+    <span id="stZoom">100%</span>
+    <span id="stSel" hidden></span>
+  </div>
+  <div class="group">
+    <span id="stLock" hidden></span>
+    <span id="stMode"></span>
+    <a id="aboutLink" href="/about.html" data-k="about">Tentang</a>
+    <span id="stVersion">v3.0</span>
+  </div>
+</footer>
+
+<div id="toast" role="status" aria-live="polite"></div>
+<input type="file" id="fileInput" hidden>
+
+<script type="module" src="/assets/app.js"></script>
+</body>
+</html>

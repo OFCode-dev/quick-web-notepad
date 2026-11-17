@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://qwnotepad.ofcodedev.me/sitemap.xml

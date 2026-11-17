@@ -20,6 +20,7 @@ function store(kind, key, value) {
   try { window[kind].setItem(key, JSON.stringify(value)); } catch { /* storage blocked or full */ }
 }
 const prefs = load('localStorage', 'qwn:prefs');
+const PAGE_LANG = root.dataset.pageLang || '';
 const saved = load('sessionStorage', 'qwn:doc');
 
 const state = {
@@ -29,10 +30,11 @@ const state = {
   wrap: !!prefs.wrap,
   zoom: prefs.zoom || 100,
   theme: root.dataset.theme,
-  lang: LANGS[prefs.lang] ? prefs.lang : detectLang(),
+  // A /xx/ page is always shown in its own language; the root page follows the saved choice or the browser.
+  lang: LANGS[PAGE_LANG] ? PAGE_LANG : LANGS[prefs.lang] ? prefs.lang : detectLang(),
   syntaxLang: '',
 };
-let T = LANGS.en;
+let T = { ...LANGS.en, ...LANGS[state.lang] };
 let fileHandle = null;
 
 function savePrefs() {
@@ -68,11 +70,12 @@ function deny() {
 function guard() { if (state.locked) { deny(); return true; } return false; }
 function updateInvite() { $('bPaste').classList.toggle('invite', !editor.value && !state.locked); }
 
-function setTitle(name) { document.title = `${name} | ${APP}`; }
+/* An unnamed document keeps the descriptive page title (this is what search engines index). */
+function setTitle(name) { document.title = name === DEFAULT_NAME ? T.pageTitle : `${name} | ${APP}`; }
 function setIcon(button, icon) { button.querySelector('use').setAttribute('href', '#i-' + icon); }
 
 /* ── Status bar ── */
-let hint = '';
+let hint = '', wordsTimer;
 function setHint(text) { hint = text; updateMode(); }
 function updateMode() {
   $('stMode').textContent = hint ||
@@ -82,7 +85,8 @@ function updateStatus() {
   const txt = editor.value, s = editor.selectionStart, e = editor.selectionEnd;
   const before = txt.slice(0, s).split('\n');
   $('stPos').textContent = `${T.ln} ${before.length}/${txt.split('\n').length} · ${T.col} ${before.pop().length + 1}`;
-  $('stWords').textContent = `${countWords(txt)} ${T.words}`;
+  if (txt.length < 50000) $('stWords').textContent = `${countWords(txt)} ${T.words}`;
+  else { clearTimeout(wordsTimer); wordsTimer = setTimeout(() => { $('stWords').textContent = `${countWords(editor.value)} ${T.words}`; }, 250); } // keep typing responsive in large files
   $('stChars').textContent = `${txt.length} ${T.chars}`;
   $('stZoom').textContent = state.zoom + '%';
   const sel = txt.slice(s, e);
@@ -221,8 +225,19 @@ async function unlock() {
   saveDoc();
 }
 
+/* Text direction follows the first letter of the text (the UI direction when empty).
+   Done here because dir="auto" on a textarea is quadratic in Chromium for large documents. */
+const RTL_FIRST = /^[^A-Za-z\u00C0-\u024F\u0370-\u058F\u0900-\uD7FF]*[\u0590-\u08FF\uFB1D-\uFDFF\uFE70-\uFEFC]/;
+function updateDirection() {
+  const head = editor.value.slice(0, 300);
+  const dir = (head.trim() ? RTL_FIRST.test(head) : T.rtl) ? 'rtl' : 'ltr';
+  const ws = $('workspace');
+  if (ws.dir !== dir) ws.dir = dir;
+}
+
 /* Call after any change to the text. */
 function afterChange() {
+  updateDirection();
   if (state.view === 'syntax') renderSyntax();
   else if (state.view === 'markdown') renderMarkdown();
   updateStatus();
@@ -510,6 +525,7 @@ function label(id, key) {
 function applyLang(code) {
   state.lang = LANGS[code] ? code : 'en';
   T = { ...LANGS.en, ...LANGS[state.lang] };
+  setTitle(fileName.value);
   root.lang = state.lang;
   root.dir = T.rtl ? 'rtl' : 'ltr';
   $('langSelect').value = state.lang;
@@ -530,6 +546,7 @@ function applyLang(code) {
   $('stLock').textContent = T.locked;
   $('aboutLink').textContent = T.about;
   hint = '';
+  updateDirection();
   updateStatus();
   showCount();
 }
@@ -555,7 +572,13 @@ $('bZoomOut').onclick = () => setZoom(state.zoom - 10);
 $('bZoomReset').onclick = () => setZoom(100);
 $('bZoomIn').onclick = () => setZoom(state.zoom + 10);
 $('bTheme').onclick = () => { prefs.theme = state.theme === 'dark' ? 'light' : 'dark'; setTheme(prefs.theme); savePrefs(); };
-$('langSelect').onchange = (e) => { prefs.lang = e.target.value; applyLang(prefs.lang); savePrefs(); };
+$('langSelect').onchange = (e) => {
+  prefs.lang = e.target.value;
+  applyLang(prefs.lang);
+  savePrefs();
+  // Keep the address on the matching localized page without reloading, so the text and open file survive.
+  if (/^\/(?:[a-z]{2}\/)?$/.test(location.pathname)) history.replaceState(null, '', prefs.lang === 'en' ? '/' : `/${prefs.lang}/`);
+};
 
 $('bFindClose').onclick = closeFind;
 $('bFindPrev').onclick = () => goMatch(-1);
@@ -627,7 +650,6 @@ addEventListener('pagehide', saveDocNow);
 document.addEventListener('visibilitychange', () => { if (document.hidden) saveDocNow(); });
 
 /* ── Start ── */
-for (const [code, lang] of Object.entries(LANGS)) $('langSelect').add(new Option(lang.name, code));
 $('stVersion').textContent = VERSION;
 if (typeof saved.text === 'string') editor.value = saved.text;
 setName(saved.name || DEFAULT_NAME);
@@ -640,4 +662,4 @@ updateStatus();
 updateInvite();
 if (state.view === 'edit') editor.focus();
 
-if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(() => {});
+if ('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js', { scope: '/' }).catch(() => {});

@@ -1,8 +1,10 @@
 # Quick Web Notepad
 
-A fast, private notepad that runs in the browser. No account, no backend, no build step.
+Quick Web Notepad is a free, open-source notepad that runs entirely in your browser: no account, notes are not uploaded, and it works offline.
 
-**Live:** https://qwnotepad.ofcodedev.me/
+**Use it:** https://qwnotepad.ofcodedev.me/ · [About, shortcuts and FAQ](https://qwnotepad.ofcodedev.me/about.html)
+
+![Quick Web Notepad showing a Markdown note in the dark theme](og-image.png)
 
 ## Features
 
@@ -15,6 +17,12 @@ A fast, private notepad that runs in the browser. No account, no backend, no bui
 - 15 interface languages, detected from the browser
 - Installable and usable offline (PWA)
 - The text of each tab survives a reload; a new tab always starts empty
+
+## Privacy and limits
+
+- The app has no backend. Your text is processed in the browser and stays on your device.
+- The text of a tab is kept in that tab's sessionStorage, so it survives a reload and is discarded when the tab closes. Save to a file to keep it.
+- There is no sync, cloud backup or sharing by link.
 
 ## Shortcuts
 
@@ -33,7 +41,9 @@ A fast, private notepad that runs in the browser. No account, no backend, no bui
 ## Project layout
 
 ```
-index.html              the app page
+index.html              the app page (English, and the template for the language pages)
+es/ tr/ ja/ ...         generated per-language copies of the app page; do not edit by hand
+_tools/                 build-locales.mjs (generator) and locales.mjs (search-result strings)
 assets/app.css          styles; the color palette is the token block at the top
 assets/app.js           app logic (ES module)
 assets/i18n.js          interface strings
@@ -41,7 +51,10 @@ assets/page.css         styles for the static pages
 assets/vendor/          marked and DOMPurify, pinned and served locally
 sw.js                   service worker (offline support)
 manifest.webmanifest    PWA manifest
-about.html, privacy.html, contact.html, 404.html
+about.html              product page: features, storage, shortcuts, comparison, FAQ
+privacy.html, contact.html, 404.html
+robots.txt, sitemap.xml, llms.txt
+index_v1.html, index_v2.html, index_v2.1.html   redirects from the old addresses
 ```
 
 ## Development
@@ -52,7 +65,17 @@ Serve the folder with any static server, for example:
 python3 -m http.server 8000
 ```
 
-When a cached file list changes, bump `CACHE` in `sw.js`.
+The site is served from the domain root, so paths are root-absolute.
+
+After editing `index.html`, `assets/i18n.js` or `_tools/locales.mjs`, rebuild the language pages and the sitemap:
+
+```
+node _tools/build-locales.mjs
+```
+
+`node _tools/build-locales.mjs --check` exits with an error if a language page is out of date.
+
+When a cached file list changes, bump `CACHE` in `sw.js`. Keep the version in `assets/app.js`, `index.html` (status bar and JSON-LD) and `about.html` in step.
 
 ## Author
 

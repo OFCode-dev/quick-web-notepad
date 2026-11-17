@@ -159,6 +159,9 @@ button.icon-only { padding: 4px 7px; }
 .md img { max-width: 100%; }
 .md hr { margin: 2em 0; border: none; border-top: 1px solid var(--border); }
 
+#noscript { padding: 24px; max-width: 62ch; font-size: 15px; line-height: 1.6; }
+#noscript a { color: var(--accent); }
+
 /* ── Status bar ── */
 #statusbar {
   display: flex; align-items: center; justify-content: space-between; gap: 12px;
@@ -186,7 +189,7 @@ button.icon-only { padding: 4px 7px; }
 @media (max-width: 860px) {
   #toolbar .lbl { display: none; }
   #toolbar { flex-wrap: wrap; overflow-x: visible; }
-  .brand { display: none; }
+  .brand { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; } /* still announced to screen readers */
   #stZoom, #stVersion { display: none; }
 }
 @media (prefers-reduced-motion: reduce) {

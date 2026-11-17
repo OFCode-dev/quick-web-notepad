@@ -3,43 +3,209 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>About | Quick Web Notepad</title>
-  <link rel="icon" type="image/svg+xml" href="icon.svg">
-  <link rel="stylesheet" href="assets/page.css">
+  <title>About Quick Web Notepad: features, privacy, shortcuts and FAQ</title>
+  <meta name="description" content="Quick Web Notepad is a free, open-source notepad that runs in your browser. Its features, how your notes are stored, offline use, keyboard shortcuts and FAQ.">
+  <link rel="canonical" href="https://qwnotepad.ofcodedev.me/about.html">
+  <meta property="og:site_name" content="Quick Web Notepad">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://qwnotepad.ofcodedev.me/about.html">
+  <meta property="og:title" content="About Quick Web Notepad: features, privacy, shortcuts and FAQ">
+  <meta property="og:description" content="Quick Web Notepad is a free, open-source notepad that runs in your browser. Its features, how your notes are stored, offline use, keyboard shortcuts and FAQ.">
+  <meta property="og:image" content="https://qwnotepad.ofcodedev.me/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" type="image/svg+xml" href="/icon.svg">
+  <link rel="stylesheet" href="/assets/page.css">
+  <script type="application/ld+json">
+{"@context": "https://schema.org", "@graph": [{"@type": "AboutPage", "@id": "https://qwnotepad.ofcodedev.me/about.html#webpage", "url": "https://qwnotepad.ofcodedev.me/about.html", "name": "About Quick Web Notepad", "inLanguage": "en", "isPartOf": {"@id": "https://qwnotepad.ofcodedev.me/#website"}, "about": {"@id": "https://qwnotepad.ofcodedev.me/#app"}, "dateModified": "2026-11-17"}, {"@type": "FAQPage", "@id": "https://qwnotepad.ofcodedev.me/about.html#faq", "mainEntity": [{"@type": "Question", "name": "Is Quick Web Notepad free?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. It is free to use, there is no paid tier, and the source code is published under the MIT license."}}, {"@type": "Question", "name": "Do I need an account?", "acceptedAnswer": {"@type": "Answer", "text": "No. There is no sign-up and no login."}}, {"@type": "Question", "name": "Are my notes uploaded or stored on a server?", "acceptedAnswer": {"@type": "Answer", "text": "No. The app has no backend. Your text is processed in your browser and stays on your device."}}, {"@type": "Question", "name": "What happens to my text when I close the tab?", "acceptedAnswer": {"@type": "Answer", "text": "It is discarded. While the tab is open, the text survives a reload, but it is not kept after the tab is closed. To keep a note, save it as a file with Ctrl+S."}}, {"@type": "Question", "name": "Does it work offline?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. After your first visit the app is cached by the browser and opens without an internet connection. It can also be installed like an app from the browser's install option."}}, {"@type": "Question", "name": "Can it save back to the same file?", "acceptedAnswer": {"@type": "Answer", "text": "Yes, in browsers that support the File System Access API, such as Chrome and Edge on desktop. In other browsers, such as Firefox and Safari, saving downloads a copy of the file."}}, {"@type": "Question", "name": "Can it preview Markdown?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. Press Alt+M or the Markdown button for a read-only preview with tables, task lists and highlighted code blocks. The preview is rendered on your device."}}, {"@type": "Question", "name": "Does it work on phones and tablets?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. On small screens the toolbar shows icons only and wraps onto more than one line."}}, {"@type": "Question", "name": "Which languages is the interface available in?", "acceptedAnswer": {"@type": "Answer", "text": "English, Spanish, Chinese, Hindi, Arabic, French, Portuguese, Indonesian, Vietnamese, Turkish, Thai, German, Japanese, Korean and Russian."}}]}]}
+  </script>
 </head>
 <body>
   <main>
-    <a class="back" href="./">← Back to app</a>
+    <a class="back" href="/">← Open Quick Web Notepad</a>
 
     <section>
-      <h1>About Quick Web Notepad</h1>
+      <h1>Quick Web Notepad: a free, private notepad in your browser</h1>
 
       <p>
-        Quick Web Notepad is a simple browser-based writing tool for quick notes,
-        drafts, and temporary text editing.
+        <strong>Quick Web Notepad</strong> is a free, open-source notepad that runs entirely in your
+        web browser. You can write plain text, open and save files on your device, find and replace
+        with regular expressions, and preview Markdown. It needs no account, your notes are not
+        uploaded to a server, and after your first visit it also works offline.
+      </p>
+      <p><a class="cta" href="/">Open the notepad</a></p>
+
+      <h2 id="features">Features</h2>
+      <ul>
+        <li>Plain-text editing with word count, character count and cursor position.</li>
+        <li>Open and save text files on your device.</li>
+        <li>Find and replace, with match case and regular expressions.</li>
+        <li>Syntax view: read-only highlighting for JavaScript, Python, HTML, CSS, JSON, SQL, shell, C and Markdown.</li>
+        <li>Markdown view: a read-only rendered preview with tables, task lists and code blocks.</li>
+        <li>Lock mode, which protects the text from accidental edits.</li>
+        <li>Light and dark themes, zoom and word wrap.</li>
+        <li>Installable as an app, and usable without an internet connection.</li>
+        <li>An interface in 15 languages.</li>
+      </ul>
+
+      <h2 id="storage">Where your notes are stored</h2>
+      <p>
+        Your text stays on your device. While you type, the text and file name of the current tab
+        are copied to that tab's sessionStorage so they survive an accidental reload. Each tab has
+        its own copy: a new tab starts empty, and closing the tab discards the copy. To keep your
+        text, save it to a file with <kbd>Ctrl</kbd>+<kbd>S</kbd>. Your theme, language, zoom and
+        word-wrap preferences are kept in localStorage. Nothing is synced between devices. The
+        <a href="/privacy.html">privacy policy</a> has the details.
       </p>
 
+      <h2 id="files">Opening and saving files</h2>
       <p>
-        It runs directly in your browser and does not require an account, sign-in,
-        or backend service.
+        <kbd>Ctrl</kbd>+<kbd>O</kbd> opens a text file from your device and <kbd>Ctrl</kbd>+<kbd>S</kbd>
+        saves it. In Chrome, Edge and other Chromium-based desktop browsers, saving writes back to
+        the file you opened, after the browser asks for permission. In browsers without that
+        feature, such as Firefox and Safari, saving downloads a copy.
       </p>
 
+      <h2 id="markdown">Markdown preview and syntax view</h2>
       <p>
-        The project is built with plain HTML, CSS, and JavaScript, with a focus on a calm,
-        minimal, and distraction-free writing experience. It can be installed as an app
-        and works offline. The Markdown view uses the open-source libraries
-        <a href="https://marked.js.org/">marked</a> and
-        <a href="https://github.com/cure53/DOMPurify">DOMPurify</a>.
+        The Markdown view (<kbd>Alt</kbd>+<kbd>M</kbd>) renders the note as a formatted document. It
+        supports GitHub Flavored Markdown: tables, task lists and fenced code blocks with
+        highlighting. The preview is rendered on your device and the generated HTML is sanitized.
+        If a note embeds an image from another website, your browser requests that image from that
+        website.
+      </p>
+      <p>
+        The Syntax view (<kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>H</kbd>) colors code in JavaScript,
+        Python, HTML, CSS, JSON, SQL, shell, C and Markdown. The language is detected from the file
+        extension or from the content. Both views are read-only: the text is locked while a view is
+        open, and unlocking returns to editing.
       </p>
 
+      <h2 id="find">Find and replace</h2>
       <p>
-        Created by OFCode-dev as a small independent web tool.
+        <kbd>Ctrl</kbd>+<kbd>F</kbd> opens the find bar. You can match case, search with a regular
+        expression, replace one match or replace all. <kbd>Enter</kbd> moves to the next match and
+        <kbd>Shift</kbd>+<kbd>Enter</kbd> to the previous one. In the Syntax and Markdown views the
+        search runs over the displayed text and highlights the matches.
       </p>
+
+      <h2 id="lock">Lock mode</h2>
+      <p>
+        <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>L</kbd> locks the text so that typing, pasting,
+        replacing and clearing are blocked until you unlock it. Pressing <kbd>Esc</kbd> three times
+        while locked unlocks and clears the text.
+      </p>
+
+      <h2 id="offline">Offline use and installing the app</h2>
+      <p>
+        After your first visit the browser keeps a copy of the app, so it opens without an internet
+        connection. In Chrome and Edge you can install it from the install option in the address
+        bar or the browser menu. On iPhone and iPad, use Share and then Add to Home Screen.
+      </p>
+
+      <h2 id="shortcuts">Keyboard shortcuts</h2>
+      <div class="table">
+        <table>
+          <thead><tr><th>Action</th><th>Shortcut</th></tr></thead>
+          <tbody>
+            <tr><td>Open a file</td><td><kbd>Ctrl</kbd>+O</td></tr>
+            <tr><td>Save</td><td><kbd>Ctrl</kbd>+S</td></tr>
+            <tr><td>Find and replace</td><td><kbd>Ctrl</kbd>+F</td></tr>
+            <tr><td>Copy everything, or the selection</td><td><kbd>Ctrl</kbd>+<kbd>Shift</kbd>+C</td></tr>
+            <tr><td>Syntax view</td><td><kbd>Ctrl</kbd>+<kbd>Shift</kbd>+H</td></tr>
+            <tr><td>Markdown view</td><td><kbd>Alt</kbd>+M</td></tr>
+            <tr><td>Lock or unlock</td><td><kbd>Ctrl</kbd>+<kbd>Shift</kbd>+L</td></tr>
+            <tr><td>Word wrap</td><td><kbd>Alt</kbd>+Z</td></tr>
+            <tr><td>Zoom in, out, reset</td><td><kbd>Ctrl</kbd>+=, <kbd>Ctrl</kbd>+−, <kbd>Ctrl</kbd>+0</td></tr>
+            <tr><td>Clear the text</td><td><kbd>Esc</kbd> twice (three times when locked)</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>On a Mac, use ⌘ instead of Ctrl and ⌥ instead of Alt.</p>
+
+      <h2 id="languages">Languages</h2>
+      <p>
+        The interface language is detected from your browser, and you can change it with the
+        selector in the title bar. Each language also has its own address:
+      </p>
+      <ul class="langs">
+        <li><a href="/" hreflang="en" lang="en">English</a></li>
+        <li><a href="/es/" hreflang="es" lang="es">Español</a></li>
+        <li><a href="/zh/" hreflang="zh" lang="zh">中文</a></li>
+        <li><a href="/hi/" hreflang="hi" lang="hi">हिन्दी</a></li>
+        <li><a href="/ar/" hreflang="ar" lang="ar">العربية</a></li>
+        <li><a href="/fr/" hreflang="fr" lang="fr">Français</a></li>
+        <li><a href="/pt/" hreflang="pt" lang="pt">Português</a></li>
+        <li><a href="/id/" hreflang="id" lang="id">Indonesia</a></li>
+        <li><a href="/vi/" hreflang="vi" lang="vi">Tiếng Việt</a></li>
+        <li><a href="/tr/" hreflang="tr" lang="tr">Türkçe</a></li>
+        <li><a href="/th/" hreflang="th" lang="th">ภาษาไทย</a></li>
+        <li><a href="/de/" hreflang="de" lang="de">Deutsch</a></li>
+        <li><a href="/ja/" hreflang="ja" lang="ja">日本語</a></li>
+        <li><a href="/ko/" hreflang="ko" lang="ko">한국어</a></li>
+        <li><a href="/ru/" hreflang="ru" lang="ru">Русский</a></li>
+      </ul>
+
+      <h2 id="compare">How it compares</h2>
+      <div class="table">
+        <table>
+          <thead><tr><th></th><th>Quick Web Notepad</th><th>Built-in desktop text editor</th><th>Cloud notes service</th></tr></thead>
+          <tbody>
+            <tr><th>Account required</th><td>No</td><td>No</td><td>Usually</td></tr>
+            <tr><th>Install required</th><td>No (installing is optional)</td><td>Comes with the system or is installed</td><td>App or website</td></tr>
+            <tr><th>Where your text lives</th><td>Your browser tab and the files you save</td><td>Files on your device</td><td>The provider's servers</td></tr>
+            <tr><th>Works offline</th><td>Yes, after the first visit</td><td>Yes</td><td>Varies</td></tr>
+            <tr><th>Syncs between devices</th><td>No</td><td>No</td><td>Yes</td></tr>
+            <tr><th>Markdown preview</th><td>Yes</td><td>Varies</td><td>Varies</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2 id="limits">Limitations</h2>
+      <ul>
+        <li>No sync, cloud backup or sharing by link.</li>
+        <li>One document per tab, and the text is not kept after the tab is closed.</li>
+        <li>The Syntax and Markdown views are for reading, not for editing.</li>
+        <li>It needs a modern browser with JavaScript enabled.</li>
+      </ul>
+
+      <h2 id="faq">Frequently asked questions</h2>
+      <h3>Is Quick Web Notepad free?</h3>
+      <p>Yes. It is free to use, there is no paid tier, and the source code is published under the MIT license.</p>
+      <h3>Do I need an account?</h3>
+      <p>No. There is no sign-up and no login.</p>
+      <h3>Are my notes uploaded or stored on a server?</h3>
+      <p>No. The app has no backend. Your text is processed in your browser and stays on your device.</p>
+      <h3>What happens to my text when I close the tab?</h3>
+      <p>It is discarded. While the tab is open, the text survives a reload, but it is not kept after the tab is closed. To keep a note, save it as a file with Ctrl+S.</p>
+      <h3>Does it work offline?</h3>
+      <p>Yes. After your first visit the app is cached by the browser and opens without an internet connection. It can also be installed like an app from the browser's install option.</p>
+      <h3>Can it save back to the same file?</h3>
+      <p>Yes, in browsers that support the File System Access API, such as Chrome and Edge on desktop. In other browsers, such as Firefox and Safari, saving downloads a copy of the file.</p>
+      <h3>Can it preview Markdown?</h3>
+      <p>Yes. Press Alt+M or the Markdown button for a read-only preview with tables, task lists and highlighted code blocks. The preview is rendered on your device.</p>
+      <h3>Does it work on phones and tablets?</h3>
+      <p>Yes. On small screens the toolbar shows icons only and wraps onto more than one line.</p>
+      <h3>Which languages is the interface available in?</h3>
+      <p>English, Spanish, Chinese, Hindi, Arabic, French, Portuguese, Indonesian, Vietnamese, Turkish, Thai, German, Japanese, Korean and Russian.</p>
+
+      <h2 id="who">Who makes it</h2>
+      <p>
+        Quick Web Notepad is created by OFCode-dev as a small independent web tool. It is built with
+        plain HTML, CSS and JavaScript, without a framework or a build step. The Markdown view uses
+        the open-source libraries <a href="https://marked.js.org/">marked</a> and
+        <a href="https://github.com/cure53/DOMPurify">DOMPurify</a>, which are served from this site.
+        The source code is on
+        <a href="https://github.com/OFCode-dev/quick-web-notepad">GitHub</a> under the MIT license.
+      </p>
+      <p class="date">Version 3.0 · Last updated: November 17, 2026</p>
     </section>
     <nav>
-      <a href="about.html">About</a>
-      <a href="privacy.html">Privacy</a>
-      <a href="contact.html">Contact</a>
+      <a href="/about.html">About</a>
+      <a href="/privacy.html">Privacy</a>
+      <a href="/contact.html">Contact</a>
+      <a href="https://github.com/OFCode-dev/quick-web-notepad">GitHub</a>
     </nav>
   </main>
 </body>

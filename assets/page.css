@@ -1,7 +1,7 @@
 /* Shared styles for the static pages (about, privacy, contact, 404). */
-:root { --bg: #14151b; --card: #1c1e27; --border: #343849; --text: #e7e9f1; --muted: #9ba1b6; --accent: #ffb454; color-scheme: dark; }
+:root { --bg: #14151b; --card: #1c1e27; --border: #343849; --text: #e7e9f1; --muted: #9ba1b6; --accent: #ffb454; --on-accent: #1d1403; color-scheme: dark; }
 @media (prefers-color-scheme: light) {
-  :root { --bg: #f4f1ea; --card: #fbf9f4; --border: #d9d2c3; --text: #24222b; --muted: #625e6c; --accent: #b45309; color-scheme: light; }
+  :root { --bg: #f4f1ea; --card: #fbf9f4; --border: #d9d2c3; --text: #24222b; --muted: #625e6c; --accent: #b45309; --on-accent: #fff; color-scheme: light; }
 }
 * { box-sizing: border-box; }
 body { margin: 0; background: var(--bg); color: var(--text); font: 16px/1.7 system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif; }
@@ -15,5 +15,17 @@ p { color: var(--muted); margin: 0 0 16px; }
 a { color: var(--accent); text-underline-offset: 2px; }
 code { font: .9em ui-monospace, Menlo, Consolas, monospace; }
 .date { margin-top: 28px; font-size: 14px; }
-nav { margin-top: 18px; font-size: 14px; color: var(--muted); display: flex; gap: 16px; }
+nav { margin-top: 18px; font-size: 14px; color: var(--muted); display: flex; flex-wrap: wrap; gap: 8px 16px; }
 :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+h3 { margin: 20px 0 6px; font-size: 16px; }
+ul { color: var(--muted); margin: 0 0 16px; padding-inline-start: 1.2em; }
+li + li { margin-top: 4px; }
+.langs { display: flex; flex-wrap: wrap; gap: 6px 18px; padding: 0; list-style: none; }
+.langs li { margin: 0; }
+.table { overflow-x: auto; margin: 0 0 16px; }
+table { border-collapse: collapse; width: 100%; font-size: 14px; color: var(--muted); }
+th, td { border: 1px solid var(--border); padding: 6px 10px; text-align: start; vertical-align: top; }
+th { color: var(--text); font-weight: 600; }
+kbd { font: .85em ui-monospace, Menlo, Consolas, monospace; border: 1px solid var(--border); border-radius: 4px; padding: 0 4px; color: var(--text); }
+strong { color: var(--text); }
+.cta { display: inline-block; padding: 8px 18px; border-radius: 8px; background: var(--accent); color: var(--on-accent); font-weight: 600; text-decoration: none; }

@@ -1,0 +1,19 @@
+# Quick Web Notepad
+
+> Quick Web Notepad is a free, open-source (MIT) notepad that runs entirely in your browser at https://qwnotepad.ofcodedev.me/ : no account, notes are not uploaded to a server, and it works offline as an installable web app.
+
+- Plain-text editor; opens and saves local files (saves in place in Chromium desktop browsers, otherwise downloads a copy)
+- Find and replace with match case and regular expressions
+- Read-only Syntax view (JavaScript, Python, HTML, CSS, JSON, SQL, shell, C, Markdown) and read-only Markdown preview (GitHub Flavored Markdown tables, task lists, code blocks)
+- Lock mode, light and dark themes, zoom, word wrap, keyboard shortcuts
+- Each tab's text is kept in that tab's sessionStorage and survives a reload; a new tab starts empty; the text is discarded when the tab closes; nothing syncs between devices
+- Interface in 15 languages: English, Spanish, Chinese, Hindi, Arabic, French, Portuguese, Indonesian, Vietnamese, Turkish, Thai, German, Japanese, Korean, Russian
+- Plain HTML, CSS and JavaScript; no build step, no third-party CDNs
+
+## Pages
+- [Notepad app](https://qwnotepad.ofcodedev.me/)
+- [About: features, storage, offline use, shortcuts, comparison, FAQ](https://qwnotepad.ofcodedev.me/about.html)
+- [Privacy policy](https://qwnotepad.ofcodedev.me/privacy.html)
+
+## Source
+- [GitHub repository (MIT)](https://github.com/OFCode-dev/quick-web-notepad)

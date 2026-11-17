@@ -3,25 +3,69 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Untitled.txt | Quick Web Notepad</title>
-<meta name="description" content="A fast, private notepad that runs in your browser. Open and save text files, find and replace, syntax highlighting, Markdown preview. No account, works offline.">
+<title>Free Online Notepad, Private &amp; Offline | Quick Web Notepad</title>
+<meta name="description" content="Free online notepad in your browser: open and save text files, find and replace with regex, preview Markdown. No sign-up, notes are not uploaded, works offline.">
+<meta name="application-name" content="Quick Web Notepad">
 <meta name="theme-color" content="#14151b">
 <meta name="color-scheme" content="dark light">
 <link rel="canonical" href="https://qwnotepad.ofcodedev.me/">
-<meta property="og:title" content="Quick Web Notepad">
-<meta property="og:description" content="A fast, private notepad that runs in your browser.">
+<link rel="alternate" hreflang="x-default" href="https://qwnotepad.ofcodedev.me/">
+<link rel="alternate" hreflang="en" href="https://qwnotepad.ofcodedev.me/">
+<link rel="alternate" hreflang="es" href="https://qwnotepad.ofcodedev.me/es/">
+<link rel="alternate" hreflang="zh" href="https://qwnotepad.ofcodedev.me/zh/">
+<link rel="alternate" hreflang="hi" href="https://qwnotepad.ofcodedev.me/hi/">
+<link rel="alternate" hreflang="ar" href="https://qwnotepad.ofcodedev.me/ar/">
+<link rel="alternate" hreflang="fr" href="https://qwnotepad.ofcodedev.me/fr/">
+<link rel="alternate" hreflang="pt" href="https://qwnotepad.ofcodedev.me/pt/">
+<link rel="alternate" hreflang="id" href="https://qwnotepad.ofcodedev.me/id/">
+<link rel="alternate" hreflang="vi" href="https://qwnotepad.ofcodedev.me/vi/">
+<link rel="alternate" hreflang="tr" href="https://qwnotepad.ofcodedev.me/tr/">
+<link rel="alternate" hreflang="th" href="https://qwnotepad.ofcodedev.me/th/">
+<link rel="alternate" hreflang="de" href="https://qwnotepad.ofcodedev.me/de/">
+<link rel="alternate" hreflang="ja" href="https://qwnotepad.ofcodedev.me/ja/">
+<link rel="alternate" hreflang="ko" href="https://qwnotepad.ofcodedev.me/ko/">
+<link rel="alternate" hreflang="ru" href="https://qwnotepad.ofcodedev.me/ru/">
+<meta property="og:site_name" content="Quick Web Notepad">
 <meta property="og:type" content="website">
+<meta property="og:locale" content="en_US">
 <meta property="og:url" content="https://qwnotepad.ofcodedev.me/">
-<link rel="icon" type="image/svg+xml" href="icon.svg">
-<link rel="apple-touch-icon" href="icon-192.png">
-<link rel="manifest" href="manifest.webmanifest">
+<meta property="og:title" content="Free Online Notepad, Private &amp; Offline | Quick Web Notepad">
+<meta property="og:description" content="Free online notepad in your browser: open and save text files, find and replace with regex, preview Markdown. No sign-up, notes are not uploaded, works offline.">
+<meta property="og:image" content="https://qwnotepad.ofcodedev.me/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Quick Web Notepad in the dark theme, showing a Markdown note">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="/icon.svg">
+<link rel="apple-touch-icon" href="/icon-192.png">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="modulepreload" href="/assets/app.js">
+<link rel="modulepreload" href="/assets/i18n.js">
+<!-- jsonld:start -->
+<script type="application/ld+json">
+{"@context":"https://schema.org","@graph":[
+{"@type":"WebSite","@id":"https://qwnotepad.ofcodedev.me/#website","url":"https://qwnotepad.ofcodedev.me/","name":"Quick Web Notepad","inLanguage":"en","publisher":{"@id":"https://qwnotepad.ofcodedev.me/#publisher"}},
+{"@type":"WebApplication","@id":"https://qwnotepad.ofcodedev.me/#app","name":"Quick Web Notepad","url":"https://qwnotepad.ofcodedev.me/",
+"description":"Quick Web Notepad is a free, open-source notepad that runs entirely in your browser: no account, notes are not uploaded, and it works offline.",
+"applicationCategory":"UtilitiesApplication","applicationSubCategory":"Text editor","operatingSystem":"Any (runs in a modern web browser)","browserRequirements":"Requires JavaScript",
+"softwareVersion":"3.0","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},
+"license":"https://opensource.org/licenses/MIT",
+"inLanguage":["en","es","zh","hi","ar","fr","pt","id","vi","tr","th","de","ja","ko","ru"],
+"featureList":["Plain-text editing","Open and save local files","Find and replace with match case and regular expressions","Read-only syntax highlighting for JavaScript, Python, HTML, CSS, JSON, SQL, shell, C and Markdown","Read-only Markdown preview with GitHub Flavored Markdown tables, task lists and code blocks","Lock mode against accidental edits","Light and dark themes, zoom and word wrap","Installable web app that works offline","Per-tab autosave in the browser","Keyboard shortcuts","15 interface languages"],
+"screenshot":"https://qwnotepad.ofcodedev.me/og-image.png","image":"https://qwnotepad.ofcodedev.me/icon-512.png",
+"sameAs":["https://github.com/OFCode-dev/quick-web-notepad"],
+"author":{"@id":"https://qwnotepad.ofcodedev.me/#publisher"},"publisher":{"@id":"https://qwnotepad.ofcodedev.me/#publisher"}},
+{"@type":"Organization","@id":"https://qwnotepad.ofcodedev.me/#publisher","name":"OFCode-dev","url":"https://github.com/OFCode-dev"}
+]}
+</script>
+<!-- jsonld:end -->
 <script>
 /* Set the theme before first paint to avoid a flash. */
 (function(){var t;try{t=JSON.parse(localStorage.getItem('qwn:prefs')||'{}').theme}catch(e){}
 if(t!=='light'&&t!=='dark')t=matchMedia('(prefers-color-scheme: light)').matches?'light':'dark';
 document.documentElement.dataset.theme=t})();
 </script>
-<link rel="stylesheet" href="assets/app.css">
+<link rel="stylesheet" href="/assets/app.css">
 </head>
 <body>
 
@@ -46,73 +90,90 @@ document.documentElement.dataset.theme=t})();
 </svg>
 
 <header id="titlebar">
-  <img src="icon.svg" width="22" height="22" alt="">
-  <div class="brand"><b>Quick</b> Web Notepad</div>
-  <input id="fileName" type="text" value="Untitled.txt" spellcheck="false" autocomplete="off">
-  <select id="langSelect"></select>
+  <img src="/icon.svg" width="22" height="22" alt="">
+  <h1 class="brand"><b>Quick</b> Web Notepad</h1>
+  <input id="fileName" type="text" value="Untitled.txt" spellcheck="false" autocomplete="off" aria-label="File name" data-ka="fileName">
+  <select id="langSelect" aria-label="Language" data-ka="language">
+    <option value="en" lang="en">English</option>
+    <option value="es" lang="es">Español</option>
+    <option value="zh" lang="zh-Hans">中文</option>
+    <option value="hi" lang="hi">हिन्दी</option>
+    <option value="ar" lang="ar">العربية</option>
+    <option value="fr" lang="fr">Français</option>
+    <option value="pt" lang="pt">Português</option>
+    <option value="id" lang="id">Indonesia</option>
+    <option value="vi" lang="vi">Tiếng Việt</option>
+    <option value="tr" lang="tr">Türkçe</option>
+    <option value="th" lang="th">ภาษาไทย</option>
+    <option value="de" lang="de">Deutsch</option>
+    <option value="ja" lang="ja">日本語</option>
+    <option value="ko" lang="ko">한국어</option>
+    <option value="ru" lang="ru">Русский</option>
+  </select>
 </header>
 
-<div id="toolbar" role="toolbar">
-  <button id="bOpen"><svg class="ic"><use href="#i-open"/></svg><span class="lbl"></span></button>
-  <button id="bNewTab"><svg class="ic"><use href="#i-newtab"/></svg><span class="lbl"></span></button>
-  <button id="bSave"><svg class="ic"><use href="#i-save"/></svg><span class="lbl"></span></button>
+<div id="toolbar" role="toolbar" aria-label="Toolbar" data-ka="toolbar">
+  <button id="bOpen"><svg class="ic"><use href="#i-open"/></svg><span class="lbl" data-k="file">Open</span></button>
+  <button id="bNewTab"><svg class="ic"><use href="#i-newtab"/></svg><span class="lbl" data-k="newTab">New Tab</span></button>
+  <button id="bSave"><svg class="ic"><use href="#i-save"/></svg><span class="lbl" data-k="save">Save</span></button>
   <span class="sep"></span>
-  <button id="bPaste"><svg class="ic"><use href="#i-paste"/></svg><span class="lbl"></span></button>
-  <button id="bCopy"><svg class="ic"><use href="#i-copy"/></svg><span class="lbl"></span></button>
-  <button id="bClear"><svg class="ic"><use href="#i-clear"/></svg><span class="lbl"></span></button>
+  <button id="bPaste"><svg class="ic"><use href="#i-paste"/></svg><span class="lbl" data-k="paste">Paste</span></button>
+  <button id="bCopy"><svg class="ic"><use href="#i-copy"/></svg><span class="lbl" data-k="copy">Copy</span></button>
+  <button id="bClear"><svg class="ic"><use href="#i-clear"/></svg><span class="lbl" data-k="clear">Clear</span></button>
   <span class="sep"></span>
-  <button id="bWrap" aria-pressed="false"><svg class="ic"><use href="#i-wrap"/></svg><span class="lbl"></span></button>
-  <button id="bFind" aria-pressed="false"><svg class="ic"><use href="#i-find"/></svg><span class="lbl"></span></button>
+  <button id="bWrap" aria-pressed="false"><svg class="ic"><use href="#i-wrap"/></svg><span class="lbl" data-k="wrap">Wrap</span></button>
+  <button id="bFind" aria-pressed="false"><svg class="ic"><use href="#i-find"/></svg><span class="lbl" data-k="find">Find</span></button>
   <span class="sep"></span>
-  <button id="bSyntax" aria-pressed="false"><svg class="ic"><use href="#i-syntax"/></svg><span class="lbl"></span></button>
-  <button id="bMarkdown" aria-pressed="false"><svg class="ic"><use href="#i-markdown"/></svg><span class="lbl"></span></button>
-  <button id="bLock" aria-pressed="false"><svg class="ic"><use href="#i-unlock"/></svg><span class="lbl"></span></button>
+  <button id="bSyntax" aria-pressed="false"><svg class="ic"><use href="#i-syntax"/></svg><span class="lbl" data-k="syntax">Syntax</span></button>
+  <button id="bMarkdown" aria-pressed="false"><svg class="ic"><use href="#i-markdown"/></svg><span class="lbl" data-k="markdown">Markdown</span></button>
+  <button id="bLock" aria-pressed="false"><svg class="ic"><use href="#i-unlock"/></svg><span class="lbl" data-k="lock">Lock</span></button>
   <span class="sep"></span>
-  <button id="bZoomOut" class="txt">A−</button>
-  <button id="bZoomReset" class="txt">100%</button>
-  <button id="bZoomIn" class="txt">A+</button>
+  <button id="bZoomOut" class="txt" aria-label="Zoom out" data-ka="zoomOut">A−</button>
+  <button id="bZoomReset" class="txt" aria-label="Reset zoom" data-ka="zoomReset">100%</button>
+  <button id="bZoomIn" class="txt" aria-label="Zoom in" data-ka="zoomIn">A+</button>
   <span class="sep"></span>
-  <button id="bTheme"><svg class="ic"><use href="#i-sun"/></svg><span class="lbl"></span></button>
+  <button id="bTheme"><svg class="ic"><use href="#i-sun"/></svg><span class="lbl" data-k="light">Light</span></button>
 </div>
 
 <div id="findBar" hidden>
-  <input id="findInput" type="text" spellcheck="false" autocomplete="off">
-  <button id="bFindPrev" class="icon-only"><svg class="ic"><use href="#i-up"/></svg></button>
-  <button id="bFindNext" class="icon-only"><svg class="ic"><use href="#i-down"/></svg></button>
-  <span id="findCount" role="status">0</span>
-  <input id="replaceInput" type="text" spellcheck="false" autocomplete="off">
-  <button id="bReplace" class="txt"></button>
-  <button id="bReplaceAll" class="txt"></button>
-  <label><input type="checkbox" id="chkCase"> <span id="lblCase"></span></label>
-  <label><input type="checkbox" id="chkRegex"> <span id="lblRegex"></span></label>
-  <button id="bFindClose" class="icon-only"><svg class="ic"><use href="#i-close"/></svg></button>
+  <input id="findInput" type="text" spellcheck="false" autocomplete="off" aria-label="Find" data-ka="find">
+  <button id="bFindPrev" class="icon-only" aria-label="Previous" data-ka="prev"><svg class="ic"><use href="#i-up"/></svg></button>
+  <button id="bFindNext" class="icon-only" aria-label="Next" data-ka="next"><svg class="ic"><use href="#i-down"/></svg></button>
+  <span id="findCount" role="status"></span>
+  <input id="replaceInput" type="text" spellcheck="false" autocomplete="off" aria-label="Replace" data-ka="replace">
+  <button id="bReplace" class="txt" data-k="replace">Replace</button>
+  <button id="bReplaceAll" class="txt" data-k="all">All</button>
+  <label><input type="checkbox" id="chkCase"> <span id="lblCase" data-k="caseS">Match case</span></label>
+  <label><input type="checkbox" id="chkRegex"> <span id="lblRegex" data-k="regex">Regex</span></label>
+  <button id="bFindClose" class="icon-only" aria-label="Close" data-ka="close"><svg class="ic"><use href="#i-close"/></svg></button>
 </div>
 
 <main id="workspace">
-  <textarea id="editor" dir="auto" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off"></textarea>
-  <pre id="highlight" dir="auto" tabindex="0" hidden></pre>
-  <article id="preview" class="md" dir="auto" tabindex="0" hidden></article>
+  <noscript><p id="noscript"><span data-ns>Quick Web Notepad needs JavaScript. It is a free notepad that runs entirely in your browser: open and save text files, find and replace, and preview Markdown, with no account and nothing uploaded.</span> <a href="/about.html" data-k="about">About</a></p></noscript>
+  <textarea id="editor" aria-label="Editor" data-ka="editor" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off"></textarea>
+  <pre id="highlight" tabindex="0" hidden></pre>
+  <article id="preview" class="md" tabindex="0" hidden></article>
 </main>
 
 <footer id="statusbar">
   <div class="group">
-    <span id="stPos"></span>
-    <span id="stWords"></span>
-    <span id="stChars"></span>
-    <span id="stZoom"></span>
+    <span id="stPos">Ln 1/1 · Col 1</span>
+    <span id="stWords">0 words</span>
+    <span id="stChars">0 chars</span>
+    <span id="stZoom">100%</span>
     <span id="stSel" hidden></span>
   </div>
   <div class="group">
     <span id="stLock" hidden></span>
     <span id="stMode"></span>
-    <a id="aboutLink" href="about.html"></a>
-    <span id="stVersion"></span>
+    <a id="aboutLink" href="/about.html" data-k="about">About</a>
+    <span id="stVersion">v3.0</span>
   </div>
 </footer>
 
 <div id="toast" role="status" aria-live="polite"></div>
 <input type="file" id="fileInput" hidden>
 
-<script type="module" src="assets/app.js"></script>
+<script type="module" src="/assets/app.js"></script>
 </body>
 </html>
