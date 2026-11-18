@@ -44,7 +44,7 @@ Quick Web Notepad is a free, open-source notepad that runs entirely in your brow
 ```
 index.html              the app page (English, and the template for the language pages)
 es/ tr/ ja/ ...         generated per-language copies of the app page; do not edit by hand
-_tools/                 build-locales.mjs (generator) and locales.mjs (search-result strings)
+_tools/                 build-locales.mjs (generator), locales.mjs (search-result strings), monitor.mjs (search and performance report)
 assets/app.css          styles; the color palette is the token block at the top
 assets/app.js           app logic (ES module)
 assets/i18n.js          interface strings
