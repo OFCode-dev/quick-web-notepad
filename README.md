@@ -23,6 +23,7 @@ Quick Web Notepad is a free, open-source notepad that runs entirely in your brow
 - The app has no backend. Your text is processed in the browser and stays on your device.
 - The text of a tab is kept in that tab's sessionStorage, so it survives a reload and is discarded when the tab closes. Save to a file to keep it.
 - There is no sync, cloud backup or sharing by link.
+- The site shows Google AdSense ads, including one thin strip under the editor.
 
 ## Shortcuts
 

@@ -9,7 +9,7 @@
 - Each tab's text is kept in that tab's sessionStorage and survives a reload; a new tab starts empty; the text is discarded when the tab closes; nothing syncs between devices
 - Interface in 15 languages: English, Spanish, Chinese, Hindi, Arabic, French, Portuguese, Indonesian, Vietnamese, Turkish, Thai, German, Japanese, Korean, Russian
 - Plain HTML, CSS and JavaScript; no build step
-- The editor loads no advertising or analytics code; the About, Privacy and Contact pages show Google AdSense ads
+- The site shows Google AdSense ads, including one thin strip under the editor; it runs no separate analytics tool
 
 ## Pages
 - [Notepad app](https://qwnotepad.ofcodedev.me/)

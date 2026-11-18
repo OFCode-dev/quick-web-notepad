@@ -543,6 +543,7 @@ function applyLang(code) {
   fileName.setAttribute('aria-label', T.fileName);
   editor.setAttribute('aria-label', T.editor);
   $('toolbar').setAttribute('aria-label', T.toolbar);
+  $('adStrip').setAttribute('aria-label', T.ad);
   $('stLock').textContent = T.locked;
   $('aboutLink').textContent = T.about;
   hint = '';
@@ -661,5 +662,8 @@ if (saved.view === 'syntax' || saved.view === 'markdown') await setView(saved.vi
 updateStatus();
 updateInvite();
 if (state.view === 'edit') editor.focus();
+
+/* Ask for one ad for the strip under the status bar; offline or blocked, the strip simply stays collapsed. */
+if (navigator.onLine) try { (window.adsbygoogle = window.adsbygoogle || []).push({}); } catch { /* ad code unavailable */ }
 
 if ('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js', { scope: '/' }).catch(() => {});

@@ -175,6 +175,20 @@ button.icon-only { padding: 4px 7px; }
 #statusbar a { color: inherit; text-underline-offset: 2px; }
 #statusbar a:hover { color: var(--text); }
 
+/* ── Ad strip: collapsed until Google reports the slot as filled ── */
+#adStrip {
+  flex-shrink: 0; height: 0; overflow: hidden;
+  display: flex; justify-content: center;
+  background: var(--surface);
+}
+#adStrip ins { display: block; flex-shrink: 0; width: 320px; height: 50px; }
+#adStrip:has(ins[data-ad-status="filled"]) { height: 51px; border-top: 1px solid var(--border); }
+@media (min-width: 800px) and (min-height: 640px) {
+  #adStrip ins { width: 728px; height: 90px; }
+  #adStrip:has(ins[data-ad-status="filled"]) { height: 91px; }
+}
+body:has(#adStrip ins[data-ad-status="filled"]) #toast { bottom: 140px; }
+
 /* ── Toast ── */
 #toast {
   position: fixed; inset-inline: 0; bottom: 44px; margin-inline: auto; width: max-content; max-width: calc(100% - 32px);
