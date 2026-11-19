@@ -731,10 +731,11 @@ editor.addEventListener('input', afterChange);
 for (const type of ['keyup', 'click', 'select']) editor.addEventListener(type, updateStatus);
 editor.addEventListener('paste', (e) => {
   const wasEmpty = !editor.value;
-  if (state.locked && !wasEmpty) { e.preventDefault(); deny(); return; }
+  if (!state.locked) { if (wasEmpty) toast(T.pasted); return; } // the browser pastes; undo keeps working
   e.preventDefault();
-  insertText(e.clipboardData.getData('text'));
-  if (wasEmpty) toast(T.pasted);
+  if (!wasEmpty) { deny(); return; }
+  insertText(e.clipboardData.getData('text')); // a locked, empty note still accepts one paste
+  toast(T.pasted);
 });
 editor.addEventListener('keydown', (e) => {
   if (e.key === 'Tab' && !e.shiftKey && !e.ctrlKey && !e.metaKey && !e.altKey) { // Shift+Tab still leaves the editor
@@ -783,6 +784,18 @@ updateInvite();
 if (state.view === 'edit') editor.focus();
 
 /* Ask for one ad for the strip under the status bar; offline or blocked, the strip simply stays collapsed. */
-if (navigator.onLine) try { (window.adsbygoogle = window.adsbygoogle || []).push({}); } catch { /* ad code unavailable */ }
+/* The ad code is about eight times the size of the app, so it is fetched only after the page has
+   loaded and the browser is idle. Offline or blocked, the strip simply stays collapsed. */
+function loadAd() {
+  if (!navigator.onLine) return;
+  const ins = document.querySelector('#adStrip ins'), script = document.createElement('script');
+  script.async = true;
+  script.crossOrigin = 'anonymous';
+  script.src = `https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ins.dataset.adClient}`;
+  script.onload = () => { try { (window.adsbygoogle = window.adsbygoogle || []).push({}); } catch { /* ad code unavailable */ } };
+  document.head.append(script);
+}
+const whenIdle = window.requestIdleCallback ? (fn) => requestIdleCallback(fn, { timeout: 4000 }) : (fn) => setTimeout(fn, 1500);
+if (document.readyState === 'complete') whenIdle(loadAd); else addEventListener('load', () => whenIdle(loadAd), { once: true });
 
 if ('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js', { scope: '/' }).catch(() => {});
