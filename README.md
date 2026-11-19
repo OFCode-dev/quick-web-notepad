@@ -17,12 +17,12 @@ Quick Web Notepad is a free, open-source notepad that runs entirely in your brow
 - Light and dark themes, zoom, word wrap
 - 15 interface languages, detected from the browser
 - Installable and usable offline (PWA)
-- The text of each tab survives a reload; a new tab always starts empty
+- The text of each tab survives a reload; a new tab always starts empty; notes from closed tabs can be reopened from Recent
 
 ## Privacy and limits
 
 - The app has no backend. Your text is processed in the browser and stays on your device.
-- The text of a tab is kept in that tab's sessionStorage, so it survives a reload and is discarded when the tab closes. Save to a file to keep it.
+- The text of a tab survives a reload (sessionStorage). Notes from closed tabs are kept in this browser's localStorage and listed under Recent, up to 30; they can be deleted there, and keeping can be turned off. A new tab always starts empty.
 - There is no sync, cloud backup or sharing by link.
 - The site shows Google AdSense ads, including one thin strip under the editor.
 

@@ -21,7 +21,7 @@
   <!-- Ads run on the content pages only, never inside the editor. -->
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6268520629380408" crossorigin="anonymous"></script>
   <script type="application/ld+json">
-{"@context": "https://schema.org", "@graph": [{"@type": "AboutPage", "@id": "https://quickwebnotepad.com/about.html#webpage", "url": "https://quickwebnotepad.com/about.html", "name": "About Quick Web Notepad", "inLanguage": "en", "isPartOf": {"@id": "https://quickwebnotepad.com/#website"}, "about": {"@id": "https://quickwebnotepad.com/#app"}, "dateModified": "2026-11-17"}, {"@type": "FAQPage", "@id": "https://quickwebnotepad.com/about.html#faq", "mainEntity": [{"@type": "Question", "name": "Is Quick Web Notepad free?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. It is free to use, there is no paid tier, and the source code is published under the MIT license. The site shows ads from Google AdSense, including one thin strip under the editor."}}, {"@type": "Question", "name": "Do I need an account?", "acceptedAnswer": {"@type": "Answer", "text": "No. There is no sign-up and no login."}}, {"@type": "Question", "name": "Are my notes uploaded or stored on a server?", "acceptedAnswer": {"@type": "Answer", "text": "No. The app has no backend. Your text is processed in your browser and stays on your device."}}, {"@type": "Question", "name": "What happens to my text when I close the tab?", "acceptedAnswer": {"@type": "Answer", "text": "It is discarded. While the tab is open, the text survives a reload, but it is not kept after the tab is closed. To keep a note, save it as a file with Ctrl+S."}}, {"@type": "Question", "name": "Does it work offline?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. After your first visit the app is cached by the browser and opens without an internet connection. It can also be installed like an app from the browser's install option."}}, {"@type": "Question", "name": "Can it save back to the same file?", "acceptedAnswer": {"@type": "Answer", "text": "Yes, in browsers that support the File System Access API, such as Chrome and Edge on desktop. In other browsers, such as Firefox and Safari, saving downloads a copy of the file."}}, {"@type": "Question", "name": "Can it preview Markdown?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. Press Alt+M or the Markdown button for a read-only preview with tables, task lists and highlighted code blocks. The preview is rendered on your device."}}, {"@type": "Question", "name": "Does it work on phones and tablets?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. On small screens the toolbar shows icons only and wraps onto more than one line."}}, {"@type": "Question", "name": "Which languages is the interface available in?", "acceptedAnswer": {"@type": "Answer", "text": "English, Spanish, Chinese, Hindi, Arabic, French, Portuguese, Indonesian, Vietnamese, Turkish, Thai, German, Japanese, Korean and Russian."}}]}]}
+{"@context": "https://schema.org", "@graph": [{"@type": "AboutPage", "@id": "https://quickwebnotepad.com/about.html#webpage", "url": "https://quickwebnotepad.com/about.html", "name": "About Quick Web Notepad", "inLanguage": "en", "isPartOf": {"@id": "https://quickwebnotepad.com/#website"}, "about": {"@id": "https://quickwebnotepad.com/#app"}, "dateModified": "2026-11-19"}, {"@type": "FAQPage", "@id": "https://quickwebnotepad.com/about.html#faq", "mainEntity": [{"@type": "Question", "name": "Is Quick Web Notepad free?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. It is free to use, there is no paid tier, and the source code is published under the MIT license. The site shows ads from Google AdSense, including one thin strip under the editor."}}, {"@type": "Question", "name": "Do I need an account?", "acceptedAnswer": {"@type": "Answer", "text": "No. There is no sign-up and no login."}}, {"@type": "Question", "name": "Are my notes uploaded or stored on a server?", "acceptedAnswer": {"@type": "Answer", "text": "No. The app has no backend. Your text is processed in your browser and stays on your device."}}, {"@type": "Question", "name": "What happens to my text when I close the tab?", "acceptedAnswer": {"@type": "Answer", "text": "It stays on this device. Closed notes are listed under Recent, where you can reopen or delete them; a new tab still starts empty. Nothing is synced to other devices, so to keep a note for good, save it as a file with Ctrl+S."}}, {"@type": "Question", "name": "Does it work offline?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. After your first visit the app is cached by the browser and opens without an internet connection. It can also be installed like an app from the browser's install option."}}, {"@type": "Question", "name": "Can it save back to the same file?", "acceptedAnswer": {"@type": "Answer", "text": "Yes, in browsers that support the File System Access API, such as Chrome and Edge on desktop. In other browsers, such as Firefox and Safari, saving downloads a copy of the file."}}, {"@type": "Question", "name": "Can it preview Markdown?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. Press Alt+M or the Markdown button for a read-only preview with tables, task lists and highlighted code blocks. The preview is rendered on your device."}}, {"@type": "Question", "name": "Does it work on phones and tablets?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. On small screens the toolbar shows icons only and wraps onto more than one line."}}, {"@type": "Question", "name": "Which languages is the interface available in?", "acceptedAnswer": {"@type": "Answer", "text": "English, Spanish, Chinese, Hindi, Arabic, French, Portuguese, Indonesian, Vietnamese, Turkish, Thai, German, Japanese, Korean and Russian."}}]}]}
   </script>
 </head>
 <body>
@@ -47,6 +47,7 @@
         <li>Syntax view: read-only highlighting for JavaScript, Python, HTML, CSS, JSON, SQL, shell, C and Markdown.</li>
         <li>Markdown view: a read-only rendered preview with tables, task lists and code blocks.</li>
         <li>Lock mode, which protects the text from accidental edits.</li>
+        <li>Recent notes: notes from closed tabs can be reopened from the toolbar.</li>
         <li>Light and dark themes, zoom and word wrap.</li>
         <li>Installable as an app, and usable without an internet connection.</li>
         <li>An interface in 15 languages.</li>
@@ -55,11 +56,13 @@
       <h2 id="storage">Where your notes are stored</h2>
       <p>
         Your text stays on your device. While you type, the text and file name of the current tab
-        are copied to that tab's sessionStorage so they survive an accidental reload. Each tab has
-        its own copy: a new tab starts empty, and closing the tab discards the copy. To keep your
-        text, save it to a file with <kbd>Ctrl</kbd>+<kbd>S</kbd>. Your theme, language, zoom and
-        word-wrap preferences are kept in localStorage. Nothing is synced between devices. The
-        <a href="/privacy.html">privacy policy</a> has the details.
+        are copied to that tab's sessionStorage so they survive an accidental reload, and a new tab
+        always starts empty. A copy of each note is also kept in the browser's localStorage, so
+        after you close a tab its note is listed under <strong>Recent</strong> in the toolbar, where
+        you can reopen it or delete it. Up to 30 notes are kept; you can turn this off in the same
+        menu. Your theme, language, zoom and word-wrap preferences are kept in localStorage too.
+        Nothing is synced between devices, so to keep a note for good, save it to a file with
+        <kbd>Ctrl</kbd>+<kbd>S</kbd>. The <a href="/privacy.html">privacy policy</a> has the details.
       </p>
 
       <h2 id="files">Opening and saving files</h2>
@@ -168,7 +171,7 @@
       <h2 id="limits">Limitations</h2>
       <ul>
         <li>No sync, cloud backup or sharing by link.</li>
-        <li>One document per tab, and the text is not kept after the tab is closed.</li>
+        <li>One document per tab. Closed notes are kept only in this browser, up to 30 of them.</li>
         <li>The Syntax and Markdown views are for reading, not for editing.</li>
         <li>It needs a modern browser with JavaScript enabled.</li>
       </ul>
@@ -181,7 +184,7 @@
       <h3>Are my notes uploaded or stored on a server?</h3>
       <p>No. The app has no backend. Your text is processed in your browser and stays on your device.</p>
       <h3>What happens to my text when I close the tab?</h3>
-      <p>It is discarded. While the tab is open, the text survives a reload, but it is not kept after the tab is closed. To keep a note, save it as a file with Ctrl+S.</p>
+      <p>It stays on this device. Closed notes are listed under Recent, where you can reopen or delete them; a new tab still starts empty. Nothing is synced to other devices, so to keep a note for good, save it as a file with Ctrl+S.</p>
       <h3>Does it work offline?</h3>
       <p>Yes. After your first visit the app is cached by the browser and opens without an internet connection. It can also be installed like an app from the browser's install option.</p>
       <h3>Can it save back to the same file?</h3>
@@ -202,7 +205,7 @@
         The source code is on
         <a href="https://github.com/OFCode-dev/quick-web-notepad">GitHub</a> under the MIT license.
       </p>
-      <p class="date">Version 3.0 · Last updated: November 17, 2026</p>
+      <p class="date">Version 3.1 · Last updated: November 19, 2026</p>
     </section>
     <nav>
       <a href="/about.html">About</a>

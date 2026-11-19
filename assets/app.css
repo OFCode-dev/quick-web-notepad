@@ -84,6 +84,11 @@ body {
   overflow-x: auto; flex-shrink: 0; scrollbar-width: thin;
 }
 .sep { width: 1px; height: 18px; background: var(--border); margin: 0 5px; flex-shrink: 0; }
+#toolbar.tight button { padding-inline: 6px; }
+#toolbar.tight .sep { margin: 0 3px; }
+#toolbar.lean :is(#bCopy, #bClear, #bFind, #bLock, #bTheme) .lbl { display: none; } /* icons that read on their own */
+#toolbar.compact .lbl { display: none; }
+#toolbar.compact { flex-wrap: wrap; overflow-x: visible; }
 button {
   display: inline-flex; align-items: center; gap: 6px; flex-shrink: 0;
   min-height: 30px; padding: 4px 9px;
@@ -99,6 +104,25 @@ button.icon-only { padding: 4px 7px; }
 .deny { animation: deny .55s ease; }
 @keyframes invite { 50% { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); } }
 .invite { animation: invite 1.8s ease-in-out infinite; }
+
+/* ── Recent notes ── */
+#recentMenu {
+  inset: auto; margin: 0; width: min(380px, calc(100vw - 16px)); max-height: min(70vh, 520px);
+  padding: 0; overflow: auto; color: var(--text);
+  background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
+  box-shadow: 0 10px 32px rgba(0, 0, 0, .35);
+}
+.rm-head { padding: 10px 14px 6px; font-size: 13px; }
+#recentList { list-style: none; padding: 0 6px; }
+#recentList li { display: flex; align-items: center; gap: 2px; }
+#recentList .rm-open { flex: 1; min-width: 0; display: grid; gap: 1px; text-align: start; padding: 6px 8px; }
+.rm-name { font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.rm-line { color: var(--muted); font-size: 12px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+#recentEmpty { padding: 6px 14px 12px; color: var(--muted); }
+.rm-foot { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; justify-content: space-between; padding: 8px 14px 10px; border-top: 1px solid var(--border); }
+.rm-foot label { display: flex; align-items: center; gap: 6px; cursor: pointer; }
+.rm-foot input { accent-color: var(--accent); }
+#bDeleteAll { border-color: var(--border); }
 
 /* ── Find bar ── */
 #findBar {

@@ -54,6 +54,7 @@ document.documentElement.dataset.theme=t})();
 
 <svg xmlns="http://www.w3.org/2000/svg" hidden>
   <symbol id="i-open" viewBox="0 0 16 16"><path d="M1.5 4.5v8a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-6a1 1 0 0 0-1-1H8L6.5 3.5h-4a1 1 0 0 0-1 1z"/></symbol>
+  <symbol id="i-recent" viewBox="0 0 16 16"><circle cx="8" cy="8" r="5.5"/><path d="M8 5v3.2l2 1.3"/></symbol>
   <symbol id="i-newtab" viewBox="0 0 16 16"><rect x="2.5" y="2.5" width="11" height="11" rx="1.5"/><path d="M8 5.5v5M5.5 8h5"/></symbol>
   <symbol id="i-save" viewBox="0 0 16 16"><path d="M2.5 2.5H11l2.5 2.5v8.5h-11zM5 2.5V6h5V2.5M5 13.5v-4h6v4"/></symbol>
   <symbol id="i-paste" viewBox="0 0 16 16"><path d="M5.5 3h-2v10.5h9V3h-2"/><rect x="5.5" y="1.8" width="5" height="2.6" rx=".6"/></symbol>
@@ -103,6 +104,7 @@ document.documentElement.dataset.theme=t})();
 <div id="toolbar" role="toolbar" aria-label="도구 모음" data-ka="toolbar">
   <button id="bOpen"><svg class="ic"><use href="#i-open"/></svg><span class="lbl" data-k="file">열기</span></button>
   <button id="bNewTab"><svg class="ic"><use href="#i-newtab"/></svg><span class="lbl" data-k="newTab">새 탭</span></button>
+  <button id="bRecent" popovertarget="recentMenu"><svg class="ic"><use href="#i-recent"/></svg><span class="lbl" data-k="recent">최근</span></button>
   <button id="bSave"><svg class="ic"><use href="#i-save"/></svg><span class="lbl" data-k="save">저장</span></button>
   <span class="sep"></span>
   <button id="bPaste"><svg class="ic"><use href="#i-paste"/></svg><span class="lbl" data-k="paste">붙여넣기</span></button>
@@ -121,6 +123,17 @@ document.documentElement.dataset.theme=t})();
   <button id="bZoomIn" class="txt" aria-label="확대" data-ka="zoomIn">A+</button>
   <span class="sep"></span>
   <button id="bTheme"><svg class="ic"><use href="#i-sun"/></svg><span class="lbl" data-k="light">라이트</span></button>
+</div>
+
+<!-- Notes from closed tabs, kept on this device. -->
+<div id="recentMenu" popover role="dialog" aria-labelledby="recentTitle">
+  <div class="rm-head"><strong id="recentTitle" data-k="recent">최근</strong></div>
+  <ul id="recentList"></ul>
+  <p id="recentEmpty" data-k="recentEmpty">닫은 탭의 메모가 여기에 표시됩니다.</p>
+  <div class="rm-foot">
+    <label><input type="checkbox" id="chkKeep" checked> <span data-k="keepNotes">닫은 메모를 이 기기에 보관</span></label>
+    <button id="bDeleteAll" class="txt" data-k="deleteAll">모두 삭제</button>
+  </div>
 </div>
 
 <div id="findBar" hidden>
@@ -155,7 +168,7 @@ document.documentElement.dataset.theme=t})();
     <span id="stLock" hidden></span>
     <span id="stMode"></span>
     <a id="aboutLink" href="/about.html" data-k="about">정보</a>
-    <span id="stVersion">v3.0</span>
+    <span id="stVersion">v3.1</span>
   </div>
 </footer>
 

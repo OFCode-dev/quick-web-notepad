@@ -42,11 +42,16 @@
       <h2>Browser storage</h2>
       <p>
         To survive an accidental reload, the text and file name of the current tab
-        are kept in your browser's sessionStorage. This copy belongs to that tab
-        only: a new tab starts empty, and the copy is discarded when the tab is
-        closed. Your theme, language, zoom and word-wrap preferences are kept in
-        localStorage. None of this leaves your device, and you can clear it from
-        your browser settings.
+        are kept in your browser's sessionStorage, which belongs to that tab only;
+        a new tab starts empty. So that a note can be reopened after its tab is
+        closed, a copy of each note that is not empty is also kept in your
+        browser's localStorage and listed under Recent. Up to 30 notes are kept,
+        notes longer than one million characters are not, and emptying a note
+        removes its copy. In the Recent menu you can delete one note, delete all
+        of them, or turn this off, which deletes the kept notes. Your theme,
+        language, zoom and word-wrap preferences are also kept in localStorage.
+        None of this leaves your device, and you can clear it from your browser
+        settings.
       </p>
 
       <h2>Offline use and Markdown</h2>
@@ -87,7 +92,7 @@
         <a href="mailto:contact@ofcodedev.me">contact@ofcodedev.me</a>
       </p>
 
-      <p class="date">Last updated: November 17, 2026</p>
+      <p class="date">Last updated: November 19, 2026</p>
     </section>
     <nav>
       <a href="/about.html">About</a>

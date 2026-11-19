@@ -1,6 +1,6 @@
 import { LANGS, detectLang } from './i18n.js';
 
-const VERSION = 'v3.0';
+const VERSION = 'v3.1';
 const APP = 'Quick Web Notepad';
 const DEFAULT_BASE = 'Untitled';
 const IS_MAC = /Mac|iPhone|iPad/.test(navigator.platform);
@@ -22,6 +22,8 @@ function store(kind, key, value) {
 const prefs = load('localStorage', 'qwn:prefs');
 const PAGE_LANG = root.dataset.pageLang || '';
 const saved = load('sessionStorage', 'qwn:doc');
+const newId = () => (crypto.randomUUID ? crypto.randomUUID() : `${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}`);
+let docId = saved.id || newId(); // identifies this tab's note in the Recent list
 
 const state = {
   view: 'edit',            // 'edit' | 'syntax' | 'markdown'
@@ -38,16 +40,143 @@ let T = { ...LANGS.en, ...LANGS[state.lang] };
 let fileHandle = null;
 
 function savePrefs() {
-  store('localStorage', 'qwn:prefs', { theme: prefs.theme, lang: prefs.lang, zoom: state.zoom, wrap: state.wrap });
+  store('localStorage', 'qwn:prefs', { theme: prefs.theme, lang: prefs.lang, zoom: state.zoom, wrap: state.wrap, keepNotes: prefs.keepNotes });
 }
 let saveTimer;
 function saveDocNow() {
   clearTimeout(saveTimer);
   store('sessionStorage', 'qwn:doc', {
-    text: editor.value, name: fileName.value, ext: fileExt.value, bare: bareName, view: state.view,
+    id: docId, text: editor.value, name: fileName.value, ext: fileExt.value, bare: bareName, view: state.view,
     locked: state.view === 'edit' ? state.locked : state.lockBeforeView,
   });
+  keepNote();
 }
+
+/* ── Recent notes ──
+   Each tab's text is also kept in localStorage (one key per note plus a small index), so that it can be
+   reopened after the tab is closed. New tabs still start empty. An emptied note is removed. */
+const NOTES_KEY = 'qwn:notes', NOTE_KEY = (id) => `qwn:note:${id}`;
+const MAX_NOTES = 30, MAX_NOTE_CHARS = 1e6;
+const keeping = () => prefs.keepNotes !== false;
+function noteIndex() { try { return JSON.parse(localStorage.getItem(NOTES_KEY)) || []; } catch { return []; } }
+function writeIndex(list) { try { localStorage.setItem(NOTES_KEY, JSON.stringify(list)); } catch { /* storage blocked */ } }
+function dropNote(id) {
+  try { localStorage.removeItem(NOTE_KEY(id)); } catch { /* storage blocked */ }
+  writeIndex(noteIndex().filter((n) => n.id !== id));
+}
+function keepNote() {
+  if (!keeping()) return;
+  const text = editor.value;
+  if (!text.trim() || text.length > MAX_NOTE_CHARS) { dropNote(docId); return; } // very large notes are not kept
+  const index = noteIndex(), prev = index.find((n) => n.id === docId);
+  // Unchanged (closing or hiding the tab saves too): keep its place and time in the list.
+  if (prev && prev.name === fileName.value && prev.ext === fileExt.value && prev.bare === bareName && readNote(prev) === text) return;
+  const firstLine = (text.trim().split('\n', 1)[0] || '').slice(0, 120);
+  const entry = { id: docId, name: fileName.value, ext: fileExt.value, bare: bareName, line: firstLine, updated: Date.now() };
+  const list = [entry, ...index.filter((n) => n.id !== docId)];
+  while (list.length > MAX_NOTES) dropNote(list.pop().id);
+  for (let tries = 0; tries < 5; tries++) {
+    try { localStorage.setItem(NOTE_KEY(docId), text); writeIndex(list); return; }
+    catch { if (list.length <= 1) return; const old = list.pop(); try { localStorage.removeItem(NOTE_KEY(old.id)); } catch { /* blocked */ } } // full: drop the oldest
+  }
+}
+function deleteAllNotes() {
+  for (const n of noteIndex()) { try { localStorage.removeItem(NOTE_KEY(n.id)); } catch { /* blocked */ } }
+  try { localStorage.removeItem(NOTES_KEY); } catch { /* blocked */ }
+}
+
+/* Notes open in other tabs are left out of the list; tabs answer a short "who is open" question. */
+const channel = window.BroadcastChannel ? new BroadcastChannel('qwn') : null;
+if (channel) channel.onmessage = (e) => { if (e.data === 'who') channel.postMessage({ open: docId }); };
+function openElsewhere() {
+  if (!channel) return Promise.resolve(new Set());
+  const ids = new Set(), listen = (e) => { if (e.data && e.data.open) ids.add(e.data.open); };
+  channel.addEventListener('message', listen);
+  channel.postMessage('who');
+  return new Promise((done) => setTimeout(() => { channel.removeEventListener('message', listen); done(ids); }, 120));
+}
+/* A tab made with the browser's "Duplicate" command copies sessionStorage, id included. The copy
+   becomes a note of its own, so the two tabs do not overwrite each other. */
+if (saved.id) openElsewhere().then((ids) => { if (ids.has(docId)) { docId = newId(); if (editor.value.trim()) saveDocNow(); } });
+
+const recentMenu = $('recentMenu');
+const canPopover = 'popover' in HTMLElement.prototype; // Chrome 114, Firefox 125, Safari 17 and later
+const recentOpen = () => canPopover && recentMenu.matches(':popover-open');
+if (!canPopover) { $('bRecent').hidden = true; recentMenu.hidden = true; }
+const relTime = (t) => {
+  const s = (t - Date.now()) / 1000, rtf = new Intl.RelativeTimeFormat(state.lang, { numeric: 'auto' });
+  for (const [unit, size] of [['day', 86400], ['hour', 3600], ['minute', 60]]) if (Math.abs(s) >= size) return rtf.format(Math.round(s / size), unit);
+  return rtf.format(0, 'minute');
+};
+async function renderRecent() {
+  const open = await openElsewhere();
+  const list = noteIndex().filter((n) => n.id !== docId && !open.has(n.id));
+  const ul = $('recentList');
+  ul.textContent = '';
+  for (const n of list) {
+    const li = document.createElement('li'), btn = document.createElement('button'), del = document.createElement('button');
+    const name = n.bare && !n.ext ? n.name : `${n.name || DEFAULT_BASE}.${n.ext || 'txt'}`;
+    btn.className = 'rm-open';
+    btn.innerHTML = '<span class="rm-name"></span><span class="rm-line"></span>';
+    btn.firstChild.textContent = name;
+    btn.lastChild.textContent = `${relTime(n.updated)} · ${n.line}`;
+    btn.onclick = () => openNote(n);
+    del.className = 'icon-only';
+    del.innerHTML = '<svg class="ic"><use href="#i-close"/></svg>';
+    del.title = `${T.deleteNote}: ${name}`;
+    del.setAttribute('aria-label', del.title);
+    del.onclick = () => { dropNote(n.id); li.remove(); showRecentState(); ul.querySelector('button')?.focus(); };
+    li.append(btn, del);
+    ul.append(li);
+  }
+  showRecentState();
+}
+function showRecentState() {
+  const any = !!$('recentList').children.length;
+  $('chkKeep').checked = keeping();
+  $('recentEmpty').textContent = keeping() ? T.recentEmpty : T.recentOff;
+  $('recentEmpty').hidden = any;
+  $('bDeleteAll').hidden = !any;
+}
+function readNote(n) {
+  let text = null;
+  try { text = localStorage.getItem(NOTE_KEY(n.id)); } catch { /* blocked */ }
+  return text;
+}
+function openNote(n) {
+  recentMenu.hidePopover();
+  if (editor.value.trim()) { // keep the current note: the other one opens in a new tab
+    saveDocNow();
+    window.open(`${location.pathname}#open=${encodeURIComponent(n.id)}`, '_blank', 'noopener');
+    return;
+  }
+  adoptNote(n);
+}
+function adoptNote(n) {
+  const text = readNote(n);
+  if (text === null) { dropNote(n.id); return; }
+  docId = n.id;
+  fileHandle = null;
+  fileName.value = n.name || DEFAULT_BASE; fileExt.value = n.ext || ''; bareName = !!n.bare;
+  refreshName();
+  setText(text);
+  if (state.view === 'edit') editor.focus();
+  toast(`${fullName()} ${T.opened}`);
+}
+recentMenu.addEventListener('beforetoggle', (e) => {
+  if (e.newState !== 'open') return;
+  const r = $('bRecent').getBoundingClientRect(), w = Math.min(380, innerWidth - 16);
+  recentMenu.style.top = `${r.bottom + 4}px`;
+  recentMenu.style.left = `${Math.max(8, Math.min(T.rtl ? r.right - w : r.left, innerWidth - w - 8))}px`;
+  renderRecent().then(() => (recentMenu.querySelector('#recentList button') || $('chkKeep')).focus());
+});
+recentMenu.addEventListener('keydown', (e) => { // up and down move between the notes
+  if (e.key !== 'ArrowDown' && e.key !== 'ArrowUp') return;
+  const items = [...recentMenu.querySelectorAll('.rm-open')], i = items.indexOf(document.activeElement);
+  if (i < 0 || !items.length) return;
+  e.preventDefault();
+  items[(i + (e.key === 'ArrowDown' ? 1 : -1) + items.length) % items.length].focus();
+});
 function saveDoc() { clearTimeout(saveTimer); saveTimer = setTimeout(saveDocNow, 300); }
 
 /* ── Small helpers ── */
@@ -397,6 +526,7 @@ function setName(name) {
 function dropHandleIfRenamed() { if (fileHandle && fileHandle.name !== fullName()) fileHandle = null; } // the next save asks where to write
 async function loadFile(file, handle = null) {
   const text = await file.text();
+  if (editor.value.trim()) { saveDocNow(); docId = newId(); } // the replaced note stays under Recent
   fileHandle = handle;
   setName(file.name);
   setText(text);
@@ -614,7 +744,7 @@ const SHORTCUTS = {
 const LABELS = {
   bOpen: 'file', bNewTab: 'newTab', bSave: 'save', bPaste: 'paste', bCopy: 'copy', bClear: 'clear', bWrap: 'wrap',
   bFind: 'find', bSyntax: 'syntax', bMarkdown: 'markdown', bLock: 'lock', bZoomOut: 'zoomOut', bZoomReset: 'zoomReset',
-  bZoomIn: 'zoomIn', bFindPrev: 'prev', bFindNext: 'next', bFindClose: 'close',
+  bZoomIn: 'zoomIn', bFindPrev: 'prev', bFindNext: 'next', bFindClose: 'close', bRecent: 'recent',
 };
 function label(id, key) {
   const b = $(id), text = T[key], lbl = b.querySelector('.lbl');
@@ -631,6 +761,10 @@ function applyLang(code) {
   $('langSelect').value = state.lang;
   for (const [id, key] of Object.entries(LABELS)) label(id, key);
   setTheme(state.theme);
+  $('recentTitle').textContent = T.recent;
+  $('bDeleteAll').textContent = T.deleteAll;
+  document.querySelector('[data-k="keepNotes"]').textContent = T.keepNotes;
+  if (recentOpen()) renderRecent();
   $('bReplace').textContent = T.replace;
   $('bReplaceAll').textContent = T.all;
   $('lblCase').textContent = T.caseS;
@@ -651,7 +785,21 @@ function applyLang(code) {
   updateDirection();
   updateStatus();
   showCount();
+  fitToolbar();
 }
+
+/* Labels take more room in some languages. When the toolbar does not fit, the buttons first move
+   closer together, then drop the labels of the clearest icons, and then show icons only (their names stay in the tooltip and for screen readers). */
+function fitToolbar() {
+  const bar = $('toolbar');
+  bar.classList.remove('tight', 'lean', 'compact');
+  for (const step of ['tight', 'lean', 'compact']) {
+    if (bar.scrollWidth <= bar.clientWidth) return;
+    bar.classList.add(step);
+  }
+}
+addEventListener('resize', fitToolbar);
+document.fonts?.ready.then(fitToolbar);
 
 /* ── Wiring ── */
 $('bOpen').onclick = openFile;
@@ -745,6 +893,7 @@ editor.addEventListener('keydown', (e) => {
 });
 
 document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && recentOpen()) return; // Esc closes the menu, it does not clear
   if (e.key === 'Escape') { e.preventDefault(); onEscape(); return; }
   if (e.altKey && !e.ctrlKey && !e.metaKey) {
     if (e.code === 'KeyZ') { e.preventDefault(); setWrap(!state.wrap); }
@@ -769,6 +918,24 @@ document.addEventListener('keydown', (e) => {
 addEventListener('pagehide', saveDocNow);
 document.addEventListener('visibilitychange', () => { if (document.hidden) saveDocNow(); });
 
+$('chkKeep').onchange = () => {
+  if (!$('chkKeep').checked) {
+    if ((noteIndex().length || editor.value.trim()) && !confirm(T.confirmDeleteAll)) { $('chkKeep').checked = true; return; }
+    deleteAllNotes();
+  }
+  prefs.keepNotes = $('chkKeep').checked;
+  savePrefs();
+  if (keeping()) keepNote();
+  renderRecent();
+};
+$('bDeleteAll').onclick = () => {
+  if (!confirm(T.confirmDeleteAll)) return;
+  const mine = docId;
+  for (const n of noteIndex()) if (n.id !== mine) dropNote(n.id); // the open note stays until it is closed or emptied
+  renderRecent();
+  $('chkKeep').focus();
+};
+
 /* ── Start ── */
 $('stVersion').textContent = VERSION;
 if (typeof saved.text === 'string') editor.value = saved.text;
@@ -779,11 +946,18 @@ setZoom(state.zoom);
 setWrap(state.wrap);
 setLock(!!saved.locked);
 if (saved.view === 'syntax' || saved.view === 'markdown') await setView(saved.view);
+{ // a note reopened from the Recent list of another tab (…#open=<id>)
+  const id = decodeURIComponent((/^#open=(.+)$/.exec(location.hash) || [])[1] || '');
+  if (id) {
+    history.replaceState(null, '', location.pathname + location.search);
+    const n = noteIndex().find((x) => x.id === id);
+    if (n && !editor.value.trim()) adoptNote(n);
+  }
+}
 updateStatus();
 updateInvite();
 if (state.view === 'edit') editor.focus();
 
-/* Ask for one ad for the strip under the status bar; offline or blocked, the strip simply stays collapsed. */
 /* The ad code is about eight times the size of the app, so it is fetched only after the page has
    loaded and the browser is idle. Offline or blocked, the strip simply stays collapsed. */
 function loadAd() {

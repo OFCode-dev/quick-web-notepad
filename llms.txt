@@ -6,7 +6,7 @@
 - Find and replace with match case and regular expressions
 - Read-only Syntax view (JavaScript, Python, HTML, CSS, JSON, SQL, shell, C, Markdown) and read-only Markdown preview (GitHub Flavored Markdown tables, task lists, code blocks)
 - Lock mode, light and dark themes, zoom, word wrap, keyboard shortcuts
-- Each tab's text is kept in that tab's sessionStorage and survives a reload; a new tab starts empty; the text is discarded when the tab closes; nothing syncs between devices
+- Each tab's text survives a reload; a new tab starts empty; notes from closed tabs stay in the browser (localStorage, up to 30) and can be reopened or deleted from the Recent menu; nothing syncs between devices
 - Interface in 15 languages: English, Spanish, Chinese, Hindi, Arabic, French, Portuguese, Indonesian, Vietnamese, Turkish, Thai, German, Japanese, Korean, Russian
 - Plain HTML, CSS and JavaScript; no build step
 - The site shows Google AdSense ads, including one thin strip under the editor; it runs no separate analytics tool
