@@ -151,7 +151,8 @@ function detectSyntax(name, text) {
 const FENCE_ALIAS = { javascript: 'js', typescript: 'js', ts: 'js', jsx: 'js', tsx: 'js', python: 'py', shell: 'sh', bash: 'sh', zsh: 'sh', 'c++': 'c', cpp: 'c', htm: 'html', xml: 'html', markdown: 'md' };
 
 const RULES = {
-  js: [['cm', /\/\/[^\n]*|\/\*[\s\S]*?\*\//], ['st', /`[\s\S]*?`|"(?:[^"\\\n]|\\.)*"|'(?:[^'\\\n]|\\.)*'/],
+  js: [['st', /(?<=(?:^|[=(,:;!&|?{}[+\-*%~^]|\breturn|\btypeof|\bcase)[ \t]*)\/(?![*/])(?:[^/\\\n[]|\\.|\[(?:[^\]\\\n]|\\.)*\])+\/[dgimsuvy]*/],
+    ['cm', /\/\/[^\n]*|\/\*[\s\S]*?\*\//], ['st', /`[\s\S]*?`|"(?:[^"\\\n]|\\.)*"|'(?:[^'\\\n]|\\.)*'/],
     ['kw', /\b(const|let|var|function|return|if|else|for|while|do|switch|case|break|continue|new|this|typeof|class|extends|import|export|default|async|await|try|catch|finally|throw|null|undefined|true|false)\b/],
     ['tp', /\b(Promise|Array|Object|Map|Set|Error|Date|Math|JSON|console|window|document|Number|String|Boolean)\b/],
     ['nm', /\b\d+\.?\d*\b/], ['fn', /\b[A-Za-z_$][\w$]*(?=\s*\()/]],
@@ -159,9 +160,10 @@ const RULES = {
     ['kw', /\b(def|class|return|if|elif|else|for|while|try|except|finally|with|as|import|from|pass|break|continue|lambda|yield|raise|True|False|None|async|await)\b/],
     ['nm', /\b\d+\.?\d*\b/], ['fn', /\b[A-Za-z_]\w*(?=\s*\()/]],
   html: [['cm', /<!--[\s\S]*?-->/], ['st', /"[^"<>]*"(?=[^<>]*>)|'[^'<>]*'(?=[^<>]*>)/], ['tp', /<\/?\w[\w-]*|<!DOCTYPE/], ['at', /\b[\w:-]+(?=\s*=[^<>]*>)/]],
-  css: [['cm', /\/\*[\s\S]*?\*\//], ['st', /"[^"]*"|'[^']*'/],
-    ['nm', /#[0-9a-fA-F]{3,8}|\b\d+\.?\d*(?:px|em|rem|%|vh|vw|s|ms)?\b/],
-    ['tp', /[\w-]+(?=\s*\{)/], ['kw', /\b(color|background|border|margin|padding|font|display|position|width|height|flex|grid|overflow|opacity|transition|transform|content|cursor)\b/]],
+  css: [['cm', /\/\*[\s\S]*?\*\//], ['st', /"[^"\n]*"|'[^'\n]*'/], ['kw', /@[\w-]+/],
+    // a #hex that is followed by "{" is an id selector, not a color
+    ['nm', /#[0-9a-fA-F]{3,8}\b(?![^{};]*\{)|-?\b\d+\.?\d*(?:px|em|rem|%|vh|vw|s|ms|deg|fr)?/],
+    ['tp', /[.#]?[\w-]+(?=[^{};]*\{)/], ['at', /(?<=[{;]\s*)[\w-]+(?=\s*:)/]],
   json: [['at', /"(?:[^"\\]|\\.)*"(?=\s*:)/], ['st', /"(?:[^"\\]|\\.)*"/], ['nm', /-?\d+\.?\d*\b/], ['kw', /\b(true|false|null)\b/]],
   sql: [['cm', /--[^\n]*/], ['st', /'(?:[^'\\]|\\.)*'/], ['nm', /\b\d+\.?\d*\b/],
     ['kw', /\b(SELECT|FROM|WHERE|JOIN|LEFT|RIGHT|INNER|ON|GROUP|BY|ORDER|HAVING|INSERT|INTO|VALUES|UPDATE|SET|DELETE|CREATE|TABLE|DROP|AS|AND|OR|NOT|IN|NULL|IS|LIMIT|CASE|WHEN|THEN|ELSE|END)\b/, 'i']],
@@ -174,27 +176,78 @@ const RULES = {
     ['nm', /\b\d+\.?\d*\b/], ['fn', /\b[A-Za-z_]\w*(?=\s*\()/]],
 };
 const COMPILED = {};
-function tokenize(text, lang) {
+/* Yield [class, text] pieces for one language's rules (class is null for plain text).
+   Lazy, so a large file can be highlighted a block at a time. */
+function* ruleSegments(text, lang) {
   const rules = RULES[lang];
-  if (!text || !rules) return escapeHtml(text);
+  if (!text) return;
+  if (!rules) { yield [null, text]; return; }
   // One alternation of named groups; a rule's own groups must be non-capturing.
-  const rx = COMPILED[lang] ||= new RegExp(rules.map((r, i) => `(?<g${i}>${r[1].source})`).join('|'),
+  COMPILED[lang] ||= new RegExp(rules.map((r, i) => `(?<g${i}>${r[1].source})`).join('|'),
     'gm' + (rules.some((r) => r[2] === 'i') ? 'i' : ''));
-  rx.lastIndex = 0;
-  let out = '', pos = 0, m;
+  const rx = new RegExp(COMPILED[lang]); // own position: several of these can be in progress
+  let pos = 0, m;
   while ((m = rx.exec(text)) !== null) {
     if (!m[0]) { rx.lastIndex++; continue; }
-    out += escapeHtml(text.slice(pos, m.index));
-    const i = rules.findIndex((_, n) => m.groups['g' + n] !== undefined);
-    out += `<span class="${rules[i][0]}">${escapeHtml(m[0])}</span>`;
+    if (m.index > pos) yield [null, text.slice(pos, m.index)];
+    yield [rules[rules.findIndex((_, n) => m.groups['g' + n] !== undefined)][0], m[0]];
     pos = rx.lastIndex;
   }
-  return out + escapeHtml(text.slice(pos));
+  if (pos < text.length) yield [null, text.slice(pos)];
+}
+/* HTML also highlights the contents of <script> and <style> in their own language. */
+function* segments(text, lang) {
+  if (lang !== 'html') { yield* ruleSegments(text, lang); return; }
+  let pos = 0;
+  for (const m of text.matchAll(/(<(script|style)\b[^>]*>)([\s\S]*?)(<\/\2\s*>)/gi)) {
+    yield* ruleSegments(text.slice(pos, m.index) + m[1], 'html');
+    yield* ruleSegments(m[3], m[2].toLowerCase() === 'style' ? 'css' : /type\s*=\s*["']?[^"'>]*json/i.test(m[1]) ? 'json' : 'js');
+    yield* ruleSegments(m[4], 'html');
+    pos = m.index + m[0].length;
+  }
+  yield* ruleSegments(text.slice(pos), 'html');
+}
+const segHtml = (cls, text) => (cls ? `<span class="${cls}">${escapeHtml(text)}</span>` : escapeHtml(text));
+function tokenize(text, lang) {
+  let html = '';
+  for (const [cls, part] of segments(text, lang)) html += segHtml(cls, part);
+  return html;
 }
 
+/* The same, as blocks of whole lines, produced one at a time. A block ends only at a line break
+   in plain text, never inside a token; that line break is represented by the block boundary. */
+const CHUNK = 40000;
+function* highlightChunks(text, lang) {
+  let html = '', size = 0;
+  for (let [cls, part] of segments(text, lang)) {
+    while (!cls && size + part.length > CHUNK) {
+      const nl = part.indexOf('\n', Math.max(0, CHUNK - size));
+      if (nl < 0) break;
+      yield html + escapeHtml(part.slice(0, nl));
+      html = ''; size = 0; part = part.slice(nl + 1);
+    }
+    html += segHtml(cls, part); size += part.length;
+  }
+  yield html;
+}
+
+let renderJob = 0;
 function renderSyntax() {
   state.syntaxLang = detectSyntax(fileExt.value ? `x.${fileExt.value}` : '', editor.value); // a typed extension wins over guessing
-  highlight.innerHTML = tokenize(editor.value, state.syntaxLang);
+  const chunks = highlightChunks(editor.value, state.syntaxLang), job = ++renderJob;
+  const block = (html) => `<div>${html || '\n'}</div>`; // an empty block still needs its line
+  let next = chunks.next();
+  highlight.innerHTML = block(next.value);
+  const more = () => { // the rest is highlighted and added in short slices so the page stays responsive
+    if (job !== renderJob || state.view !== 'syntax') return;
+    const until = performance.now() + 12;
+    while (!(next = chunks.next()).done) {
+      highlight.insertAdjacentHTML('beforeend', block(next.value));
+      if (performance.now() > until) { setTimeout(more); return; }
+    }
+    if (!findBar.hidden) runFind();
+  };
+  setTimeout(more);
   refreshName();
 }
 

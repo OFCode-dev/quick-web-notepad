@@ -128,6 +128,7 @@ button.icon-only { padding: 4px 7px; }
 }
 #editor { caret-color: var(--accent); }
 #highlight { cursor: text; }
+#highlight > div { content-visibility: auto; contain-intrinsic-size: auto 800px; } /* off-screen blocks of a large file are not laid out */
 .wrap #editor, .wrap #highlight { white-space: pre-wrap; overflow-wrap: anywhere; overflow-x: hidden; }
 #editor:focus-visible, #highlight:focus-visible, #preview:focus-visible { outline: none; }
 ::selection { background: var(--mark); }
