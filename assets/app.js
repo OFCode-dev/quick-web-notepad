@@ -124,15 +124,28 @@ function updateStatus() {
 }
 
 /* ── Syntax highlighting ── */
+/* Language of the text: a known extension decides, otherwise the content is examined.
+   The checks are deliberately strict: ordinary prose ("let me know", "select one from the list")
+   must stay undetected, because the result also picks the automatic file extension. */
 function detectSyntax(name, text) {
-  const ext = (name.split('.').pop() || '').toLowerCase(), head = text.slice(0, 400);
+  const ext = (name.split('.').pop() || '').toLowerCase(), head = text.slice(0, 3000);
   const byExt = { js: 'js', jsx: 'js', ts: 'js', tsx: 'js', mjs: 'js', html: 'html', htm: 'html', css: 'css', json: 'json', py: 'py', sh: 'sh', bash: 'sh', sql: 'sql', c: 'c', cpp: 'c', h: 'c', md: 'md' };
   if (byExt[ext]) return byExt[ext];
-  if (/^\s*<(!DOCTYPE|html)/i.test(head)) return 'html';
-  if (/^\s*\{[\s\S]{0,40}"\w+":/m.test(head)) return 'json';
-  if (/\bdef\s+\w+\s*\(/.test(head)) return 'py';
-  if (/\b(const|let|var)\s+\w+/.test(head)) return 'js';
-  if (/\bSELECT\b.{1,40}\bFROM\b/i.test(head)) return 'sql';
+  const shebang = /^#!.*?\b(bash|zsh|sh|python\d*|node)\b/.exec(head);
+  if (shebang) return shebang[1].startsWith('python') ? 'py' : shebang[1] === 'node' ? 'js' : 'sh';
+  if (/^\s*<(!DOCTYPE|html|\?xml)/i.test(head) || /<\/(html|head|body|div|p|span|a|ul|ol|li|h[1-6]|table|section|script|style)>/i.test(head)) return 'html';
+  if (/^\s*[{[]/.test(head)) {
+    if (text.length < 2e6) try { JSON.parse(text); return 'json'; } catch { /* not complete JSON */ }
+    if (/^\s*\{\s*"[^"\n]+"\s*:/.test(head)) return 'json';
+  }
+  if (/^[ \t]*#[ \t]*include[ \t]*[<"]/m.test(head)) return 'c';
+  if (/^[ \t]*(def|class)\s+\w+[^\n]*:[ \t]*$/m.test(head) || /^from\s+[\w.]+\s+import\s/m.test(head) || /^import\s+[\w.]+(\s+as\s+\w+)?[ \t]*$/m.test(head)) return 'py';
+  if (/\b(const|let|var)\s+[\w$]+\s*=/.test(head) || /\bfunction\s*[\w$]*\s*\(/.test(head) || /=>\s*[{(]/.test(head) || /^import\s[^\n]*\sfrom\s+['"]/m.test(head)) return 'js';
+  if (/^\s*(SELECT\s[\s\S]{1,200}?\sFROM\s|INSERT\s+INTO\s|UPDATE\s+\w+\s+SET\s|DELETE\s+FROM\s|CREATE\s+TABLE\s|ALTER\s+TABLE\s)/m.test(head)
+    || /^\s*(select\s[\s\S]{1,200}?\sfrom\s|insert\s+into\s|create\s+table\s)[\s\S]{0,400}?;[ \t]*$/im.test(head)) return 'sql';
+  if (/(^|\})\s*[.#@:*]?[\w-][^{}\n;]*\{\s*[a-z-]+\s*:[^;{}\n]+;/m.test(head)) return 'css';
+  const md = [/^\s*#{1,6} \S/, /^```/m, /\[[^\]\n]+\]\([^)\n]+\)/, /^\s*[-*] \[[ xX]\] /m, /\*\*[^*\n]+\*\*/, /^#{2,6} \S/m, /^\s*[-*+] \S[^\n]*\n\s*[-*+] \S/m];
+  if (md.filter((re) => re.test(head)).length >= 2) return 'md'; // one sign alone (a "# comment" line) is not enough
   return '';
 }
 const FENCE_ALIAS = { javascript: 'js', typescript: 'js', ts: 'js', jsx: 'js', tsx: 'js', python: 'py', shell: 'sh', bash: 'sh', zsh: 'sh', 'c++': 'c', cpp: 'c', htm: 'html', xml: 'html', markdown: 'md' };
@@ -142,20 +155,21 @@ const RULES = {
     ['kw', /\b(const|let|var|function|return|if|else|for|while|do|switch|case|break|continue|new|this|typeof|class|extends|import|export|default|async|await|try|catch|finally|throw|null|undefined|true|false)\b/],
     ['tp', /\b(Promise|Array|Object|Map|Set|Error|Date|Math|JSON|console|window|document|Number|String|Boolean)\b/],
     ['nm', /\b\d+\.?\d*\b/], ['fn', /\b[A-Za-z_$][\w$]*(?=\s*\()/]],
-  py: [['cm', /#[^\n]*/], ['st', /"""[\s\S]*?"""|"(?:[^"\\\n]|\\.)*"|'(?:[^'\\\n]|\\.)*'/],
+  py: [['cm', /#[^\n]*/], ['st', /"""[\s\S]*?"""|\'\'\'[\s\S]*?\'\'\'|"(?:[^"\\\n]|\\.)*"|'(?:[^'\\\n]|\\.)*'/], ['at', /^[ \t]*@[\w.]+/],
     ['kw', /\b(def|class|return|if|elif|else|for|while|try|except|finally|with|as|import|from|pass|break|continue|lambda|yield|raise|True|False|None|async|await)\b/],
     ['nm', /\b\d+\.?\d*\b/], ['fn', /\b[A-Za-z_]\w*(?=\s*\()/]],
-  html: [['cm', /<!--[\s\S]*?-->/], ['st', /"[^"]*"|'[^']*'/], ['tp', /<\/?\w[\w-]*/], ['at', /\b[\w-]+(?=\s*=)/]],
+  html: [['cm', /<!--[\s\S]*?-->/], ['st', /"[^"<>]*"(?=[^<>]*>)|'[^'<>]*'(?=[^<>]*>)/], ['tp', /<\/?\w[\w-]*|<!DOCTYPE/], ['at', /\b[\w:-]+(?=\s*=[^<>]*>)/]],
   css: [['cm', /\/\*[\s\S]*?\*\//], ['st', /"[^"]*"|'[^']*'/],
     ['nm', /#[0-9a-fA-F]{3,8}|\b\d+\.?\d*(?:px|em|rem|%|vh|vw|s|ms)?\b/],
     ['tp', /[\w-]+(?=\s*\{)/], ['kw', /\b(color|background|border|margin|padding|font|display|position|width|height|flex|grid|overflow|opacity|transition|transform|content|cursor)\b/]],
   json: [['at', /"(?:[^"\\]|\\.)*"(?=\s*:)/], ['st', /"(?:[^"\\]|\\.)*"/], ['nm', /-?\d+\.?\d*\b/], ['kw', /\b(true|false|null)\b/]],
   sql: [['cm', /--[^\n]*/], ['st', /'(?:[^'\\]|\\.)*'/], ['nm', /\b\d+\.?\d*\b/],
     ['kw', /\b(SELECT|FROM|WHERE|JOIN|LEFT|RIGHT|INNER|ON|GROUP|BY|ORDER|HAVING|INSERT|INTO|VALUES|UPDATE|SET|DELETE|CREATE|TABLE|DROP|AS|AND|OR|NOT|IN|NULL|IS|LIMIT|CASE|WHEN|THEN|ELSE|END)\b/, 'i']],
-  sh: [['cm', /#[^\n]*/], ['st', /"(?:[^"\\\n]|\\.)*"|'[^'\n]*'/],
-    ['kw', /\b(if|then|else|elif|fi|for|do|done|while|function|return|exit|export|local|source|case|esac)\b/], ['at', /\$[\w{][^}]*}?|\$\d+/]],
-  md: [['kw', /^#{1,6} .+$/], ['st', /`{1,3}[\s\S]*?`{1,3}/], ['cm', /\*\*[\s\S]*?\*\*|__[\s\S]*?__/], ['fn', /\[[^\]\n]*\]\([^)\n]*\)/]],
-  c: [['cm', /\/\/[^\n]*|\/\*[\s\S]*?\*\//], ['st', /"(?:[^"\\\n]|\\.)*"|'(?:[^'\\\n]|\\.)*'/],
+  sh: [['cm', /(?<=^|\s)#[^\n]*/], ['st', /"(?:[^"\\\n]|\\.)*"|'[^'\n]*'/],
+    ['kw', /\b(if|then|else|elif|fi|for|do|done|while|function|return|exit|export|local|source|case|esac)\b/], ['at', /\$\{[^}\n]*\}|\$[A-Za-z_]\w*|\$[\d@#?*$!-]/]],
+  md: [['kw', /^#{1,6} .+$/], ['st', /```[\s\S]*?```|`[^`\n]+`/], ['at', /\*\*[^*\n]+\*\*|__[^_\n]+__/], ['fn', /\[[^\]\n]*\]\([^)\n]*\)/],
+    ['cm', /^[ \t]*>[^\n]*/], ['tp', /^[ \t]*(?:[-*+]|\d+\.)(?= )/]],
+  c: [['cm', /\/\/[^\n]*|\/\*[\s\S]*?\*\//], ['st', /"(?:[^"\\\n]|\\.)*"|'(?:[^'\\\n]|\\.)*'/], ['at', /^[ \t]*#[ \t]*\w+/],
     ['kw', /\b(auto|bool|break|case|char|const|continue|default|do|double|else|enum|extern|float|for|goto|if|int|long|return|short|sizeof|static|struct|switch|typedef|void|volatile|while)\b/],
     ['nm', /\b\d+\.?\d*\b/], ['fn', /\b[A-Za-z_]\w*(?=\s*\()/]],
 };
