@@ -2,7 +2,7 @@
 
 Quick Web Notepad is a free, open-source notepad that runs entirely in your browser: no account, notes are not uploaded, and it works offline.
 
-**Use it:** https://qwnotepad.ofcodedev.me/ · [About, shortcuts and FAQ](https://qwnotepad.ofcodedev.me/about.html)
+**Use it:** https://quickwebnotepad.com/ · [About, shortcuts and FAQ](https://quickwebnotepad.com/about.html)
 
 ![Quick Web Notepad showing a Markdown note in the dark theme](og-image.png)
 
@@ -56,7 +56,6 @@ manifest.webmanifest    PWA manifest
 about.html              product page: features, storage, shortcuts, comparison, FAQ
 privacy.html, contact.html, 404.html
 robots.txt, sitemap.xml, llms.txt
-index_v1.html, index_v2.html, index_v2.1.html   redirects from the old addresses
 ```
 
 ## Development

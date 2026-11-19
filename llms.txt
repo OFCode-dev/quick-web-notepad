@@ -1,6 +1,6 @@
 # Quick Web Notepad
 
-> Quick Web Notepad is a free, open-source (MIT) notepad that runs entirely in your browser at https://qwnotepad.ofcodedev.me/ : no account, notes are not uploaded to a server, and it works offline as an installable web app.
+> Quick Web Notepad is a free, open-source (MIT) notepad that runs entirely in your browser at https://quickwebnotepad.com/ : no account, notes are not uploaded to a server, and it works offline as an installable web app.
 
 - Plain-text editor; opens and saves local files (saves in place in Chromium desktop browsers, otherwise downloads a copy)
 - Find and replace with match case and regular expressions
@@ -12,9 +12,9 @@
 - The site shows Google AdSense ads, including one thin strip under the editor; it runs no separate analytics tool
 
 ## Pages
-- [Notepad app](https://qwnotepad.ofcodedev.me/)
-- [About: features, storage, offline use, shortcuts, comparison, FAQ](https://qwnotepad.ofcodedev.me/about.html)
-- [Privacy policy](https://qwnotepad.ofcodedev.me/privacy.html)
+- [Notepad app](https://quickwebnotepad.com/)
+- [About: features, storage, offline use, shortcuts, comparison, FAQ](https://quickwebnotepad.com/about.html)
+- [Privacy policy](https://quickwebnotepad.com/privacy.html)
 
 ## Source
 - [GitHub repository (MIT)](https://github.com/OFCode-dev/quick-web-notepad)

@@ -13,9 +13,9 @@ import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'node:fs';
 import { createSign } from 'node:crypto';
 import { homedir } from 'node:os';
 
-const SITE = 'https://qwnotepad.ofcodedev.me/';
-const GSC_PROPERTY = 'sc-domain:ofcodedev.me';
-const HOST_FILTER = 'qwnotepad.ofcodedev.me';
+const SITE = 'https://quickwebnotepad.com/';
+const GSC_PROPERTY = 'sc-domain:quickwebnotepad.com';
+const HOST_FILTER = 'quickwebnotepad.com';
 const CONF = `${homedir()}/.config/qwnotepad-monitor/`;
 const OUT = `${homedir()}/.local/share/qwnotepad-monitor/`;
 const today = new Date().toISOString().slice(0, 10);
@@ -52,7 +52,7 @@ async function availability() {
     const sm = await (await get(SITE + 'sitemap.xml')).text();
     const checks = [
       ['title', /<title>Free Online Notepad/.test(html)], ['meta description', /<meta name="description"/.test(html)],
-      ['canonical', /<link rel="canonical" href="https:\/\/qwnotepad\.ofcodedev\.me\/">/.test(html)],
+      ['canonical', /<link rel="canonical" href="https:\/\/quickwebnotepad\.com\/">/.test(html)],
       ['hreflang ×16', (html.match(/hreflang=/g) || []).length === 16], ['JSON-LD', /application\/ld\+json/.test(html)],
       ['og:image', /og:image/.test(html)], ['h1', /<h1/.test(html)], [`sitemap URLs: ${(sm.match(/<loc>/g) || []).length}`, /<loc>/.test(sm)],
     ];

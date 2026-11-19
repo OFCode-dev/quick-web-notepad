@@ -9,7 +9,7 @@ import { LANGS } from '../assets/i18n.js';
 import { LOCALES } from './locales.mjs';
 
 const ROOT = fileURLToPath(new URL('..', import.meta.url));
-const SITE = 'https://qwnotepad.ofcodedev.me/';
+const SITE = 'https://quickwebnotepad.com/';
 const check = process.argv.includes('--check');
 const esc = (s) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 const source = readFileSync(ROOT + 'index.html', 'utf8');

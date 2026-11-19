@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://qwnotepad.ofcodedev.me/sitemap.xml
+Sitemap: https://quickwebnotepad.com/sitemap.xml
