@@ -211,9 +211,10 @@ button.icon-only { padding: 4px 7px; }
   display: flex; align-items: center; justify-content: space-between; gap: 12px;
   padding: 4px 12px; background: var(--surface); border-top: 1px solid var(--border);
   color: var(--muted); font-size: 12px; white-space: nowrap; overflow: hidden; flex-shrink: 0;
-  font-variant-numeric: tabular-nums;
+  font-variant-numeric: tabular-nums; flex-wrap: wrap; row-gap: 2px; /* on a narrow screen the right group moves to a second line instead of overlapping */
 }
 .group { display: flex; align-items: center; gap: 14px; min-width: 0; }
+#statusbar .group:last-child { margin-inline-start: auto; }
 #stLock { color: var(--danger); font-weight: 700; text-transform: uppercase; letter-spacing: .4px; }
 #stMode { color: var(--text); }
 #statusbar a { color: inherit; text-underline-offset: 2px; }

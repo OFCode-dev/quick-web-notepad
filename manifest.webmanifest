@@ -41,6 +41,49 @@
       "type": "image/png",
       "form_factor": "wide",
       "label": "Quick Web Notepad showing a Markdown note"
+    },
+    {
+      "src": "/screenshot-narrow.png",
+      "sizes": "780x1560",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "A Markdown note on a phone"
+    }
+  ],
+  "file_handlers": [
+    {
+      "action": "/",
+      "accept": {
+        "text/plain": [
+          ".txt",
+          ".log"
+        ],
+        "text/markdown": [
+          ".md",
+          ".markdown"
+        ],
+        "text/csv": [
+          ".csv"
+        ],
+        "application/json": [
+          ".json"
+        ]
+      }
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Markdown viewer",
+      "short_name": "Markdown",
+      "description": "Open a Markdown file and read it formatted",
+      "url": "/markdown-viewer/",
+      "icons": [
+        {
+          "src": "/icon-192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
     }
   ]
 }

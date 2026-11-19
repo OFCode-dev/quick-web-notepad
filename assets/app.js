@@ -993,6 +993,14 @@ updateStatus();
 updateInvite();
 if (state.view === 'edit') editor.focus();
 
+/* A file opened with the installed app ("Open with" in the system) arrives here; saving writes back to it. */
+if ('launchQueue' in window) {
+  window.launchQueue.setConsumer(async ({ files }) => {
+    if (!files || !files.length) return;
+    try { await loadFile(await files[0].getFile(), files[0]); } catch { toast(T.openFailed); }
+  });
+}
+
 /* The ad code is about eight times the size of the app, so it is fetched only after the page has
    loaded and the browser is idle. Offline or blocked, the strip simply stays collapsed. */
 function loadAd() {
