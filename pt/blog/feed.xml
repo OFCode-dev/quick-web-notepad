@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+<channel>
+  <title>Quick Web Notepad blog</title>
+  <link>https://quickwebnotepad.com/pt/blog/</link>
+  <description>Guias sobre texto simples, Markdown e notas privadas no navegador, feitos pela equipe do Quick Web Notepad.</description>
+  <language>pt-BR</language>
+  <atom:link href="https://quickwebnotepad.com/pt/blog/feed.xml" rel="self" type="application/rss+xml"/>
+
+</channel>
+</rss>

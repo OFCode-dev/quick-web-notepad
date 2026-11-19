@@ -1,5 +1,6 @@
 #!/usr/bin/env node
-/* Builds the per-language app pages (/es/, /tr/, ...), the Markdown viewer page and sitemap.xml from index.html.
+/* Builds the per-language app pages (/es/, /tr/, ...), the Markdown viewer page and sitemap.xml from index.html,
+   and the blog through build-blog.mjs.
    Run after editing index.html, assets/i18n.js or _tools/locales.mjs:
      node _tools/build-locales.mjs          write the files
      node _tools/build-locales.mjs --check  exit 1 if a language page is out of date */
@@ -7,6 +8,7 @@ import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { LANGS } from '../assets/i18n.js';
 import { LOCALES } from './locales.mjs';
+import { buildBlog, blogSitemap } from './build-blog.mjs';
 
 const ROOT = fileURLToPath(new URL('..', import.meta.url));
 const SITE = 'https://quickwebnotepad.com/';
@@ -89,13 +91,16 @@ for (const [path, make] of pages) {
     writeFileSync(file, html);
   }
 }
-if (check) process.exit(stale ? 1 : 0);
+const blog = buildBlog({ check });
+if (check) process.exit(stale || blog.problems ? 1 : 0);
+if (blog.problems) process.exit(1);
 
 const today = new Date().toISOString().slice(0, 10);
-const paths = ['', ...codes.map((c) => `${c}/`), 'markdown-viewer/', 'about.html', 'pt/sobre.html', 'es/acerca.html', 'privacy.html', 'contact.html'];
+const paths = ['', ...codes.map((c) => `${c}/`), 'markdown-viewer/', 'about.html', 'pt/sobre.html', 'es/acerca.html', 'privacy.html', 'contact.html']
+  .map((p) => [p, today]).concat(blogSitemap());
 writeFileSync(ROOT + 'sitemap.xml', `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-${paths.map((p) => `  <url><loc>${SITE}${p}</loc><lastmod>${today}</lastmod></url>`).join('\n')}
+${paths.map(([p, mod]) => `  <url><loc>${SITE}${p}</loc><lastmod>${mod}</lastmod></url>`).join('\n')}
 </urlset>
 `);
-console.log(`built ${codes.length} language pages, the Markdown viewer and sitemap.xml`);
+console.log(`built ${codes.length} language pages, the Markdown viewer, ${blog.posts} blog posts and sitemap.xml`);

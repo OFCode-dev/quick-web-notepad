@@ -17,6 +17,7 @@
 - [About: features, storage, offline use, shortcuts, comparison, FAQ](https://quickwebnotepad.com/about.html)
 - [Sobre (Portuguese About page and FAQ)](https://quickwebnotepad.com/pt/sobre.html)
 - [Acerca de (Spanish About page and FAQ)](https://quickwebnotepad.com/es/acerca.html)
+- [Blog: guides to plain text, Markdown and private notes](https://quickwebnotepad.com/blog/)
 - [Privacy policy](https://quickwebnotepad.com/privacy.html)
 
 ## Source
