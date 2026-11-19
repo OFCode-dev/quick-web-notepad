@@ -48,13 +48,14 @@ ol { margin: 0 0 16px; padding-inline-start: 1.4em; }
 .sources { font-size: 14px; }
 .cards { display: grid; gap: 14px; padding: 0; list-style: none; }
 .cards li + li { margin-top: 0; }
-.cards a { display: grid; grid-template-columns: 190px 1fr; gap: 16px; align-items: start; padding: 12px; border: 1px solid var(--border); border-radius: 14px; color: inherit; text-decoration: none; }
+.cards a { display: grid; grid-template-columns: minmax(0, 190px) minmax(0, 1fr); gap: 16px; align-items: start; padding: 12px; border: 1px solid var(--border); border-radius: 14px; color: inherit; text-decoration: none; }
 .cards a:hover { border-color: var(--accent); }
-.cards img { width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: cover; border-radius: 8px; }
+.cards img { display: block; width: 100%; max-width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: cover; border-radius: 8px; }
+.cards .t, .cards .d { overflow-wrap: anywhere; }
 .cards .t { display: block; color: var(--text); font-weight: 600; line-height: 1.4; }
 .cards .d { display: block; margin: 4px 0; color: var(--muted); font-size: 14px; line-height: 1.5; }
 .cards time { color: var(--muted); font-size: 13px; }
 @media (max-width: 560px) {
   section, article { padding: 20px; }
-  .cards a { grid-template-columns: 1fr; }
+  .cards a { grid-template-columns: minmax(0, 1fr); }
 }
