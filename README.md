@@ -9,6 +9,7 @@ Quick Web Notepad is a free, open-source notepad that runs entirely in your brow
 ## Features
 
 - Plain text editing; open and save local files (saves in place where the browser supports the File System Access API, otherwise downloads)
+- Separate name and extension fields; an empty extension is chosen automatically (`md` in the Markdown view, the detected language in the Syntax view, otherwise `txt`)
 - Find and replace with match case and regex
 - Syntax view: read-only highlighting for JS, Python, HTML, CSS, JSON, SQL, shell, C, Markdown
 - Markdown view: read-only rendered preview (GFM tables, task lists, highlighted code blocks)

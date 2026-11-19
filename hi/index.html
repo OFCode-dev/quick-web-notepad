@@ -76,7 +76,12 @@ document.documentElement.dataset.theme=t})();
 <header id="titlebar">
   <img src="/icon.svg" width="22" height="22" alt="">
   <h1 class="brand"><b>Quick</b> Web Notepad</h1>
-  <input id="fileName" type="text" value="Untitled.txt" spellcheck="false" autocomplete="off" aria-label="फ़ाइल का नाम" data-ka="fileName">
+  <span id="fileBox">
+    <input id="fileName" type="text" value="Untitled" spellcheck="false" autocomplete="off" aria-label="फ़ाइल का नाम" data-ka="fileName">
+    <span class="dot" aria-hidden="true">.</span>
+    <input id="fileExt" type="text" placeholder="txt" list="extList" spellcheck="false" autocomplete="off" autocapitalize="off" aria-label="फ़ाइल एक्सटेंशन" data-ka="fileExt">
+    <datalist id="extList"><option value="txt"><option value="md"><option value="html"><option value="css"><option value="js"><option value="json"><option value="py"><option value="sql"><option value="sh"><option value="c"><option value="csv"><option value="log"><option value="xml"><option value="yaml"></datalist>
+  </span>
   <select id="langSelect" aria-label="भाषा" data-ka="language">
     <option value="en" lang="en">English</option>
     <option value="es" lang="es">Español</option>

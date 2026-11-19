@@ -2,7 +2,7 @@ import { LANGS, detectLang } from './i18n.js';
 
 const VERSION = 'v3.0';
 const APP = 'Quick Web Notepad';
-const DEFAULT_NAME = 'Untitled.txt';
+const DEFAULT_BASE = 'Untitled';
 const IS_MAC = /Mac|iPhone|iPad/.test(navigator.platform);
 const MOD = IS_MAC ? '⌘' : 'Ctrl';
 const ALT = IS_MAC ? '⌥' : 'Alt';
@@ -10,7 +10,7 @@ const ALT = IS_MAC ? '⌥' : 'Alt';
 const $ = (id) => document.getElementById(id);
 const root = document.documentElement;
 const editor = $('editor'), highlight = $('highlight'), preview = $('preview');
-const fileName = $('fileName'), findBar = $('findBar'), findInput = $('findInput'), replaceInput = $('replaceInput');
+const fileName = $('fileName'), fileExt = $('fileExt'), findBar = $('findBar'), findInput = $('findInput'), replaceInput = $('replaceInput');
 
 /* ── Storage: the document is per tab (sessionStorage), preferences are shared (localStorage) ── */
 function load(kind, key) {
@@ -44,7 +44,7 @@ let saveTimer;
 function saveDocNow() {
   clearTimeout(saveTimer);
   store('sessionStorage', 'qwn:doc', {
-    text: editor.value, name: fileName.value, view: state.view,
+    text: editor.value, name: fileName.value, ext: fileExt.value, bare: bareName, view: state.view,
     locked: state.view === 'edit' ? state.locked : state.lockBeforeView,
   });
 }
@@ -70,8 +70,35 @@ function deny() {
 function guard() { if (state.locked) { deny(); return true; } return false; }
 function updateInvite() { $('bPaste').classList.toggle('invite', !editor.value && !state.locked); }
 
+/* ── File name: [ name ] . [ extension ] ──
+   An empty extension field means "automatic": md in the Markdown view, the detected language in the
+   Syntax view, otherwise txt. A typed extension, or the one of an opened file, is kept as it is. */
+const EXT_OF = { js: 'js', py: 'py', html: 'html', css: 'css', json: 'json', sql: 'sql', sh: 'sh', c: 'c', md: 'md' };
+let bareName = false; // an opened file without an extension keeps none
+function autoExt() {
+  return state.view === 'markdown' ? 'md' : (state.view === 'syntax' && EXT_OF[state.syntaxLang]) || 'txt';
+}
+function baseName() { return fileName.value.trim() || DEFAULT_BASE; }
+function fullName() {
+  return bareName && !fileExt.value ? baseName() : `${baseName()}.${fileExt.value || autoExt()}`;
+}
 /* An unnamed document keeps the descriptive page title (this is what search engines index). */
-function setTitle(name) { document.title = name === DEFAULT_NAME ? T.pageTitle : `${name} | ${APP}`; }
+function setTitle() {
+  const untouched = baseName() === DEFAULT_BASE && !fileExt.value && !bareName;
+  document.title = untouched ? T.pageTitle : `${fullName()} | ${APP}`;
+}
+function refreshName() {
+  fileExt.placeholder = bareName ? '' : autoExt();
+  if (!CSS.supports('field-sizing', 'content')) { // size the fields to their text where the browser cannot
+    fileName.style.width = `calc(${Math.max(3, fileName.value.length)}ch + 16px)`;
+    fileExt.style.width = `calc(${Math.max(3, (fileExt.value || fileExt.placeholder).length)}ch + 16px)`;
+  }
+  setTitle();
+}
+function splitName(name) {
+  const m = /^(.+)\.([A-Za-z0-9_+-]{1,10})$/.exec(name);
+  return m ? [m[1], m[2]] : [name, ''];
+}
 function setIcon(button, icon) { button.querySelector('use').setAttribute('href', '#i-' + icon); }
 
 /* ── Status bar ── */
@@ -152,8 +179,9 @@ function tokenize(text, lang) {
 }
 
 function renderSyntax() {
-  state.syntaxLang = detectSyntax(fileName.value, editor.value);
+  state.syntaxLang = detectSyntax(fileExt.value ? `x.${fileExt.value}` : '', editor.value); // a typed extension wins over guessing
   highlight.innerHTML = tokenize(editor.value, state.syntaxLang);
+  refreshName();
 }
 
 /* ── Markdown view (libraries load on first use) ── */
@@ -212,6 +240,7 @@ async function setView(next) {
   setLock(next === 'edit' ? state.lockBeforeView : true);
   if (next === 'edit' && !state.locked) editor.focus();
   hint = '';
+  refreshName();
   updateStatus();
   saveDoc();
   if (!findBar.hidden) runFind();
@@ -292,10 +321,13 @@ function clearAll() {
 }
 
 /* ── Files ── */
+/* Take over a real file name: its extension becomes fixed. */
 function setName(name) {
-  fileName.value = name;
-  setTitle(name);
+  [fileName.value, fileExt.value] = splitName(name);
+  bareName = !fileExt.value;
+  refreshName();
 }
+function dropHandleIfRenamed() { if (fileHandle && fileHandle.name !== fullName()) fileHandle = null; } // the next save asks where to write
 async function loadFile(file, handle = null) {
   const text = await file.text();
   fileHandle = handle;
@@ -318,7 +350,7 @@ async function openFile() {
   $('fileInput').click();
 }
 async function saveFile() {
-  const name = fileName.value || DEFAULT_NAME;
+  const name = fullName();
   try {
     if (!fileHandle && window.showSaveFilePicker) fileHandle = await window.showSaveFilePicker({ suggestedName: name });
     if (fileHandle) {
@@ -335,7 +367,8 @@ async function saveFile() {
     fileHandle = null; // picker unavailable here (e.g. permission denied): fall back to a download
   }
   const a = document.createElement('a');
-  a.href = URL.createObjectURL(new Blob([editor.value], { type: 'text/plain' }));
+  // Without an extension, text/plain would make the browser append .txt to the download.
+  a.href = URL.createObjectURL(new Blob([editor.value], { type: name.includes('.') ? 'text/plain' : 'application/octet-stream' }));
   a.download = name;
   a.click();
   setTimeout(() => URL.revokeObjectURL(a.href), 1000);
@@ -525,7 +558,7 @@ function label(id, key) {
 function applyLang(code) {
   state.lang = LANGS[code] ? code : 'en';
   T = { ...LANGS.en, ...LANGS[state.lang] };
-  setTitle(fileName.value);
+  setTitle();
   root.lang = state.lang;
   root.dir = T.rtl ? 'rtl' : 'ltr';
   $('langSelect').value = state.lang;
@@ -541,6 +574,7 @@ function applyLang(code) {
   replaceInput.setAttribute('aria-label', T.replace);
   $('langSelect').setAttribute('aria-label', T.language);
   fileName.setAttribute('aria-label', T.fileName);
+  fileExt.setAttribute('aria-label', T.fileExt);
   editor.setAttribute('aria-label', T.editor);
   $('toolbar').setAttribute('aria-label', T.toolbar);
   $('adStrip').setAttribute('aria-label', T.ad);
@@ -597,17 +631,34 @@ findBar.addEventListener('keydown', (e) => {
   }
 });
 
-fileName.onfocus = () => { const dot = fileName.value.lastIndexOf('.'); setTimeout(() => fileName.setSelectionRange(0, dot > 0 ? dot : fileName.value.length)); };
-fileName.oninput = () => { const v = fileName.value.trim(); if (v) setTitle(v.includes('.') ? v : v + '.txt'); };
-fileName.onchange = () => {
-  let v = fileName.value.trim() || 'Untitled';
-  if (!v.includes('.')) v += '.txt';
-  if (fileHandle && fileHandle.name !== v) fileHandle = null; // renamed: the next save asks where to write
-  setName(v);
+const afterRename = () => {
+  dropHandleIfRenamed();
+  refreshName();
   if (state.view === 'syntax') { renderSyntax(); updateMode(); }
   saveDoc();
 };
-fileName.onkeydown = (e) => { if (e.key === 'Enter') { e.preventDefault(); (viewEl() || editor).focus(); } };
+fileName.onfocus = () => setTimeout(() => fileName.select());
+fileName.oninput = refreshName;
+fileName.onchange = () => {
+  const [base, ext] = splitName(fileName.value.trim()); // "notes.md" typed or pasted into the name field
+  fileName.value = base || DEFAULT_BASE;
+  if (ext) { fileExt.value = ext; bareName = false; }
+  afterRename();
+};
+fileName.onkeydown = (e) => {
+  if (e.key === 'Enter') { e.preventDefault(); (viewEl() || editor).focus(); }
+  else if (e.key === '.' && fileName.selectionStart === fileName.value.length) { e.preventDefault(); fileExt.focus(); fileExt.select(); } // a dot at the end moves on to the extension
+};
+fileExt.oninput = () => {
+  fileExt.value = fileExt.value.replace(/[^A-Za-z0-9_+-]/g, '').slice(0, 10);
+  bareName = false;
+  refreshName();
+};
+fileExt.onchange = afterRename;
+fileExt.onkeydown = (e) => {
+  if (e.key === 'Enter') { e.preventDefault(); (viewEl() || editor).focus(); }
+  else if (e.key === 'Backspace' && !fileExt.value) { e.preventDefault(); fileName.focus(); }
+};
 
 editor.addEventListener('input', afterChange);
 for (const type of ['keyup', 'click', 'select']) editor.addEventListener(type, updateStatus);
@@ -653,7 +704,8 @@ document.addEventListener('visibilitychange', () => { if (document.hidden) saveD
 /* ── Start ── */
 $('stVersion').textContent = VERSION;
 if (typeof saved.text === 'string') editor.value = saved.text;
-setName(saved.name || DEFAULT_NAME);
+if ('ext' in saved) { fileName.value = saved.name || DEFAULT_BASE; fileExt.value = saved.ext || ''; bareName = !!saved.bare; }
+refreshName();
 applyLang(state.lang);
 setZoom(state.zoom);
 setWrap(state.wrap);

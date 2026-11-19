@@ -55,13 +55,20 @@ body {
 #titlebar img { flex-shrink: 0; border-radius: 5px; }
 .brand { font-size: 14px; font-weight: 500; white-space: nowrap; color: var(--muted); letter-spacing: .2px; }
 .brand b { color: var(--accent); font-weight: 700; }
-#fileName {
-  flex: 1; min-width: 60px; max-width: 420px;
+/* File name and extension are separate fields: [ name ] . [ ext ] */
+#fileBox { display: flex; align-items: center; min-width: 0; }
+#fileName, #fileExt {
+  field-sizing: content; min-width: 3ch;
   background: transparent; border: 1px solid transparent; border-radius: 6px;
-  color: var(--text); font: inherit; padding: 4px 8px;
+  color: var(--text); font: inherit; padding: 4px 6px;
 }
-#fileName:hover { border-color: var(--border); }
-#fileName:focus { border-color: var(--accent); background: var(--editor); outline: none; }
+#fileName { max-width: min(420px, 40vw); padding-inline-end: 3px; }
+#fileExt { max-width: 12ch; padding-inline-start: 3px; }
+#fileBox .dot { color: var(--muted); }
+#fileExt::placeholder { color: var(--muted); opacity: 1; } /* the automatic extension */
+#fileExt::-webkit-calendar-picker-indicator { display: none !important; }
+#fileName:hover, #fileExt:hover { border-color: var(--border); }
+#fileName:focus, #fileExt:focus { border-color: var(--accent); background: var(--editor); outline: none; }
 #langSelect {
   margin-inline-start: auto; flex-shrink: 0;
   background: transparent; border: 1px solid var(--border); border-radius: 6px;
