@@ -2,7 +2,7 @@
 
 > Quick Web Notepad is a free, open-source (MIT) notepad that runs entirely in your browser at https://quickwebnotepad.com/ : no account, notes are not uploaded to a server, and it works offline as an installable web app.
 
-- Plain-text editor; opens and saves local files (saves in place in Chromium desktop browsers, otherwise downloads a copy)
+- Plain-text editor; opens and saves local files (saves in place in Chromium desktop browsers, otherwise downloads a copy); a file dropped on the page is opened
 - Find and replace with match case and regular expressions
 - Read-only Syntax view (JavaScript, Python, HTML, CSS, JSON, SQL, shell, C, Markdown) and read-only Markdown preview (GitHub Flavored Markdown tables, task lists, code blocks)
 - Lock mode, light and dark themes, zoom, word wrap, keyboard shortcuts
@@ -13,6 +13,7 @@
 
 ## Pages
 - [Notepad app](https://quickwebnotepad.com/)
+- [Markdown viewer: opens .md files and pasted Markdown formatted](https://quickwebnotepad.com/markdown-viewer/)
 - [About: features, storage, offline use, shortcuts, comparison, FAQ](https://quickwebnotepad.com/about.html)
 - [Privacy policy](https://quickwebnotepad.com/privacy.html)
 

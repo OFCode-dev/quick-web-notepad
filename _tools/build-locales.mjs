@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-/* Builds the per-language app pages (/es/, /tr/, ...) and sitemap.xml from index.html.
+/* Builds the per-language app pages (/es/, /tr/, ...), the Markdown viewer page and sitemap.xml from index.html.
    Run after editing index.html, assets/i18n.js or _tools/locales.mjs:
      node _tools/build-locales.mjs          write the files
      node _tools/build-locales.mjs --check  exit 1 if a language page is out of date */
@@ -43,24 +43,58 @@ function build(code) {
   return html;
 }
 
+/* The same app at /markdown-viewer/: it explains itself while empty and shows text that is opened,
+   dropped or pasted in the Markdown view. English only; the interface still follows the visitor's language. */
+function buildMarkdownViewer() {
+  const T = LANGS.en, url = `${SITE}markdown-viewer/`;
+  const title = 'Markdown Viewer Online, Free & Private | Quick Web Notepad';
+  const description = 'Open a .md file or paste Markdown and read it formatted, with tables, task lists and highlighted code. Free, no sign-up, nothing is uploaded, and it works offline.';
+  const noscript = 'The Markdown viewer needs JavaScript. It opens .md files and pasted Markdown in your browser and shows them formatted, with nothing uploaded.';
+  const jsonld = `<script type="application/ld+json">
+${JSON.stringify({ '@context': 'https://schema.org', '@type': 'WebPage', '@id': `${url}#page`, url, name: T.mvTitle, description, inLanguage: 'en', isPartOf: { '@id': `${SITE}#website` }, about: { '@id': `${SITE}#app` } })}
+</script>
+`;
+  const intro = `<section id="intro" aria-labelledby="introTitle">
+    <h1 id="introTitle" data-k="mvTitle">${esc(T.mvTitle)}</h1>
+    <p data-k="mvLead">${esc(T.mvLead)}</p>
+    <button id="bIntroOpen" data-k="mvOpen">${esc(T.mvOpen)}</button>
+    <p class="note" data-k="mvNote">${esc(T.mvNote)}</p>
+  </section>`;
+  let html = source;
+  html = swap(html, /<html lang="en" dir="ltr">/, '<html lang="en" dir="ltr" data-start="markdown">', '<html>');
+  html = swap(html, /<title>[^<]*<\/title>/, `<title>${esc(title)}</title>`, '<title>');
+  html = swap(html, /(<meta name="description" content=")[^"]*/, `$1${esc(description)}`, 'meta description');
+  html = swap(html, /(<link rel="canonical" href=")[^"]*/, `$1${url}`, 'canonical');
+  html = swap(html, /(?:<link rel="alternate" hreflang="[^"]+" href="[^"]+">\n)+/, '', 'hreflang links'); // a single language
+  html = swap(html, /(<meta property="og:url" content=")[^"]*/, `$1${url}`, 'og:url');
+  html = swap(html, /(<meta property="og:title" content=")[^"]*/, `$1${esc(title)}`, 'og:title');
+  html = swap(html, /(<meta property="og:description" content=")[^"]*/, `$1${esc(description)}`, 'og:description');
+  html = swap(html, /<!-- jsonld:start -->[\s\S]*?<!-- jsonld:end -->\n/, jsonld, 'JSON-LD block');
+  html = swap(html, /<h1 class="brand">([\s\S]*?)<\/h1>/, '<a class="brand" href="/">$1</a>', 'brand'); // the page heading is the viewer's
+  html = swap(html, /(<span data-ns>)[^<]*/, `$1${esc(noscript)}`, 'noscript text');
+  html = swap(html, /\n  <textarea id="editor"/, `\n  ${intro}\n  <textarea id="editor"`, 'editor');
+  return html;
+}
+
 const codes = Object.keys(LANGS).filter((c) => c !== 'en');
+const pages = [...codes.map((code) => [`${code}/index.html`, () => build(code)]), ['markdown-viewer/index.html', buildMarkdownViewer]];
 let stale = 0;
-for (const code of codes) {
-  const file = `${ROOT}${code}/index.html`, html = build(code);
+for (const [path, make] of pages) {
+  const file = ROOT + path, html = make();
   if (check) {
-    if (!existsSync(file) || readFileSync(file, 'utf8') !== html) { console.error(`out of date: ${code}/index.html`); stale++; }
+    if (!existsSync(file) || readFileSync(file, 'utf8') !== html) { console.error(`out of date: ${path}`); stale++; }
   } else {
-    mkdirSync(ROOT + code, { recursive: true });
+    mkdirSync(ROOT + path.replace(/[^/]+$/, ''), { recursive: true });
     writeFileSync(file, html);
   }
 }
 if (check) process.exit(stale ? 1 : 0);
 
 const today = new Date().toISOString().slice(0, 10);
-const paths = ['', ...codes.map((c) => `${c}/`), 'about.html', 'privacy.html', 'contact.html'];
+const paths = ['', ...codes.map((c) => `${c}/`), 'markdown-viewer/', 'about.html', 'privacy.html', 'contact.html'];
 writeFileSync(ROOT + 'sitemap.xml', `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 ${paths.map((p) => `  <url><loc>${SITE}${p}</loc><lastmod>${today}</lastmod></url>`).join('\n')}
 </urlset>
 `);
-console.log(`built ${codes.length} language pages and sitemap.xml`);
+console.log(`built ${codes.length} language pages, the Markdown viewer and sitemap.xml`);

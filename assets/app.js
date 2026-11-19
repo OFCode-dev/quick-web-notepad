@@ -21,6 +21,7 @@ function store(kind, key, value) {
 }
 const prefs = load('localStorage', 'qwn:prefs');
 const PAGE_LANG = root.dataset.pageLang || '';
+const START_MD = root.dataset.start === 'markdown'; // the Markdown viewer page
 const saved = load('sessionStorage', 'qwn:doc');
 const newId = () => (crypto.randomUUID ? crypto.randomUUID() : `${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}`);
 let docId = saved.id || newId(); // identifies this tab's note in the Recent list
@@ -197,7 +198,16 @@ function deny() {
   b.classList.remove('deny'); void b.offsetWidth; b.classList.add('deny');
 }
 function guard() { if (state.locked) { deny(); return true; } return false; }
-function updateInvite() { $('bPaste').classList.toggle('invite', !editor.value && !state.locked); }
+function updateInvite() {
+  $('bPaste').classList.toggle('invite', !editor.value && !state.locked);
+  const intro = $('intro'); // the Markdown viewer page explains itself while the note is empty
+  if (intro) intro.hidden = !!editor.value || state.view !== 'edit';
+}
+/* On the Markdown viewer page, text that arrives in an empty note is shown formatted. */
+function showFormatted(wasEmpty) {
+  if (!START_MD || !wasEmpty || !editor.value.trim() || state.view !== 'edit') return;
+  setView('markdown').then(() => { if (state.view === 'markdown') preview.focus(); });
+}
 
 /* ── File name: [ name ] . [ extension ] ──
    An empty extension field means "automatic": md in the Markdown view, the detected language in the
@@ -504,9 +514,11 @@ function copy() {
 async function paste() {
   if (state.locked && editor.value) { deny(); return; }
   if (state.view === 'edit') editor.focus();
+  const wasEmpty = !editor.value.trim();
   try {
     insertText(await navigator.clipboard.readText());
     toast(T.pasted);
+    showFormatted(wasEmpty);
   } catch { toast(T.ctrlV); }
 }
 function clearAll() {
@@ -532,7 +544,9 @@ async function loadFile(file, handle = null) {
   setText(text);
   if (state.view === 'edit') editor.focus();
   toast(`${file.name} ${T.opened}`);
+  showFormatted(true);
 }
+function openDropped(file) { loadFile(file).catch(() => toast(T.openFailed)); } // a folder or an unreadable file
 async function openFile() {
   if (window.showOpenFilePicker) {
     try {
@@ -781,6 +795,7 @@ function applyLang(code) {
   $('adStrip').setAttribute('aria-label', T.ad);
   $('stLock').textContent = T.locked;
   $('aboutLink').textContent = T.about;
+  for (const el of document.querySelectorAll('#intro [data-k]')) el.textContent = T[el.dataset.k];
   hint = '';
   updateDirection();
   updateStatus();
@@ -803,7 +818,8 @@ document.fonts?.ready.then(fitToolbar);
 
 /* ── Wiring ── */
 $('bOpen').onclick = openFile;
-$('fileInput').onchange = () => { const f = $('fileInput').files[0]; if (f) loadFile(f); };
+$('fileInput').onchange = () => { const f = $('fileInput').files[0]; if (f) openDropped(f); };
+$('bIntroOpen')?.addEventListener('click', openFile);
 $('bNewTab').onclick = newTab;
 $('bSave').onclick = saveFile;
 $('bPaste').onclick = paste;
@@ -879,11 +895,29 @@ editor.addEventListener('input', afterChange);
 for (const type of ['keyup', 'click', 'select']) editor.addEventListener(type, updateStatus);
 editor.addEventListener('paste', (e) => {
   const wasEmpty = !editor.value;
-  if (!state.locked) { if (wasEmpty) toast(T.pasted); return; } // the browser pastes; undo keeps working
+  if (!state.locked) { // the browser pastes; undo keeps working
+    if (wasEmpty) { toast(T.pasted); setTimeout(() => showFormatted(true)); }
+    return;
+  }
   e.preventDefault();
   if (!wasEmpty) { deny(); return; }
   insertText(e.clipboardData.getData('text')); // a locked, empty note still accepts one paste
   toast(T.pasted);
+  showFormatted(true);
+});
+
+/* A file dropped anywhere on the page is opened. Text dragged within the editor is left to the browser. */
+const draggingFiles = (e) => [...(e.dataTransfer?.types || [])].includes('Files');
+let dragDepth = 0;
+addEventListener('dragenter', (e) => { if (draggingFiles(e)) { dragDepth++; root.classList.add('dropping'); } });
+addEventListener('dragleave', (e) => { if (draggingFiles(e) && --dragDepth <= 0) { dragDepth = 0; root.classList.remove('dropping'); } });
+addEventListener('dragover', (e) => { if (draggingFiles(e)) { e.preventDefault(); e.dataTransfer.dropEffect = 'copy'; } });
+addEventListener('drop', (e) => {
+  dragDepth = 0; root.classList.remove('dropping');
+  if (!draggingFiles(e)) return;
+  e.preventDefault(); // otherwise the browser leaves the page to show the file
+  const file = e.dataTransfer.files[0];
+  if (file) openDropped(file);
 });
 editor.addEventListener('keydown', (e) => {
   if (e.key === 'Tab' && !e.shiftKey && !e.ctrlKey && !e.metaKey && !e.altKey) { // Shift+Tab still leaves the editor
