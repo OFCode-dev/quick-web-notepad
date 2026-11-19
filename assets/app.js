@@ -795,6 +795,7 @@ function applyLang(code) {
   $('adStrip').setAttribute('aria-label', T.ad);
   $('stLock').textContent = T.locked;
   $('aboutLink').textContent = T.about;
+  $('aboutLink').href = T.aboutUrl; // Portuguese and Spanish have their own About page
   for (const el of document.querySelectorAll('#intro [data-k]')) el.textContent = T[el.dataset.k];
   hint = '';
   updateDirection();

@@ -45,6 +45,7 @@ Quick Web Notepad is a free, open-source notepad that runs entirely in your brow
 ```
 index.html              the app page (English, and the template for the language pages)
 es/ tr/ ja/ ...         generated per-language copies of the app page; do not edit by hand
+markdown-viewer/        generated copy of the app page that opens text in the Markdown view; do not edit by hand
 _tools/                 build-locales.mjs (generator), locales.mjs (search-result strings), monitor.mjs (search and performance report)
 assets/app.css          styles; the color palette is the token block at the top
 assets/app.js           app logic (ES module)
@@ -54,6 +55,7 @@ assets/vendor/          marked and DOMPurify, pinned and served locally
 sw.js                   service worker (offline support)
 manifest.webmanifest    PWA manifest
 about.html              product page: features, storage, shortcuts, comparison, FAQ
+pt/sobre.html, es/acerca.html   translations of about.html, edited by hand; keep them in step
 privacy.html, contact.html, 404.html
 robots.txt, sitemap.xml, llms.txt
 ```
@@ -76,7 +78,7 @@ node _tools/build-locales.mjs
 
 `node _tools/build-locales.mjs --check` exits with an error if a language page is out of date.
 
-When a cached file list changes, bump `CACHE` in `sw.js`. Keep the version in `assets/app.js`, `index.html` (status bar and JSON-LD) and `about.html` in step.
+When a cached file list changes, bump `CACHE` in `sw.js`. Keep the version in `assets/app.js`, `index.html` (status bar and JSON-LD), `about.html` and its translations in step. Each FAQ's visible text must match its FAQPage data exactly.
 
 ## Author
 

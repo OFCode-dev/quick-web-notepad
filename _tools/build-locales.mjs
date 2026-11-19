@@ -34,6 +34,7 @@ function build(code) {
   html = swap(html, /<!-- jsonld:start -->[\s\S]*?<!-- jsonld:end -->\n/, '', 'JSON-LD block'); // the entity is described once, on the root page
   html = swap(html, /(<span data-ns>)[^<]*/, `$1${esc(L.noscript)}`, 'noscript text');
   html = swap(html, new RegExp(`<option value="${code}"`), `<option value="${code}" selected`, 'language option');
+  html = html.replace(/href="\/about\.html"(?= data-k="about")/g, `href="${T.aboutUrl}"`); // status bar and noscript links
   html = swap(html, /(<span id="stPos">)[^<]*/, `$1${esc(T.ln)} 1/1 · ${esc(T.col)} 1`, 'status position');
   html = swap(html, /(<span id="stWords">)[^<]*/, `$10 ${esc(T.words)}`, 'status words');
   html = swap(html, /(<span id="stChars">)[^<]*/, `$10 ${esc(T.chars)}`, 'status chars');
@@ -91,7 +92,7 @@ for (const [path, make] of pages) {
 if (check) process.exit(stale ? 1 : 0);
 
 const today = new Date().toISOString().slice(0, 10);
-const paths = ['', ...codes.map((c) => `${c}/`), 'markdown-viewer/', 'about.html', 'privacy.html', 'contact.html'];
+const paths = ['', ...codes.map((c) => `${c}/`), 'markdown-viewer/', 'about.html', 'pt/sobre.html', 'es/acerca.html', 'privacy.html', 'contact.html'];
 writeFileSync(ROOT + 'sitemap.xml', `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 ${paths.map((p) => `  <url><loc>${SITE}${p}</loc><lastmod>${today}</lastmod></url>`).join('\n')}
