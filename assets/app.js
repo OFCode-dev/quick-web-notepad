@@ -125,7 +125,7 @@ async function renderRecent() {
     btn.lastChild.textContent = `${relTime(n.updated)} · ${n.line}`;
     btn.onclick = () => openNote(n);
     del.className = 'icon-only';
-    del.innerHTML = '<svg class="ic"><use href="#i-close"/></svg>';
+    del.innerHTML = '<svg class="ic" aria-hidden="true"><use href="#i-close"/></svg>';
     del.title = `${T.deleteNote}: ${name}`;
     del.setAttribute('aria-label', del.title);
     del.onclick = () => { dropNote(n.id); li.remove(); showRecentState(); ul.querySelector('button')?.focus(); };
@@ -416,8 +416,9 @@ async function renderMarkdown() {
     const box = document.createElement('div'), b = document.createElement('button');
     box.className = 'codebox';
     b.className = 'icon-only copy-code';
-    b.innerHTML = '<svg class="ic"><use href="#i-copy"/></svg>';
-    b.title = T.copy; b.setAttribute('aria-label', T.copy);
+    b.innerHTML = '<svg class="ic" aria-hidden="true"><use href="#i-copy"/></svg>';
+    b.title = T.copy;
+    b.setAttribute('aria-label', `${T.copy}: ${pre.textContent.trim().split('\n', 1)[0].slice(0, 40)}`); // told apart from the toolbar's Copy
     b.onclick = () => copyText(pre.textContent, T.copied);
     pre.replaceWith(box);
     box.append(pre, b);
@@ -988,8 +989,9 @@ document.addEventListener('visibilitychange', () => { if (document.hidden) saveD
 let answerConfirm = null;
 function askDelete() {
   $('rmConfirm').hidden = false;
+  $('bDeleteAll').hidden = true; // one "Delete all" at a time
   $('bConfirmNo').focus();
-  return new Promise((done) => { answerConfirm = (yes) => { answerConfirm = null; $('rmConfirm').hidden = true; done(yes); }; });
+  return new Promise((done) => { answerConfirm = (yes) => { answerConfirm = null; $('rmConfirm').hidden = true; $('bDeleteAll').hidden = !$('recentList').children.length; done(yes); }; });
 }
 $('bConfirmYes').onclick = () => answerConfirm?.(true);
 $('bConfirmNo').onclick = () => answerConfirm?.(false);

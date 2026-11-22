@@ -102,27 +102,27 @@ document.documentElement.dataset.theme=t})();
 </header>
 
 <div id="toolbar" role="toolbar" aria-label="Bilah alat" data-ka="toolbar">
-  <button id="bOpen"><svg class="ic"><use href="#i-open"/></svg><span class="lbl" data-k="file">Buka</span></button>
-  <button id="bNewTab"><svg class="ic"><use href="#i-newtab"/></svg><span class="lbl" data-k="newTab">Tab baru</span></button>
-  <button id="bRecent" popovertarget="recentMenu"><svg class="ic"><use href="#i-recent"/></svg><span class="lbl" data-k="recent">Terbaru</span></button>
-  <button id="bSave"><svg class="ic"><use href="#i-save"/></svg><span class="lbl" data-k="save">Simpan</span></button>
+  <button id="bOpen"><svg class="ic" aria-hidden="true"><use href="#i-open"/></svg><span class="lbl" data-k="file">Buka</span></button>
+  <button id="bNewTab"><svg class="ic" aria-hidden="true"><use href="#i-newtab"/></svg><span class="lbl" data-k="newTab">Tab baru</span></button>
+  <button id="bRecent" popovertarget="recentMenu"><svg class="ic" aria-hidden="true"><use href="#i-recent"/></svg><span class="lbl" data-k="recent">Terbaru</span></button>
+  <button id="bSave"><svg class="ic" aria-hidden="true"><use href="#i-save"/></svg><span class="lbl" data-k="save">Simpan</span></button>
   <span class="sep"></span>
-  <button id="bPaste"><svg class="ic"><use href="#i-paste"/></svg><span class="lbl" data-k="paste">Tempel</span></button>
-  <button id="bCopy"><svg class="ic"><use href="#i-copy"/></svg><span class="lbl" data-k="copy">Salin</span></button>
-  <button id="bClear"><svg class="ic"><use href="#i-clear"/></svg><span class="lbl" data-k="clear">Bersihkan</span></button>
+  <button id="bPaste"><svg class="ic" aria-hidden="true"><use href="#i-paste"/></svg><span class="lbl" data-k="paste">Tempel</span></button>
+  <button id="bCopy"><svg class="ic" aria-hidden="true"><use href="#i-copy"/></svg><span class="lbl" data-k="copy">Salin</span></button>
+  <button id="bClear"><svg class="ic" aria-hidden="true"><use href="#i-clear"/></svg><span class="lbl" data-k="clear">Bersihkan</span></button>
   <span class="sep"></span>
-  <button id="bWrap" aria-pressed="false"><svg class="ic"><use href="#i-wrap"/></svg><span class="lbl" data-k="wrap">Bungkus kata</span></button>
-  <button id="bFind" aria-pressed="false"><svg class="ic"><use href="#i-find"/></svg><span class="lbl" data-k="find">Cari</span></button>
+  <button id="bWrap" aria-pressed="false"><svg class="ic" aria-hidden="true"><use href="#i-wrap"/></svg><span class="lbl" data-k="wrap">Bungkus kata</span></button>
+  <button id="bFind" aria-pressed="false"><svg class="ic" aria-hidden="true"><use href="#i-find"/></svg><span class="lbl" data-k="find">Cari</span></button>
   <span class="sep"></span>
-  <button id="bSyntax" aria-pressed="false"><svg class="ic"><use href="#i-syntax"/></svg><span class="lbl" data-k="syntax">Sintaks</span></button>
-  <button id="bMarkdown" aria-pressed="false"><svg class="ic"><use href="#i-markdown"/></svg><span class="lbl" data-k="markdown">Markdown</span></button>
-  <button id="bLock" aria-pressed="false"><svg class="ic"><use href="#i-unlock"/></svg><span class="lbl" data-k="lock">Kunci</span></button>
+  <button id="bSyntax" aria-pressed="false"><svg class="ic" aria-hidden="true"><use href="#i-syntax"/></svg><span class="lbl" data-k="syntax">Sintaks</span></button>
+  <button id="bMarkdown" aria-pressed="false"><svg class="ic" aria-hidden="true"><use href="#i-markdown"/></svg><span class="lbl" data-k="markdown">Markdown</span></button>
+  <button id="bLock" aria-pressed="false"><svg class="ic" aria-hidden="true"><use href="#i-unlock"/></svg><span class="lbl" data-k="lock">Kunci</span></button>
   <span class="sep"></span>
   <button id="bZoomOut" class="txt" aria-label="Perkecil" data-ka="zoomOut">A−</button>
   <button id="bZoomReset" class="txt" aria-label="Atur ulang zoom" data-ka="zoomReset">100%</button>
   <button id="bZoomIn" class="txt" aria-label="Perbesar" data-ka="zoomIn">A+</button>
   <span class="sep"></span>
-  <button id="bTheme"><svg class="ic"><use href="#i-sun"/></svg><span class="lbl" data-k="light">Terang</span></button>
+  <button id="bTheme"><svg class="ic" aria-hidden="true"><use href="#i-sun"/></svg><span class="lbl" data-k="light">Terang</span></button>
 </div>
 
 <!-- Notes from closed tabs, kept on this device. -->
@@ -142,15 +142,15 @@ document.documentElement.dataset.theme=t})();
 
 <div id="findBar" hidden>
   <input id="findInput" type="text" spellcheck="false" autocomplete="off" aria-label="Cari" data-ka="find">
-  <button id="bFindPrev" class="icon-only" aria-label="Sebelumnya" data-ka="prev"><svg class="ic"><use href="#i-up"/></svg></button>
-  <button id="bFindNext" class="icon-only" aria-label="Berikutnya" data-ka="next"><svg class="ic"><use href="#i-down"/></svg></button>
+  <button id="bFindPrev" class="icon-only" aria-label="Sebelumnya" data-ka="prev"><svg class="ic" aria-hidden="true"><use href="#i-up"/></svg></button>
+  <button id="bFindNext" class="icon-only" aria-label="Berikutnya" data-ka="next"><svg class="ic" aria-hidden="true"><use href="#i-down"/></svg></button>
   <span id="findCount" role="status"></span>
   <input id="replaceInput" type="text" spellcheck="false" autocomplete="off" aria-label="Ganti" data-ka="replace">
   <button id="bReplace" class="txt" data-k="replace">Ganti</button>
   <button id="bReplaceAll" class="txt" data-k="all">Semua</button>
   <label><input type="checkbox" id="chkCase"> <span id="lblCase" data-k="caseS">Cocokkan huruf besar/kecil</span></label>
   <label><input type="checkbox" id="chkRegex"> <span id="lblRegex" data-k="regex">Regex</span></label>
-  <button id="bFindClose" class="icon-only" aria-label="Tutup" data-ka="close"><svg class="ic"><use href="#i-close"/></svg></button>
+  <button id="bFindClose" class="icon-only" aria-label="Tutup" data-ka="close"><svg class="ic" aria-hidden="true"><use href="#i-close"/></svg></button>
 </div>
 
 <main id="workspace">

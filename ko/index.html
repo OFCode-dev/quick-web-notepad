@@ -102,27 +102,27 @@ document.documentElement.dataset.theme=t})();
 </header>
 
 <div id="toolbar" role="toolbar" aria-label="도구 모음" data-ka="toolbar">
-  <button id="bOpen"><svg class="ic"><use href="#i-open"/></svg><span class="lbl" data-k="file">열기</span></button>
-  <button id="bNewTab"><svg class="ic"><use href="#i-newtab"/></svg><span class="lbl" data-k="newTab">새 탭</span></button>
-  <button id="bRecent" popovertarget="recentMenu"><svg class="ic"><use href="#i-recent"/></svg><span class="lbl" data-k="recent">최근</span></button>
-  <button id="bSave"><svg class="ic"><use href="#i-save"/></svg><span class="lbl" data-k="save">저장</span></button>
+  <button id="bOpen"><svg class="ic" aria-hidden="true"><use href="#i-open"/></svg><span class="lbl" data-k="file">열기</span></button>
+  <button id="bNewTab"><svg class="ic" aria-hidden="true"><use href="#i-newtab"/></svg><span class="lbl" data-k="newTab">새 탭</span></button>
+  <button id="bRecent" popovertarget="recentMenu"><svg class="ic" aria-hidden="true"><use href="#i-recent"/></svg><span class="lbl" data-k="recent">최근</span></button>
+  <button id="bSave"><svg class="ic" aria-hidden="true"><use href="#i-save"/></svg><span class="lbl" data-k="save">저장</span></button>
   <span class="sep"></span>
-  <button id="bPaste"><svg class="ic"><use href="#i-paste"/></svg><span class="lbl" data-k="paste">붙여넣기</span></button>
-  <button id="bCopy"><svg class="ic"><use href="#i-copy"/></svg><span class="lbl" data-k="copy">복사</span></button>
-  <button id="bClear"><svg class="ic"><use href="#i-clear"/></svg><span class="lbl" data-k="clear">지우기</span></button>
+  <button id="bPaste"><svg class="ic" aria-hidden="true"><use href="#i-paste"/></svg><span class="lbl" data-k="paste">붙여넣기</span></button>
+  <button id="bCopy"><svg class="ic" aria-hidden="true"><use href="#i-copy"/></svg><span class="lbl" data-k="copy">복사</span></button>
+  <button id="bClear"><svg class="ic" aria-hidden="true"><use href="#i-clear"/></svg><span class="lbl" data-k="clear">지우기</span></button>
   <span class="sep"></span>
-  <button id="bWrap" aria-pressed="false"><svg class="ic"><use href="#i-wrap"/></svg><span class="lbl" data-k="wrap">줄바꿈</span></button>
-  <button id="bFind" aria-pressed="false"><svg class="ic"><use href="#i-find"/></svg><span class="lbl" data-k="find">찾기</span></button>
+  <button id="bWrap" aria-pressed="false"><svg class="ic" aria-hidden="true"><use href="#i-wrap"/></svg><span class="lbl" data-k="wrap">줄바꿈</span></button>
+  <button id="bFind" aria-pressed="false"><svg class="ic" aria-hidden="true"><use href="#i-find"/></svg><span class="lbl" data-k="find">찾기</span></button>
   <span class="sep"></span>
-  <button id="bSyntax" aria-pressed="false"><svg class="ic"><use href="#i-syntax"/></svg><span class="lbl" data-k="syntax">구문</span></button>
-  <button id="bMarkdown" aria-pressed="false"><svg class="ic"><use href="#i-markdown"/></svg><span class="lbl" data-k="markdown">Markdown</span></button>
-  <button id="bLock" aria-pressed="false"><svg class="ic"><use href="#i-unlock"/></svg><span class="lbl" data-k="lock">잠금</span></button>
+  <button id="bSyntax" aria-pressed="false"><svg class="ic" aria-hidden="true"><use href="#i-syntax"/></svg><span class="lbl" data-k="syntax">구문</span></button>
+  <button id="bMarkdown" aria-pressed="false"><svg class="ic" aria-hidden="true"><use href="#i-markdown"/></svg><span class="lbl" data-k="markdown">Markdown</span></button>
+  <button id="bLock" aria-pressed="false"><svg class="ic" aria-hidden="true"><use href="#i-unlock"/></svg><span class="lbl" data-k="lock">잠금</span></button>
   <span class="sep"></span>
   <button id="bZoomOut" class="txt" aria-label="축소" data-ka="zoomOut">A−</button>
   <button id="bZoomReset" class="txt" aria-label="확대/축소 초기화" data-ka="zoomReset">100%</button>
   <button id="bZoomIn" class="txt" aria-label="확대" data-ka="zoomIn">A+</button>
   <span class="sep"></span>
-  <button id="bTheme"><svg class="ic"><use href="#i-sun"/></svg><span class="lbl" data-k="light">라이트</span></button>
+  <button id="bTheme"><svg class="ic" aria-hidden="true"><use href="#i-sun"/></svg><span class="lbl" data-k="light">라이트</span></button>
 </div>
 
 <!-- Notes from closed tabs, kept on this device. -->
@@ -142,15 +142,15 @@ document.documentElement.dataset.theme=t})();
 
 <div id="findBar" hidden>
   <input id="findInput" type="text" spellcheck="false" autocomplete="off" aria-label="찾기" data-ka="find">
-  <button id="bFindPrev" class="icon-only" aria-label="이전" data-ka="prev"><svg class="ic"><use href="#i-up"/></svg></button>
-  <button id="bFindNext" class="icon-only" aria-label="다음" data-ka="next"><svg class="ic"><use href="#i-down"/></svg></button>
+  <button id="bFindPrev" class="icon-only" aria-label="이전" data-ka="prev"><svg class="ic" aria-hidden="true"><use href="#i-up"/></svg></button>
+  <button id="bFindNext" class="icon-only" aria-label="다음" data-ka="next"><svg class="ic" aria-hidden="true"><use href="#i-down"/></svg></button>
   <span id="findCount" role="status"></span>
   <input id="replaceInput" type="text" spellcheck="false" autocomplete="off" aria-label="바꾸기" data-ka="replace">
   <button id="bReplace" class="txt" data-k="replace">바꾸기</button>
   <button id="bReplaceAll" class="txt" data-k="all">모두</button>
   <label><input type="checkbox" id="chkCase"> <span id="lblCase" data-k="caseS">대소문자 구분</span></label>
   <label><input type="checkbox" id="chkRegex"> <span id="lblRegex" data-k="regex">정규식</span></label>
-  <button id="bFindClose" class="icon-only" aria-label="닫기" data-ka="close"><svg class="ic"><use href="#i-close"/></svg></button>
+  <button id="bFindClose" class="icon-only" aria-label="닫기" data-ka="close"><svg class="ic" aria-hidden="true"><use href="#i-close"/></svg></button>
 </div>
 
 <main id="workspace">

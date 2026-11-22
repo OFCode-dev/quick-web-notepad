@@ -102,27 +102,27 @@ document.documentElement.dataset.theme=t})();
 </header>
 
 <div id="toolbar" role="toolbar" aria-label="Barra de herramientas" data-ka="toolbar">
-  <button id="bOpen"><svg class="ic"><use href="#i-open"/></svg><span class="lbl" data-k="file">Abrir</span></button>
-  <button id="bNewTab"><svg class="ic"><use href="#i-newtab"/></svg><span class="lbl" data-k="newTab">Nueva pestaña</span></button>
-  <button id="bRecent" popovertarget="recentMenu"><svg class="ic"><use href="#i-recent"/></svg><span class="lbl" data-k="recent">Recientes</span></button>
-  <button id="bSave"><svg class="ic"><use href="#i-save"/></svg><span class="lbl" data-k="save">Guardar</span></button>
+  <button id="bOpen"><svg class="ic" aria-hidden="true"><use href="#i-open"/></svg><span class="lbl" data-k="file">Abrir</span></button>
+  <button id="bNewTab"><svg class="ic" aria-hidden="true"><use href="#i-newtab"/></svg><span class="lbl" data-k="newTab">Nueva pestaña</span></button>
+  <button id="bRecent" popovertarget="recentMenu"><svg class="ic" aria-hidden="true"><use href="#i-recent"/></svg><span class="lbl" data-k="recent">Recientes</span></button>
+  <button id="bSave"><svg class="ic" aria-hidden="true"><use href="#i-save"/></svg><span class="lbl" data-k="save">Guardar</span></button>
   <span class="sep"></span>
-  <button id="bPaste"><svg class="ic"><use href="#i-paste"/></svg><span class="lbl" data-k="paste">Pegar</span></button>
-  <button id="bCopy"><svg class="ic"><use href="#i-copy"/></svg><span class="lbl" data-k="copy">Copiar</span></button>
-  <button id="bClear"><svg class="ic"><use href="#i-clear"/></svg><span class="lbl" data-k="clear">Borrar</span></button>
+  <button id="bPaste"><svg class="ic" aria-hidden="true"><use href="#i-paste"/></svg><span class="lbl" data-k="paste">Pegar</span></button>
+  <button id="bCopy"><svg class="ic" aria-hidden="true"><use href="#i-copy"/></svg><span class="lbl" data-k="copy">Copiar</span></button>
+  <button id="bClear"><svg class="ic" aria-hidden="true"><use href="#i-clear"/></svg><span class="lbl" data-k="clear">Borrar</span></button>
   <span class="sep"></span>
-  <button id="bWrap" aria-pressed="false"><svg class="ic"><use href="#i-wrap"/></svg><span class="lbl" data-k="wrap">Ajuste</span></button>
-  <button id="bFind" aria-pressed="false"><svg class="ic"><use href="#i-find"/></svg><span class="lbl" data-k="find">Buscar</span></button>
+  <button id="bWrap" aria-pressed="false"><svg class="ic" aria-hidden="true"><use href="#i-wrap"/></svg><span class="lbl" data-k="wrap">Ajuste</span></button>
+  <button id="bFind" aria-pressed="false"><svg class="ic" aria-hidden="true"><use href="#i-find"/></svg><span class="lbl" data-k="find">Buscar</span></button>
   <span class="sep"></span>
-  <button id="bSyntax" aria-pressed="false"><svg class="ic"><use href="#i-syntax"/></svg><span class="lbl" data-k="syntax">Sintaxis</span></button>
-  <button id="bMarkdown" aria-pressed="false"><svg class="ic"><use href="#i-markdown"/></svg><span class="lbl" data-k="markdown">Markdown</span></button>
-  <button id="bLock" aria-pressed="false"><svg class="ic"><use href="#i-unlock"/></svg><span class="lbl" data-k="lock">Bloquear</span></button>
+  <button id="bSyntax" aria-pressed="false"><svg class="ic" aria-hidden="true"><use href="#i-syntax"/></svg><span class="lbl" data-k="syntax">Sintaxis</span></button>
+  <button id="bMarkdown" aria-pressed="false"><svg class="ic" aria-hidden="true"><use href="#i-markdown"/></svg><span class="lbl" data-k="markdown">Markdown</span></button>
+  <button id="bLock" aria-pressed="false"><svg class="ic" aria-hidden="true"><use href="#i-unlock"/></svg><span class="lbl" data-k="lock">Bloquear</span></button>
   <span class="sep"></span>
   <button id="bZoomOut" class="txt" aria-label="Alejar" data-ka="zoomOut">A−</button>
   <button id="bZoomReset" class="txt" aria-label="Restablecer zoom" data-ka="zoomReset">100%</button>
   <button id="bZoomIn" class="txt" aria-label="Acercar" data-ka="zoomIn">A+</button>
   <span class="sep"></span>
-  <button id="bTheme"><svg class="ic"><use href="#i-sun"/></svg><span class="lbl" data-k="light">Claro</span></button>
+  <button id="bTheme"><svg class="ic" aria-hidden="true"><use href="#i-sun"/></svg><span class="lbl" data-k="light">Claro</span></button>
 </div>
 
 <!-- Notes from closed tabs, kept on this device. -->
@@ -142,15 +142,15 @@ document.documentElement.dataset.theme=t})();
 
 <div id="findBar" hidden>
   <input id="findInput" type="text" spellcheck="false" autocomplete="off" aria-label="Buscar" data-ka="find">
-  <button id="bFindPrev" class="icon-only" aria-label="Anterior" data-ka="prev"><svg class="ic"><use href="#i-up"/></svg></button>
-  <button id="bFindNext" class="icon-only" aria-label="Siguiente" data-ka="next"><svg class="ic"><use href="#i-down"/></svg></button>
+  <button id="bFindPrev" class="icon-only" aria-label="Anterior" data-ka="prev"><svg class="ic" aria-hidden="true"><use href="#i-up"/></svg></button>
+  <button id="bFindNext" class="icon-only" aria-label="Siguiente" data-ka="next"><svg class="ic" aria-hidden="true"><use href="#i-down"/></svg></button>
   <span id="findCount" role="status"></span>
   <input id="replaceInput" type="text" spellcheck="false" autocomplete="off" aria-label="Reemplazar" data-ka="replace">
   <button id="bReplace" class="txt" data-k="replace">Reemplazar</button>
   <button id="bReplaceAll" class="txt" data-k="all">Todo</button>
   <label><input type="checkbox" id="chkCase"> <span id="lblCase" data-k="caseS">Distinguir mayúsculas</span></label>
   <label><input type="checkbox" id="chkRegex"> <span id="lblRegex" data-k="regex">Regex</span></label>
-  <button id="bFindClose" class="icon-only" aria-label="Cerrar" data-ka="close"><svg class="ic"><use href="#i-close"/></svg></button>
+  <button id="bFindClose" class="icon-only" aria-label="Cerrar" data-ka="close"><svg class="ic" aria-hidden="true"><use href="#i-close"/></svg></button>
 </div>
 
 <main id="workspace">
