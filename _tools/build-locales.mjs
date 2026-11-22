@@ -25,7 +25,7 @@ function swap(html, pattern, replacement, what) {
 function build(code) {
   const T = { ...LANGS.en, ...LANGS[code] }, L = LOCALES[code], url = `${SITE}${code}/`;
   let html = source;
-  html = swap(html, /<html lang="en" dir="ltr">/, `<html lang="${code}" dir="${T.rtl ? 'rtl' : 'ltr'}" data-page-lang="${code}">`, '<html>');
+  html = swap(html, /<html lang="en" dir="ltr"/, `<html lang="${code}" dir="${T.rtl ? 'rtl' : 'ltr'}" data-page-lang="${code}"`, '<html>');
   html = swap(html, /<title>[^<]*<\/title>/, `<title>${esc(T.pageTitle)}</title>`, '<title>');
   html = swap(html, /(<meta name="description" content=")[^"]*/, `$1${esc(L.description)}`, 'meta description');
   html = swap(html, /(<link rel="canonical" href=")[^"]*/, `$1${url}`, 'canonical');
@@ -64,7 +64,7 @@ ${JSON.stringify({ '@context': 'https://schema.org', '@type': 'WebPage', '@id': 
     <p class="note" data-k="mvNote">${esc(T.mvNote)}</p>
   </section>`;
   let html = source;
-  html = swap(html, /<html lang="en" dir="ltr">/, '<html lang="en" dir="ltr" data-start="markdown">', '<html>');
+  html = swap(html, /<html lang="en" dir="ltr"/, '<html lang="en" dir="ltr" data-start="markdown"', '<html>');
   html = swap(html, /<title>[^<]*<\/title>/, `<title>${esc(title)}</title>`, '<title>');
   html = swap(html, /(<meta name="description" content=")[^"]*/, `$1${esc(description)}`, 'meta description');
   html = swap(html, /(<link rel="canonical" href=")[^"]*/, `$1${url}`, 'canonical');

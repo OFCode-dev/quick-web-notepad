@@ -1,6 +1,6 @@
 import { LANGS, detectLang } from './i18n.js';
 
-const VERSION = 'v3.1';
+const VERSION = 'v3.2';
 const APP = 'Quick Web Notepad';
 const DEFAULT_BASE = 'Untitled';
 const IS_MAC = /Mac|iPhone|iPad/.test(navigator.platform);
@@ -22,6 +22,7 @@ function store(kind, key, value) {
 const prefs = load('localStorage', 'qwn:prefs');
 const PAGE_LANG = root.dataset.pageLang || '';
 const START_MD = root.dataset.start === 'markdown'; // the Markdown viewer page
+const AUTOMATED = navigator.webdriver === true; // a browser agent or test driver: it cannot operate system file dialogs
 const saved = load('sessionStorage', 'qwn:doc');
 const newId = () => (crypto.randomUUID ? crypto.randomUUID() : `${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}`);
 let docId = saved.id || newId(); // identifies this tab's note in the Recent list
@@ -59,6 +60,7 @@ function saveDocNow() {
 const NOTES_KEY = 'qwn:notes', NOTE_KEY = (id) => `qwn:note:${id}`;
 const MAX_NOTES = 30, MAX_NOTE_CHARS = 1e6;
 const keeping = () => prefs.keepNotes !== false;
+let fromLink = false;
 function noteIndex() { try { return JSON.parse(localStorage.getItem(NOTES_KEY)) || []; } catch { return []; } }
 function writeIndex(list) { try { localStorage.setItem(NOTES_KEY, JSON.stringify(list)); } catch { /* storage blocked */ } }
 function dropNote(id) {
@@ -66,7 +68,7 @@ function dropNote(id) {
   writeIndex(noteIndex().filter((n) => n.id !== id));
 }
 function keepNote() {
-  if (!keeping()) return;
+  if (!keeping() || fromLink) return; // a note that arrived in a link is kept only once the user edits it
   const text = editor.value;
   if (!text.trim() || text.length > MAX_NOTE_CHARS) { dropNote(docId); return; } // very large notes are not kept
   const index = noteIndex(), prev = index.find((n) => n.id === docId);
@@ -188,9 +190,10 @@ let toastTimer;
 function toast(msg) {
   const el = $('toast');
   el.textContent = msg;
+  $('lastStatus').textContent = msg;
   el.classList.add('show');
   clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => el.classList.remove('show'), 1900);
+  toastTimer = setTimeout(() => el.classList.remove('show'), AUTOMATED ? 8000 : 1900); // agents look at the page in steps
 }
 
 function deny() {
@@ -409,6 +412,16 @@ async function renderMarkdown() {
     return;
   }
   for (const a of preview.querySelectorAll('a[href]')) { a.target = '_blank'; a.rel = 'noopener noreferrer'; }
+  for (const pre of preview.querySelectorAll('pre')) { // one tap copies a code block
+    const box = document.createElement('div'), b = document.createElement('button');
+    box.className = 'codebox';
+    b.className = 'icon-only copy-code';
+    b.innerHTML = '<svg class="ic"><use href="#i-copy"/></svg>';
+    b.title = T.copy; b.setAttribute('aria-label', T.copy);
+    b.onclick = () => copyText(pre.textContent, T.copied);
+    pre.replaceWith(box);
+    box.append(pre, b);
+  }
   for (const code of preview.querySelectorAll('pre > code[class*="language-"]')) {
     const name = code.className.match(/language-([\w+-]+)/)[1].toLowerCase();
     const lang = FENCE_ALIAS[name] || name;
@@ -419,6 +432,7 @@ async function renderMarkdown() {
 /* ── Views and lock ── */
 function setLock(on) {
   state.locked = on;
+  root.dataset.locked = on; // state that agents and tests can read
   editor.readOnly = on;
   const b = $('bLock');
   b.setAttribute('aria-pressed', on);
@@ -438,6 +452,7 @@ async function setView(next) {
   if (next === 'markdown') await renderMarkdown();
   if (state.view !== next) return; // changed again while the Markdown libraries were loading
   for (const [name, el] of Object.entries(current)) el.hidden = name !== next;
+  root.dataset.view = next;
   if (next !== 'syntax') highlight.textContent = '';
   if (next !== 'markdown') preview.textContent = '';
   if (next !== 'markdown' && prev !== 'markdown') current[next].scrollTop = scrollTop;
@@ -521,11 +536,26 @@ async function paste() {
     showFormatted(wasEmpty);
   } catch { toast(T.ctrlV); }
 }
+/* Clearing can be undone until the next edit. */
+let cleared = null;
+function clearText(msg) {
+  cleared = editor.value;
+  setText('');
+  $('bUndo').hidden = false;
+  toast(msg);
+  editor.focus();
+}
+function forgetCleared() { cleared = null; $('bUndo').hidden = true; }
+function undoClear() {
+  if (cleared === null) return;
+  const text = cleared;
+  forgetCleared();
+  setText(text);
+  editor.focus();
+}
 function clearAll() {
   if (guard() || !editor.value) return;
-  setText('');
-  toast(T.cleared);
-  editor.focus();
+  clearText(T.cleared);
 }
 
 /* ── Files ── */
@@ -548,7 +578,7 @@ async function loadFile(file, handle = null) {
 }
 function openDropped(file) { loadFile(file).catch(() => toast(T.openFailed)); } // a folder or an unreadable file
 async function openFile() {
-  if (window.showOpenFilePicker) {
+  if (window.showOpenFilePicker && !AUTOMATED) {
     try {
       const [handle] = await window.showOpenFilePicker();
       await loadFile(await handle.getFile(), handle);
@@ -563,7 +593,7 @@ async function openFile() {
 async function saveFile() {
   const name = fullName();
   try {
-    if (!fileHandle && window.showSaveFilePicker) fileHandle = await window.showSaveFilePicker({ suggestedName: name });
+    if (!fileHandle && window.showSaveFilePicker && !AUTOMATED) fileHandle = await window.showSaveFilePicker({ suggestedName: name });
     if (fileHandle) {
       const writable = await fileHandle.createWritable();
       await writable.write(editor.value);
@@ -713,17 +743,13 @@ async function onEscape() {
     else {
       clearTimeout(escTimer); escCount = 0;
       await unlock();
-      setText('');
-      toast(T.unlockCleared);
-      editor.focus();
+      clearText(T.unlockCleared);
     }
   } else if (escCount === 1) setHint(T.escAgain);
   else {
     clearTimeout(escTimer); escCount = 0;
     setHint('');
-    setText('');
-    toast(T.cleared);
-    editor.focus();
+    clearText(T.cleared);
   }
 }
 
@@ -765,6 +791,7 @@ function label(id, key) {
   if (lbl) lbl.textContent = text;
   b.setAttribute('aria-label', text);
   b.title = SHORTCUTS[id] ? `${text} (${SHORTCUTS[id]})` : text;
+  if (SHORTCUTS[id] && id !== 'bClear') b.setAttribute('aria-keyshortcuts', SHORTCUTS[id].replace('Ctrl', 'Control').replace('⌘', 'Meta').replace('⌥', 'Alt').replace('−', '-'));
 }
 function applyLang(code) {
   state.lang = LANGS[code] ? code : 'en';
@@ -776,7 +803,10 @@ function applyLang(code) {
   for (const [id, key] of Object.entries(LABELS)) label(id, key);
   setTheme(state.theme);
   $('recentTitle').textContent = T.recent;
-  $('bDeleteAll').textContent = T.deleteAll;
+  $('bDeleteAll').textContent = $('bConfirmYes').textContent = T.deleteAll;
+  $('bConfirmNo').textContent = T.cancel;
+  $('rmConfirmText').textContent = T.confirmDeleteAll;
+  $('bUndo').textContent = T.undo;
   document.querySelector('[data-k="keepNotes"]').textContent = T.keepNotes;
   if (recentOpen()) renderRecent();
   $('bReplace').textContent = T.replace;
@@ -892,7 +922,8 @@ fileExt.onkeydown = (e) => {
   else if (e.key === 'Backspace' && !fileExt.value) { e.preventDefault(); fileName.focus(); }
 };
 
-editor.addEventListener('input', afterChange);
+editor.addEventListener('input', () => { fromLink = false; forgetCleared(); afterChange(); });
+$('bUndo').onclick = undoClear;
 for (const type of ['keyup', 'click', 'select']) editor.addEventListener(type, updateStatus);
 editor.addEventListener('paste', (e) => {
   const wasEmpty = !editor.value;
@@ -953,9 +984,20 @@ document.addEventListener('keydown', (e) => {
 addEventListener('pagehide', saveDocNow);
 document.addEventListener('visibilitychange', () => { if (document.hidden) saveDocNow(); });
 
-$('chkKeep').onchange = () => {
+/* The question is asked inside the menu: a native confirm() would freeze browser agents and screen magnifiers alike. */
+let answerConfirm = null;
+function askDelete() {
+  $('rmConfirm').hidden = false;
+  $('bConfirmNo').focus();
+  return new Promise((done) => { answerConfirm = (yes) => { answerConfirm = null; $('rmConfirm').hidden = true; done(yes); }; });
+}
+$('bConfirmYes').onclick = () => answerConfirm?.(true);
+$('bConfirmNo').onclick = () => answerConfirm?.(false);
+recentMenu.addEventListener('toggle', (e) => { if (e.newState === 'closed') answerConfirm?.(false); });
+
+$('chkKeep').onchange = async () => {
   if (!$('chkKeep').checked) {
-    if ((noteIndex().length || editor.value.trim()) && !confirm(T.confirmDeleteAll)) { $('chkKeep').checked = true; return; }
+    if ((noteIndex().length || editor.value.trim()) && !(await askDelete())) { $('chkKeep').checked = true; $('chkKeep').focus(); return; }
     deleteAllNotes();
   }
   prefs.keepNotes = $('chkKeep').checked;
@@ -963,8 +1005,8 @@ $('chkKeep').onchange = () => {
   if (keeping()) keepNote();
   renderRecent();
 };
-$('bDeleteAll').onclick = () => {
-  if (!confirm(T.confirmDeleteAll)) return;
+$('bDeleteAll').onclick = async () => {
+  if (!(await askDelete())) { $('bDeleteAll').focus(); return; }
   const mine = docId;
   for (const n of noteIndex()) if (n.id !== mine) dropNote(n.id); // the open note stays until it is closed or emptied
   renderRecent();
@@ -989,6 +1031,51 @@ if (saved.view === 'syntax' || saved.view === 'markdown') await setView(saved.vi
     if (n && !editor.value.trim()) adoptNote(n);
   }
 }
+/* A note in the address: …/#text=<encodeURIComponent(text)>&name=report.md&view=markdown&lock=1
+   The text sits after the #, so it is never sent to the server. Used by links and by browser agents
+   that hand a result to the user. */
+const LINK_MAX = 500000;
+async function openFromLink() {
+  const hash = location.hash.slice(1);
+  if (!/(?:^|&)text=/.test(hash)) return;
+  const q = new URLSearchParams(hash.replace(/\+/g, '%2B')); // a literal plus stays a plus
+  history.replaceState(null, '', location.pathname + location.search);
+  const text = (q.get('text') || '').slice(0, LINK_MAX);
+  if (!text.trim()) return;
+  if (editor.value.trim()) {
+    if (!keeping()) { toast(T.openFailed); return; } // nowhere to keep the note that is open
+    saveDocNow(); // it stays under Recent
+  }
+  if (state.view !== 'edit') await setView('edit');
+  setLock(false);
+  forgetCleared();
+  docId = newId();
+  fileHandle = null;
+  const name = (q.get('name') || '').replace(/[\\/:*?"<>|\u0000-\u001f]/g, '').slice(0, 120);
+  if (name) setName(name); else { fileName.value = DEFAULT_BASE; fileExt.value = ''; bareName = false; refreshName(); }
+  fromLink = true;
+  setText(text);
+  const view = q.get('view');
+  if (view === 'markdown' || view === 'syntax') await setView(view);
+  else if (view !== 'edit') showFormatted(true);
+  if (q.get('lock') === '1' && state.view === 'edit') setLock(true);
+  toast(`${fullName()} ${T.opened}`);
+}
+await openFromLink();
+addEventListener('hashchange', openFromLink);
+
+/* A small scripting surface for browser agents and user scripts. It does what the buttons do. */
+window.qwn = Object.freeze({
+  version: VERSION.slice(1),
+  getText: () => editor.value,
+  getState: () => ({ view: state.view, locked: state.locked, name: fullName(), chars: editor.value.length, words: countWords(editor.value), lang: state.lang, theme: state.theme }),
+  setText(text) { if (state.locked) return false; fromLink = false; forgetCleared(); setText(String(text)); return true; },
+  append(text) { if (state.locked) return false; fromLink = false; forgetCleared(); setText(editor.value + String(text)); return true; },
+  setName(name) { setName(String(name)); dropHandleIfRenamed(); saveDoc(); return fullName(); },
+  async setView(view) { if (!['edit', 'syntax', 'markdown'].includes(view)) return false; await setView(view); return true; },
+  save: () => saveFile(),
+});
+
 updateStatus();
 updateInvite();
 if (state.view === 'edit') editor.focus();

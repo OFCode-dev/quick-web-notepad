@@ -11,6 +11,14 @@
 - Plain HTML, CSS and JavaScript; no build step
 - The site shows Google AdSense ads, including one thin strip under the editor; it runs no separate analytics tool
 
+## For AI agents and browser automation
+- Hand a result to the user: open `https://quickwebnotepad.com/#text=<encodeURIComponent(text)>&name=report.md&view=markdown`. Optional: `view=markdown|syntax|edit`, `lock=1`. The text is after the `#`, so it is not sent to any server; at most 500,000 characters. The user reads the report formatted; every code block has a Copy button, so put anything the user must copy (commands, links, values) in fenced code blocks.
+- Script it: `window.qwn.getText()`, `.setText(text)`, `.append(text)`, `.setName('notes.md')`, `.setView('markdown')`, `.getState()`, `.save()`.
+- Read state: `<html data-view="edit|syntax|markdown" data-locked="true|false">`; the last status message stays in `#lastStatus`.
+- Stable controls: `#editor` (textarea), `#bOpen`, `#bSave`, `#bCopy`, `#bClear`, `#bFind`, `#bMarkdown`, `#bSyntax`, `#bLock`, `#bRecent`, `#fileName`, `#fileExt`, `#fileInput` (upload a file here to open it). Each button has an aria-label in the interface language.
+- No native dialogs: confirmations are in-page buttons. Under automation (`navigator.webdriver`), Open uses `#fileInput` and Save downloads the file, so no system file dialog appears.
+- Careful: pressing Esc twice clears the text (three times when locked). An Undo button (`#bUndo`) restores it until the next edit.
+
 ## Pages
 - [Notepad app](https://quickwebnotepad.com/)
 - [Markdown viewer: opens .md files and pasted Markdown formatted](https://quickwebnotepad.com/markdown-viewer/)

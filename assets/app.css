@@ -125,6 +125,16 @@ button.icon-only { padding: 4px 7px; }
 .rm-foot label { display: flex; align-items: center; gap: 6px; cursor: pointer; }
 .rm-foot input { accent-color: var(--accent); }
 #bDeleteAll { border-color: var(--border); }
+#rmConfirm { padding: 10px 14px; border-top: 1px solid var(--border); }
+#rmConfirm p { margin-bottom: 8px; }
+#rmConfirm div { display: flex; gap: 8px; justify-content: flex-end; }
+#rmConfirm button { border-color: var(--border); }
+#rmConfirm button.danger { border-color: var(--danger); color: var(--danger); }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+#bUndo { min-height: 0; padding: 0 8px; border-color: var(--accent); color: var(--accent); font-size: inherit; }
+.codebox { position: relative; }
+.copy-code { position: absolute; top: 6px; inset-inline-end: 6px; min-height: 0; padding: 4px 6px; background: var(--surface); border-color: var(--border); opacity: .75; }
+.copy-code:hover, .copy-code:focus-visible { opacity: 1; }
 
 /* ── Find bar ── */
 #findBar {

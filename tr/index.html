@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="tr" dir="ltr" data-page-lang="tr">
+<html lang="tr" dir="ltr" data-page-lang="tr" data-view="edit" data-locked="false">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -130,6 +130,10 @@ document.documentElement.dataset.theme=t})();
   <div class="rm-head"><strong id="recentTitle" data-k="recent">Son notlar</strong></div>
   <ul id="recentList"></ul>
   <p id="recentEmpty" data-k="recentEmpty">Kapatılan sekmelerin notları burada görünür.</p>
+  <div id="rmConfirm" role="alertdialog" aria-labelledby="rmConfirmText" hidden>
+    <p id="rmConfirmText" data-k="confirmDeleteAll">Bu cihazda saklanan tüm notlar silinsin mi? Bu işlem geri alınamaz.</p>
+    <div><button id="bConfirmNo" class="txt" data-k="cancel">Vazgeç</button><button id="bConfirmYes" class="txt danger" data-k="deleteAll">Tümünü sil</button></div>
+  </div>
   <div class="rm-foot">
     <label><input type="checkbox" id="chkKeep" checked> <span data-k="keepNotes">Kapatılan notları bu cihazda sakla</span></label>
     <button id="bDeleteAll" class="txt" data-k="deleteAll">Tümünü sil</button>
@@ -165,10 +169,11 @@ document.documentElement.dataset.theme=t})();
     <span id="stSel" hidden></span>
   </div>
   <div class="group">
+    <button id="bUndo" class="txt" hidden data-k="undo">Geri al</button>
     <span id="stLock" hidden></span>
     <span id="stMode"></span>
     <a id="aboutLink" href="/about.html" data-k="about">Hakkında</a>
-    <span id="stVersion">v3.1</span>
+    <span id="stVersion">v3.2</span>
   </div>
 </footer>
 
@@ -178,7 +183,9 @@ document.documentElement.dataset.theme=t})();
 </aside>
 
 <div id="toast" role="status" aria-live="polite"></div>
-<input type="file" id="fileInput" hidden>
+<!-- The last message stays here for assistive tools and browser agents that look after the toast has gone. -->
+<p id="lastStatus" class="sr-only"></p>
+<input type="file" id="fileInput" hidden aria-label="Aç" data-ka="file">
 
 <script type="module" src="/assets/app.js"></script>
 </body>
