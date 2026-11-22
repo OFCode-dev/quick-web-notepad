@@ -6,6 +6,12 @@
   <description>Guides to plain text, Markdown and private note-taking in the browser, from the makers of Quick Web Notepad.</description>
   <language>en-US</language>
   <atom:link href="https://quickwebnotepad.com/blog/feed.xml" rel="self" type="application/rss+xml"/>
-
+  <item>
+    <title>How to Open an MD File and Read It Formatted</title>
+    <link>https://quickwebnotepad.com/blog/open-md-file/</link>
+    <guid>https://quickwebnotepad.com/blog/open-md-file/</guid>
+    <pubDate>Sun, 22 Nov 2026 09:00:00 GMT</pubDate>
+    <description>How to open a .md file on Windows, Mac, Linux, your phone or in a browser, switch between plain text and formatted view, and why Notepad shows # and *.</description>
+  </item>
 </channel>
 </rss>

@@ -1,0 +1,71 @@
+{
+  "slug": "open-md-file",
+  "lang": "en",
+  "title": "How to Open an MD File and Read It Formatted",
+  "description": "How to open a .md file on Windows, Mac, Linux, your phone or in a browser, switch between plain text and formatted view, and why Notepad shows # and *.",
+  "date": "2026-11-22",
+  "updated": "2026-11-22",
+  "keywords": [
+    "open md file",
+    "md file viewer",
+    "md viewer",
+    "markdown viewer",
+    "how to open markdown file"
+  ],
+  "image": {
+    "file": "open-md-file.jpg",
+    "alt": "Flat illustration of a laptop showing a formatted document beside a paper sheet of short gray lines and dots.",
+    "width": 1376,
+    "height": 768
+  },
+  "body": "A .md file is plain text written in Markdown, so any text editor can open it. To see it formatted, with headings, bold text, lists and tables, open it in the current Windows 11 Notepad, in VS Code or in a browser-based Markdown viewer. If you see `#`, `*` and `-` characters, the app is showing the raw source and nothing is wrong with the file.\n\n## Why a .md file looks like symbols in Notepad\n\nMarkdown marks formatting with ordinary keyboard characters. One to six `#` signs at the start of a line make a heading. Text wrapped in `**` becomes bold. A `>` starts a quote, and triple backticks fence off a code block.\n\nA Markdown renderer turns those marks into formatting. A plain text editor shows them exactly as they were typed. Here are the same lines in both views:\n\n| What a text editor shows | What a Markdown viewer shows |\n|---|---|\n| `# Setup` | A large heading: Setup |\n| `**important**` | **important** in bold |\n| `- first item` | A bulleted list item |\n| `[docs](https://example.com)` | A clickable link labeled \"docs\" |\n| `- [ ] buy milk` | A checkbox item (in GitHub Flavored Markdown) |\n\nUse the plain-text view to see or edit the exact characters, and the formatted view to read.\n\n## Open an MD file on Windows\n\nMicrosoft added Markdown support to Windows 11 Notepad in 2025. The [Windows Insider announcement of text formatting in Notepad](https://blogs.windows.com/windows-insider/2025/05/30/text-formatting-in-notepad-begin-rolling-out-to-windows-insiders/) says Notepad \"supports Markdown style input and files.\" It has two views: formatted Markdown and Markdown syntax. You switch between them from the **View** menu or with the toggle in the status bar at the bottom of the window. Formatting can also be turned off in Notepad's settings, so if an up-to-date Notepad shows raw symbols, check the toggle and that setting first.\n\nTo open a .md file in Notepad:\n\n1. In File Explorer, right-click the .md file.\n2. Choose **Open with**, then pick **Notepad** or another app from the list.\n3. If the file shows as raw text, use the **View** menu or the status bar toggle to switch to the formatted view.\n\nTo make one app open every .md file, follow Microsoft's steps to [change default apps in Windows](https://support.microsoft.com/en-us/windows/apps/change-default-apps-in-windows):\n\n1. Open **Settings** and select **Apps** > **Default apps**.\n2. In the search bar, type `.md`.\n3. Select the result, choose the app you want, then select **Set default**.\n\nAt first, Notepad's formatting covered headings, bold, italic, links and simple lists. A November 2025 Notepad update (version 11.2510.6.0) added tables. New Notepad features reach Windows Insiders first, so your copy may not have all of them yet.\n\nInstall Notepad updates when they arrive. In February 2026, Microsoft patched CVE-2026-20841, a flaw in how Notepad handled links in Markdown files: clicking a crafted link in a .md file in the formatted view could run files on your PC. Whatever app you use, don't click links in .md files you don't trust.\n\n## Open an MD file on a Mac or Linux\n\nTextEdit comes with every Mac and shows the file as plain text. For a formatted view, use VS Code or a browser viewer. [Apple's Mac User Guide](https://support.apple.com/en-us/guide/mac-help/mh35597/mac) lists these ways to open a file in a specific app:\n\n- Control-click the .md file, choose **Open With**, then choose an app.\n- Select the file in the Finder and choose **File** > **Open With**.\n- Drag the file onto the app's icon in the Finder or the Dock.\n- Open the app, choose **File** > **Open** and select the file.\n\nTo use the same app for every .md file, select one and choose **File** > **Get Info**. Click the arrow next to **Open with**, choose an app, then click **Change All**.\n\nOn Linux with GNOME Files, right-click the file and pick an app from the top of the menu. If the app you want isn't listed, choose **Open With…**, then click **View All Apps**. What you see depends on the app you pick; GNOME's Text Editor shows the plain text. In a terminal, `less README.md` also shows the plain text. Press `q` to quit.\n\n## Open an MD file on Android or iPhone\n\nOn an iPhone, as [Apple's guide to the Files app](https://support.apple.com/guide/iphone/find-and-view-files-and-folders-iphe4bff8827/ios) describes:\n\n1. Open the **Files** app and tap **Browse**, or tap **Recents**.\n2. Tap the .md file. If you don't have the app that created it, Files opens a preview in Quick Look.\n3. To pick an app yourself, touch and hold the file, then choose **Open With**.\n\nOn Android:\n\n1. Open the **Files by Google** app.\n2. Find the .md file under **Recents**, or tap a category under **Categories** to see its files in a list.\n3. Tap the file to open it. Which app opens it depends on the apps installed on your phone.\n\nIf the file shows `#` and `*` signs, you are looking at the raw source. If you already have Markdown as text, for example in a chat message or on a web page, copy it and paste it into an empty note in the browser viewer described below to read it formatted.\n\n## Preview Markdown in VS Code\n\nVisual Studio Code runs on Windows, macOS and Linux. Its [Markdown documentation](https://code.visualstudio.com/docs/languages/markdown) says \"VS Code supports Markdown files out of the box,\" so you don't need an extension.\n\n1. Open the .md file in VS Code.\n2. Press **Ctrl+Shift+V** (**⇧⌘V** on a Mac) to switch the editor to the preview.\n3. To edit and preview side by side, press **Ctrl+K**, then **V** (on a Mac, **⌘K**, then **V**).\n\nVS Code is worth installing if you work with README files often. For reading a single file, a lighter option is quicker.\n\n## Open an MD file in any browser\n\nQuick Web Notepad's [Markdown viewer page](/markdown-viewer/) runs in the browser, so you can use it on a computer where you can't install software. Text you open, drop or paste into an empty note there shows up formatted right away.\n\n1. Open the Markdown viewer in your browser.\n2. On a computer, drag the .md file anywhere onto the page, or press **Ctrl+O** (**⌘O** on a Mac) and choose the file.\n3. If you copied Markdown text, paste it into the empty note.\n4. Press **Alt+M** (**⌥M** on a Mac) to switch between the formatted view and the plain text.\n\nThe viewer renders GitHub Flavored Markdown, including tables, task lists and fenced code blocks with syntax highlighting. It renders on your device, doesn't upload your text and sanitizes the HTML before showing it. The exception is images embedded from other websites: your browser requests those from the sites that host them. After your first visit, the page works offline.\n\nThe formatted view is read-only. To make changes, switch to the text view with **Alt+M** (**⌥M** on a Mac), edit there and save with **Ctrl+S** (**⌘S** on a Mac). In Chrome, Edge and other Chromium desktop browsers, Save writes back to the file you opened once the browser asks for and gets permission. In Firefox and Safari, Save downloads a copy. The [main notepad](/) is the same app at a different address.\n\nThe viewer can't export to PDF or Word. It holds one document per tab and doesn't sync between devices. In desktop Chrome or Edge you can install it as an app, and it then shows up in the system's **Open with** menu for .md and .markdown files. On an iPhone or iPad, tap **Share**, then **Add to Home Screen**.\n\n## Which option to use\n\n| Option | Platforms | Formatted view | Edit the file | Install needed |\n|---|---|---|---|---|\n| Windows 11 Notepad | Windows 11 | Yes, tables in recent versions | Yes | No (built in) |\n| TextEdit or another plain text editor | All desktops | No, source only | Yes | Usually built in |\n| VS Code | Windows, macOS, Linux | Yes, side-by-side preview | Yes | Yes |\n| Browser Markdown viewer | Any device with a browser | Yes, GitHub Flavored Markdown | In text view | No |\n\nOn a phone, the browser viewer is the only option in this table that formats Markdown. On Windows 11, check which Notepad features you already have before you install anything else.",
+  "faq": [
+    {
+      "q": "What program opens an MD file?",
+      "a": "Any text editor can: Notepad on Windows, TextEdit on a Mac or a text editor on Linux. The current Windows 11 Notepad can also show Markdown formatted, and VS Code or a browser Markdown viewer can do the same on any desktop system."
+    },
+    {
+      "q": "Is an MD file safe to open?",
+      "a": "A .md file holds only text, and a plain text editor displays it without running anything. The risk is in links. In February 2026 Microsoft patched a Notepad flaw (CVE-2026-20841) that let a crafted link run files when clicked, so keep your apps updated and don't click links in files you don't trust."
+    },
+    {
+      "q": "How do I convert an MD file to readable text?",
+      "a": "Open it in a Markdown viewer, which turns the symbols into headings, bold text, lists and links. A viewer only displays the file, so to get a PDF or Word file you need a tool that exports."
+    },
+    {
+      "q": "Why does my MD file show # and * signs?",
+      "a": "Those characters are the Markdown formatting, and your app is showing the source. Switch to a formatted or preview view, or open the file in a Markdown viewer."
+    },
+    {
+      "q": "How do I open an MD file on my phone?",
+      "a": "On an iPhone, find the file in the Files app under Browse and tap it, or touch and hold it and choose Open With. On Android, open Files by Google, find the file under Recents or Categories and tap it. If you have Markdown as text, for example in a chat message, paste it into a browser-based Markdown viewer to read it formatted."
+    }
+  ],
+  "cta": {
+    "lead": "Drop the file or paste its text into the viewer to read your Markdown formatted in the browser.",
+    "text": "Open the Markdown viewer",
+    "href": "/markdown-viewer/"
+  },
+  "sources": [
+    {
+      "title": "Text formatting in Notepad begins rolling out to Windows Insiders (Windows Insider Blog)",
+      "url": "https://blogs.windows.com/windows-insider/2025/05/30/text-formatting-in-notepad-begin-rolling-out-to-windows-insiders/"
+    },
+    {
+      "title": "Change default apps in Windows (Microsoft Support)",
+      "url": "https://support.microsoft.com/en-us/windows/apps/change-default-apps-in-windows"
+    },
+    {
+      "title": "Markdown and Visual Studio Code (VS Code documentation)",
+      "url": "https://code.visualstudio.com/docs/languages/markdown"
+    },
+    {
+      "title": "Choose an app to open a file on Mac (Apple Support)",
+      "url": "https://support.apple.com/en-us/guide/mac-help/mh35597/mac"
+    },
+    {
+      "title": "Find and view files and folders in Files on iPhone (Apple Support)",
+      "url": "https://support.apple.com/guide/iphone/find-and-view-files-and-folders-iphe4bff8827/ios"
+    }
+  ]
+}
