@@ -1,5 +1,5 @@
 /* Offline support. Network first, so an online visitor always gets the current version. */
-const CACHE = 'qwn-v14';
+const CACHE = 'qwn-v15';
 const FILES = ['./', 'index.html', 'about.html', 'privacy.html', 'contact.html', 'icon.svg', 'icon-192.png', 'icon-512.png',
   'manifest.webmanifest', 'assets/app.css', 'assets/page.css', 'assets/app.js', 'assets/i18n.js',
   'assets/vendor/marked.esm.js', 'assets/vendor/purify.es.js'];

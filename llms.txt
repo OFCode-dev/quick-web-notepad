@@ -16,7 +16,7 @@
 - Script it: `window.qwn.getText()`, `.setText(text)`, `.append(text)`, `.setName('notes.md')`, `.setView('markdown')`, `.getState()`, `.save()`.
 - Read state: `<html data-view="edit|syntax|markdown" data-locked="true|false">`; the last status message stays in `#lastStatus`.
 - Stable controls: `#editor` (textarea), `#bOpen`, `#bSave`, `#bCopy`, `#bClear`, `#bFind`, `#bMarkdown`, `#bSyntax`, `#bLock`, `#bRecent`, `#fileName`, `#fileExt`, `#fileInput` (upload a file here to open it). Each button has an aria-label in the interface language.
-- No native dialogs: confirmations are in-page buttons. Under automation (`navigator.webdriver`), Open uses `#fileInput` and Save downloads the file, so no system file dialog appears.
+- No native dialogs: confirmations are in-page buttons. In agent mode, Open uses `#fileInput` and Save downloads the file, so no system file dialog appears. Agent mode is on automatically under `navigator.webdriver`; an agent that drives a normal browser (for example through an extension) turns it on with `agent=1` in the hash (`/#agent=1`, or `…#text=…&agent=1`) or `window.qwn.agent()`. It lasts for the tab. `window.qwn.save()` always downloads.
 - Careful: pressing Esc twice clears the text (three times when locked). An Undo button (`#bUndo`) restores it until the next edit.
 
 ## Pages

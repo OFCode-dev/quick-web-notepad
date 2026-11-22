@@ -22,7 +22,10 @@ function store(kind, key, value) {
 const prefs = load('localStorage', 'qwn:prefs');
 const PAGE_LANG = root.dataset.pageLang || '';
 const START_MD = root.dataset.start === 'markdown'; // the Markdown viewer page
-const AUTOMATED = navigator.webdriver === true; // a browser agent or test driver: it cannot operate system file dialogs
+/* A browser agent cannot operate system file dialogs. Test drivers announce themselves (navigator.webdriver);
+   agents that drive a normal browser through an extension do not, so they can say so: …/#agent=1 or qwn.agent(). */
+let AUTOMATED = navigator.webdriver === true || /(?:^|[#&])agent=1(?:&|$)/.test(location.hash);
+try { if (AUTOMATED) sessionStorage.setItem('qwn:agent', '1'); else AUTOMATED = sessionStorage.getItem('qwn:agent') === '1'; } catch { /* storage blocked */ }
 const saved = load('sessionStorage', 'qwn:doc');
 const newId = () => (crypto.randomUUID ? crypto.randomUUID() : `${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}`);
 let docId = saved.id || newId(); // identifies this tab's note in the Recent list
@@ -591,10 +594,11 @@ async function openFile() {
   $('fileInput').value = '';
   $('fileInput').click();
 }
-async function saveFile() {
+async function saveFile({ download = AUTOMATED } = {}) {
   const name = fullName();
   try {
-    if (!fileHandle && window.showSaveFilePicker && !AUTOMATED) fileHandle = await window.showSaveFilePicker({ suggestedName: name });
+    if (download) throw new Error('download'); // no dialog, and no write to a file opened earlier
+    if (!fileHandle && window.showSaveFilePicker) fileHandle = await window.showSaveFilePicker({ suggestedName: name });
     if (fileHandle) {
       const writable = await fileHandle.createWritable();
       await writable.write(editor.value);
@@ -606,7 +610,7 @@ async function saveFile() {
     }
   } catch (err) {
     if (err.name === 'AbortError') return;
-    fileHandle = null; // picker unavailable here (e.g. permission denied): fall back to a download
+    if (!download) fileHandle = null; // picker unavailable here (e.g. permission denied): fall back to a download
   }
   const a = document.createElement('a');
   // Without an extension, text/plain would make the browser append .txt to the download.
@@ -1039,6 +1043,7 @@ if (saved.view === 'syntax' || saved.view === 'markdown') await setView(saved.vi
 const LINK_MAX = 500000;
 async function openFromLink() {
   const hash = location.hash.slice(1);
+  if (/^agent=1$/.test(hash)) history.replaceState(null, '', location.pathname + location.search);
   if (!/(?:^|&)text=/.test(hash)) return;
   const q = new URLSearchParams(hash.replace(/\+/g, '%2B')); // a literal plus stays a plus
   history.replaceState(null, '', location.pathname + location.search);
@@ -1075,7 +1080,8 @@ window.qwn = Object.freeze({
   append(text) { if (state.locked) return false; fromLink = false; forgetCleared(); setText(editor.value + String(text)); return true; },
   setName(name) { setName(String(name)); dropHandleIfRenamed(); saveDoc(); return fullName(); },
   async setView(view) { if (!['edit', 'syntax', 'markdown'].includes(view)) return false; await setView(view); return true; },
-  save: () => saveFile(),
+  save: () => saveFile({ download: true }), // always a download, never a system dialog
+  agent(on = true) { AUTOMATED = !!on; try { sessionStorage.setItem('qwn:agent', on ? '1' : '0'); } catch { /* storage blocked */ } return AUTOMATED; },
 });
 
 updateStatus();
