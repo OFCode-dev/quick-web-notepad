@@ -1,8 +1,10 @@
-/* Shared styles for the static pages (about, privacy, contact, 404). */
+/* Shared styles for the static pages (about, privacy, contact, 404, blog).
+   The theme follows the notepad: the choice saved there (html[data-theme], set before paint), else the system's. */
 :root { --bg: #14151b; --card: #1c1e27; --border: #343849; --text: #e7e9f1; --muted: #9ba1b6; --accent: #ffb454; --on-accent: #1d1403; color-scheme: dark; }
 @media (prefers-color-scheme: light) {
-  :root { --bg: #f4f1ea; --card: #fbf9f4; --border: #d9d2c3; --text: #24222b; --muted: #625e6c; --accent: #b45309; --on-accent: #fff; color-scheme: light; }
+  :root:not([data-theme="dark"]) { --bg: #f4f1ea; --card: #fbf9f4; --border: #d9d2c3; --text: #24222b; --muted: #625e6c; --accent: #b45309; --on-accent: #fff; color-scheme: light; }
 }
+:root[data-theme="light"] { --bg: #f4f1ea; --card: #fbf9f4; --border: #d9d2c3; --text: #24222b; --muted: #625e6c; --accent: #b45309; --on-accent: #fff; color-scheme: light; }
 * { box-sizing: border-box; }
 body { margin: 0; background: var(--bg); color: var(--text); font: 16px/1.7 system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif; }
 main { width: min(760px, calc(100% - 32px)); margin: 0 auto; padding: 56px 0; }
