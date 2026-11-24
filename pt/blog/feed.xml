@@ -6,6 +6,12 @@
   <description>Guias sobre texto simples, Markdown e notas privadas no navegador, feitos pela equipe do Quick Web Notepad.</description>
   <language>pt-BR</language>
   <atom:link href="https://quickwebnotepad.com/pt/blog/feed.xml" rel="self" type="application/rss+xml"/>
-
+  <item>
+    <title>Bloco de notas online: como usar sem cadastro e offline</title>
+    <link>https://quickwebnotepad.com/pt/blog/bloco-de-notas-online/</link>
+    <guid>https://quickwebnotepad.com/pt/blog/bloco-de-notas-online/</guid>
+    <pubDate>Tue, 24 Nov 2026 09:00:00 GMT</pubDate>
+    <description>Como usar um bloco de notas online grátis e sem cadastro: onde o texto fica salvo, como abrir e salvar arquivos .txt, uso offline e no celular.</description>
+  </item>
 </channel>
 </rss>

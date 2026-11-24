@@ -1,0 +1,71 @@
+{
+  "slug": "bloco-de-notas-online",
+  "lang": "pt",
+  "title": "Bloco de notas online: como usar sem cadastro e offline",
+  "description": "Como usar um bloco de notas online grátis e sem cadastro: onde o texto fica salvo, como abrir e salvar arquivos .txt, uso offline e no celular.",
+  "date": "2026-11-24",
+  "updated": "2026-11-24",
+  "keywords": [
+    "bloco de notas online",
+    "bloco de notas online grátis",
+    "notepad online",
+    "editor de texto online",
+    "bloco de notas online sem cadastro"
+  ],
+  "image": {
+    "file": "bloco-de-notas-online.jpg",
+    "alt": "Ilustração de um notebook aberto ao lado de um bloco de papel, um lápis e um celular sobre uma mesa.",
+    "width": 1376,
+    "height": 768
+  },
+  "body": "Um bloco de notas online é um editor de texto simples que abre no navegador: você digita, abre e salva arquivos .txt sem instalar nada. No Quick Web Notepad não existe cadastro, e o texto fica no seu navegador, sem ir para um servidor. Para guardar algo de vez, salve um arquivo .txt no seu aparelho.\n\n## Como começar sem cadastro\n\n1. Abra [o bloco de notas em português](/pt/).\n2. Clique na área de texto e comece a digitar.\n3. Acompanhe os números do texto: o editor mostra a contagem de palavras, a de caracteres e a posição do cursor.\n\nNinguém pede e-mail, senha ou conta. O Quick Web Notepad é gratuito e de código aberto (licença MIT). O site exibe anúncios do Google AdSense, entre eles uma faixa fina logo abaixo do editor.\n\nCada aba guarda um único documento. Se você precisa de duas notas ao mesmo tempo, abra duas abas.\n\n## Onde o texto fica salvo\n\n- **Na aba aberta:** o texto continua lá se você recarregar a página, porque fica no `sessionStorage` da aba. Uma aba nova começa vazia.\n- **Depois que você fecha a aba:** a nota vai para o `localStorage` deste navegador. Cabem até 30 notas. Notas com mais de um milhão de caracteres não são guardadas. Você reabre ou apaga essas notas no menu de notas recentes e pode desligar esse recurso.\n- **No servidor:** nada. O Quick Web Notepad não tem backend, então o texto é processado no navegador e não sai dele. Os detalhes estão na [política de privacidade](/privacy.html).\n\nPor isso, as notas ficam presas a este navegador, neste aparelho. Elas não aparecem no celular, em outro navegador ou em outro computador. Não há sincronização nem backup em nuvem.\n\nEm janela anônima, os dados duram menos. Segundo a [documentação do localStorage na MDN](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage), os dados de uma sessão privada são apagados quando você fecha a última aba privada. Se o texto for importante, salve um arquivo.\n\n## Como abrir e salvar arquivos .txt\n\n1. Pressione Ctrl+O (⌘O no Mac) e escolha o arquivo. Se preferir, arraste o arquivo e solte em qualquer ponto da página.\n2. Edite o texto.\n3. Pressione Ctrl+S (⌘S no Mac) para salvar.\n\nO que acontece ao salvar depende do navegador:\n\n| Navegador | O que Ctrl+S (⌘S) faz |\n|---|---|\n| Chrome, Edge e outros navegadores Chromium no computador | Grava no próprio arquivo que você abriu, depois que o navegador pede sua permissão |\n| Firefox e Safari | Baixa uma cópia do arquivo |\n\nA gravação direta usa a API File System Access (acesso ao sistema de arquivos). A [página da MDN sobre showSaveFilePicker](https://developer.mozilla.org/en-US/docs/Web/API/Window/showSaveFilePicker) classifica essa API como de disponibilidade limitada, sem suporte em alguns dos navegadores mais usados. No Firefox e no Safari, confira a cópia baixada e substitua o arquivo antigo se for o caso.\n\nSe você instalar o app em um navegador Chromium no computador, pode abrir arquivos .txt, .log, .md, .markdown, .csv e .json direto pelo menu \"Abrir com\" do sistema.\n\n## Uso offline e instalação como app\n\nDepois da primeira visita, o bloco de notas funciona sem internet. Basta abrir o mesmo endereço no mesmo navegador.\n\nInstalado como app, ele ganha um ícone próprio e abre em uma janela separada. No Chrome para computador, a [ajuda do Google Chrome sobre apps da web](https://support.google.com/chrome/answer/9658361?hl=pt-BR) descreve dois caminhos:\n\n1. Abra o site no Chrome.\n2. Clique no ícone **Instalar**, no canto superior direito da barra de endereço. Outro caminho: abra o menu **Mais** e escolha **Transmitir, salvar e compartilhar** > **Instalar esta página como um app…**.\n3. Siga as instruções na tela.\n\nNo Edge, a opção de instalar também fica na barra de endereço ou no menu.\n\nNo Android, com o Chrome, os passos estão na [ajuda do Chrome para Android](https://support.google.com/chrome/answer/9658361?hl=pt-BR&co=GENIE.Platform%3DAndroid):\n\n1. Abra o site no Chrome.\n2. Toque em **Mais** (os três pontos ⋮ à direita da barra de endereço).\n3. Toque em **Instalar e criar atalho** e depois em **Instalar**.\n4. Siga as instruções na tela.\n\nPara remover, abra **Configurações** > **Apps** > **Mostrar todos os apps**, toque no ícone do app e em **Desinstalar**.\n\nNo iPhone, siga as etapas do [guia da Apple para transformar um site em app no Safari](https://support.apple.com/pt-br/guide/iphone/iphea86e5236/ios):\n\n1. Abra o site no Safari.\n2. Toque em **Menu da Página** e depois em **Compartilhar**. Se as abas estiverem no layout Inferior ou Superior, toque direto em **Compartilhar**.\n3. Toque em **Adicionar à Tela de Início**. Se a opção não aparecer, role até o fim da lista, toque em **Editar Ações** e inclua a opção.\n4. Ative **Abrir como App da Web** e toque em **Adicionar**.\n\nNo iPad, o caminho é o mesmo: Compartilhar e depois Adicionar à Tela de Início.\n\n## Bloco de notas online no celular\n\nNo celular, ele serve para anotações rápidas, como uma lista de compras, um número de protocolo ou um texto que você vai colar em outro app. A regra de armazenamento é a mesma: a nota fica no navegador do celular e não aparece no computador.\n\nPara passar um texto do celular para o computador, copie o texto e envie pelo app de mensagens ou de e-mail que você já usa. Se você instalar o site pelo Chrome no Android ou pela Tela de Início no iPhone, como mostrado acima, o bloco de notas abre com um toque.\n\nO Quick Web Notepad não tem corretor ortográfico próprio. O corretor do navegador ou do teclado pode funcionar.\n\n## Recursos que ajudam além de digitar\n\n- **Localizar e substituir:** Ctrl+F (⌘F no Mac). Aceita diferenciar maiúsculas e minúsculas e expressões regulares. Você troca uma ocorrência ou todas. Enter e Shift+Enter passam de uma ocorrência para outra.\n- **Visualização Markdown:** Alt+M (⌥M no Mac). Mostra o texto formatado, com tabelas, listas de tarefas e blocos de código, mas só para leitura. A [página do visualizador de Markdown](/markdown-viewer/) já exibe formatado o texto que você abre, solta ou cola em uma nota vazia.\n- **Destaque de sintaxe:** Ctrl+Shift+H (⌘⇧H no Mac). Colore JavaScript, Python, HTML, CSS, JSON, SQL, shell, C e Markdown, também só para leitura.\n- **Modo bloqueado:** Ctrl+Shift+L (⌘⇧L no Mac). Impede digitar, colar, substituir e limpar. Atenção: pressionar Esc três vezes com o modo ativo desbloqueia e apaga o texto.\n- **Limpar tudo:** Esc duas vezes. Salve antes se o texto importar.\n- **Quebra de linha:** Alt+Z (⌥Z no Mac).\n- **Zoom:** Ctrl+= (⌘= no Mac) para aumentar, Ctrl+− (⌘− no Mac) para diminuir e Ctrl+0 (⌘0 no Mac) para voltar ao padrão.\n- **Copiar tudo ou a seleção:** Ctrl+Shift+C (⌘⇧C no Mac).\n- **Temas:** há tema claro e escuro.\n\nA lista completa de atalhos está na [página Sobre do Quick Web Notepad](/pt/sobre.html).\n\n## Quando usar um bloco de notas online e quando não usar\n\n| Situação | Serve? | O que fazer |\n|---|---|---|\n| Rascunho rápido ou colar texto para tirar a formatação | Sim | Digite ou cole e copie de volta |\n| Editar .txt, .log, .csv ou .json | Sim | Abra com Ctrl+O (⌘O) e salve com Ctrl+S (⌘S) |\n| Trabalhar sem internet | Sim, depois da primeira visita | Instale o app para abrir pelo ícone, mesmo sem internet |\n| Texto sensível em computador compartilhado | Com cuidado | Desligue o recurso de guardar notas ou apague-as no menu de notas recentes |\n| Ver a mesma nota em vários aparelhos | Não | Não há sincronização: salve um arquivo e transfira |\n| Compartilhar por link ou editar junto com alguém | Não | Use uma ferramenta de colaboração |\n| Documento formatado, PDF ou Word | Não | Use um processador de texto |",
+  "faq": [
+    {
+      "q": "O bloco de notas online salva o texto automaticamente?",
+      "a": "Sim, no próprio navegador. O texto da aba continua lá ao recarregar a página, e as notas de abas fechadas ficam guardadas neste navegador (até 30). Isso não substitui um backup: salve um arquivo .txt para o que for importante."
+    },
+    {
+      "q": "Preciso criar conta para usar o Quick Web Notepad?",
+      "a": "Não. Não há cadastro, login nem e-mail. Você abre a página e começa a digitar."
+    },
+    {
+      "q": "Consigo ver minhas notas no celular e no computador?",
+      "a": "Não. As notas ficam só no navegador onde foram escritas, sem sincronização ou nuvem. Para levar um texto de um aparelho para outro, salve um arquivo ou copie e envie o texto."
+    },
+    {
+      "q": "O bloco de notas online funciona sem internet?",
+      "a": "Funciona, depois que você abre o site pelo menos uma vez com conexão. Instalar como app no computador ou no Android, ou adicionar à Tela de Início no iPhone, facilita abrir offline."
+    },
+    {
+      "q": "Por que o Ctrl+S (⌘S no Mac) baixa um arquivo novo em vez de salvar no original?",
+      "a": "No Firefox e no Safari, Ctrl+S (⌘S no Mac) baixa uma cópia, porque esses navegadores não oferecem a gravação direta em arquivos do sistema. No Chrome, no Edge e em outros navegadores Chromium no computador, o salvamento grava no arquivo aberto depois da sua permissão."
+    }
+  ],
+  "cta": {
+    "lead": "Para fazer uma anotação agora, sem cadastro e sem instalar nada, abra o editor no seu navegador.",
+    "text": "Abrir o bloco de notas",
+    "href": "/pt/"
+  },
+  "sources": [
+    {
+      "title": "MDN: Window.localStorage",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage"
+    },
+    {
+      "title": "MDN: Window.showSaveFilePicker()",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Window/showSaveFilePicker"
+    },
+    {
+      "title": "Ajuda do Google Chrome: usar apps da Web (computador)",
+      "url": "https://support.google.com/chrome/answer/9658361?hl=pt-BR"
+    },
+    {
+      "title": "Ajuda do Google Chrome: usar apps da Web (Android)",
+      "url": "https://support.google.com/chrome/answer/9658361?hl=pt-BR&co=GENIE.Platform%3DAndroid"
+    },
+    {
+      "title": "Suporte da Apple: transformar um site em app no Safari do iPhone",
+      "url": "https://support.apple.com/pt-br/guide/iphone/iphea86e5236/ios"
+    }
+  ]
+}
